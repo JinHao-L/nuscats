@@ -1,0 +1,16 @@
+{
+    "name": "nuscats",
+    "version": "1.0.0",
+    "scripts": {
+        "fe:start": "yarn workspace frontend start",
+        "be:start": "yarn workspace backend start:dev"
+    },
+    "private": true,
+    "workspaces": [
+        "frontend",
+        "backend",
+        "api"
+    ],
+    "author": "NUS Cats",
+    "license": "MIT"
+}

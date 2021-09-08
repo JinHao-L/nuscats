@@ -1,0 +1,23 @@
+# For local development purposes only!
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports: 
+      - 3000:3000
+    volumes: 
+      - /app/node_modules
+      - /app/frontend/node_modules
+      - .:/app
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - 3001:3001
+    volumes: 
+      - /app/node_modules
+      - /app/backend/node_modules
+      - .:/app
