@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "fe:start": "yarn workspace frontend start",
-        "be:start": "yarn workspace backend start:dev"
+        "be:start": "yarn workspace backend start:dev",
+        "lint": "yarn workspace backend lint"
     },
     "private": true,
     "workspaces": [
