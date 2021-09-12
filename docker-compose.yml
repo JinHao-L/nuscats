@@ -54,6 +54,9 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       - DB_SYNCHRONIZE=true
+      # JWT Configuration
+      - JWT_ACCESS_TOKEN_SECRET=accSecret
+      - JWT_REFRESH_TOKEN_SECRET=refSecret
       # Object Storage Configuration
       - AWS_REGION=ap-southeast-1
       - AWS_S3_ENDPOINT=http://localhost:9000

@@ -15,7 +15,7 @@ export class CatsController {
 
   @Get('/:id')
   getCat(@Param('id') id: string) {
-    return;
+    return this.catsService.findCatById(id);
   }
 
   @Post()
