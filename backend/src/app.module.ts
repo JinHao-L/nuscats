@@ -9,6 +9,7 @@ import {
   databaseConfig,
 } from './config/database.config';
 import validationSchema from './config/config.schema';
+import { SightingsModule } from './sightings/sightings.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import validationSchema from './config/config.schema';
       imports: [ConfigModule],
       useClass: DatabaseConfigService,
     }),
+    SightingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
