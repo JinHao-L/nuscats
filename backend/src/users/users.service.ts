@@ -31,7 +31,9 @@ export class UsersService {
     return from(this.userRepository.findOne({ email }).then((user) => !!user));
   }
 
-  createUser(user: User): Observable<User> {
+  createUser(
+    user: Pick<User, 'username' | 'email' | 'password_hash'>,
+  ): Observable<User> {
     const newUser = this.userRepository.create({
       ...user,
       roles: RoleType.User,

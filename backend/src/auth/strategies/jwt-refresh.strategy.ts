@@ -6,7 +6,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { UsersService } from '../../users/users.service';
-import { UserPrincipal } from '../interface/user-principal.interface';
+import {
+  getUserPrincipal,
+  UserPrincipal,
+} from '../interface/user-principal.interface';
 import { JwtConfigService } from './../../config/jwt.config';
 import { TokenPayload } from '../interface/token-payload.interface';
 @Injectable()
@@ -44,7 +47,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
       throw new UnauthorizedException();
     }
 
-    const { password_hash, ...safeUser } = user;
-    return safeUser;
+    return getUserPrincipal(user);
   }
 }

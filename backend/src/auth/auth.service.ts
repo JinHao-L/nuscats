@@ -1,6 +1,5 @@
 import { JwtConfigService } from './../config/jwt.config';
 import { TokenPayload } from './interface/token-payload.interface';
-import { User } from './../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import {
@@ -10,7 +9,10 @@ import {
 } from '@nestjs/common';
 import { map, mergeMap, Observable, from } from 'rxjs';
 
-import { UserPrincipal } from './interface/user-principal.interface';
+import {
+  getUserPrincipal,
+  UserPrincipal,
+} from './interface/user-principal.interface';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
 
@@ -103,22 +105,7 @@ export class AuthService {
     return this.usersService.removeRefreshToken(user.uuid);
   }
 
-  login(user: UserPrincipal): { username: string; token: string } {
-    const payload = {
-      username: user.username,
-      sub: user.uuid,
-    };
-    const jwtOptions = this.jwtConfigService.accessTokenOptions;
-    return {
-      username: user.username,
-      token: this.jwtService.sign(payload, {
-        secret: jwtOptions.secret,
-        expiresIn: `${jwtOptions.expiry}s`,
-      }),
-    };
-  }
-
-  signup(createUserDto: CreateUserDto): Observable<User> {
+  signup(createUserDto: CreateUserDto): Observable<UserPrincipal> {
     return this.usersService.doesUsernameExist(createUserDto.username).pipe(
       mergeMap((exists) => {
         if (exists) {
@@ -138,8 +125,9 @@ export class AuthService {
               return this.usersService.createUser({
                 ...userDetails,
                 password_hash,
-              } as User);
+              });
             }),
+            map((user) => getUserPrincipal(user)),
           );
         }
       }),

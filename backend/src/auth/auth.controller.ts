@@ -1,5 +1,8 @@
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import { UserPrincipal } from './interface/user-principal.interface';
+import {
+  getUserPrincipal,
+  UserPrincipal,
+} from './interface/user-principal.interface';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Body, Controller, Post, Req, UseGuards, Get } from '@nestjs/common';
@@ -14,7 +17,7 @@ export class AuthController {
 
   @UseGuards(LoginAuthGuard)
   @Post('/login')
-  login(@Req() req: Request) {
+  login(@Req() req: Request): Observable<UserPrincipal> {
     const user = req.user as UserPrincipal;
 
     const accessTokenCookie = this.authService.getJwtAccessTokenCookie(user);
@@ -39,17 +42,13 @@ export class AuthController {
   }
 
   @Post('/signup')
-  signup(@Body() createUserDto: CreateUserDto): Observable<string> {
-    return this.authService.signup(createUserDto).pipe(
-      map((user) => {
-        return user.uuid;
-      }),
-    );
+  signup(@Body() createUserDto: CreateUserDto): Observable<UserPrincipal> {
+    return this.authService.signup(createUserDto);
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('/refresh')
-  refresh(@Req() request: Request) {
+  refresh(@Req() request: Request): UserPrincipal {
     const user = request.user as UserPrincipal;
     const accessTokenCookie = this.authService.getJwtAccessTokenCookie(user);
 
