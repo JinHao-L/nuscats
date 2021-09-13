@@ -33,6 +33,9 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+/* Tailwind Setup */
+import "tailwindcss/tailwind.css"
+
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
