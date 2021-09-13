@@ -15,4 +15,9 @@ export default Joi.object({
   AWS_S3_ENDPOINT: Joi.string(),
   AWS_S3_SIGNATURE_VERSION: Joi.string(),
   AWS_S3_BUCKET_NAME: Joi.string().required(),
+
+  JWT_ACCESS_TOKEN_SECRET: Joi.string().required(), // in seconds
+  JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().default('1200'),
+  JWT_REFRESH_TOKEN_SECRET: Joi.string().required(), // in seconds
+  JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().default('1209600'),
 });
