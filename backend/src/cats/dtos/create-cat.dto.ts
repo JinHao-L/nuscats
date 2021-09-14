@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { UniversityZone } from '../cat.entity';
+import { UniversityZone } from '@api/cats';
 
 export class CreateCatDto {
   @ApiProperty({ example: 'Ashy', description: 'The name of the cat' })

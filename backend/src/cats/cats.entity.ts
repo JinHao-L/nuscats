@@ -6,16 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum UniversityZone {
-  Computing = 'Computing',
-  Arts = 'Arts',
-  Engineering = 'Engineering',
-  Utown = 'Utown',
-}
+import { UniversityZone, Cat as ICat } from '@api/cats';
 
 @Entity()
-export class Cat {
+export class Cat implements ICat {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

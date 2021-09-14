@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { Point } from 'geojson';
 
-import { Cat } from '../cats/cat.entity';
+import { Cat } from '../cats/cats.entity';
 
 export enum SightingType {
   Emergency = 'Emergency',
