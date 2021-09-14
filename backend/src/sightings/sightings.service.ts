@@ -18,7 +18,7 @@ export class SightingsService {
   }
 
   getSighting(id: number): Observable<CatSighting> {
-    return from(this.sightingsRepository.findOne(id));
+    return from(this.sightingsRepository.findOne(id, { relations: ['cat'] }));
   }
 
   createSighting(

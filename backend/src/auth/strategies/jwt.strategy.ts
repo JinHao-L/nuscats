@@ -5,12 +5,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { UsersService } from '../../users/users.service';
-import {
-  getUserPrincipal,
-  UserPrincipal,
-} from './../interface/user-principal.interface';
 import { JwtConfigService } from './../../config/jwt.config';
 import { TokenPayload } from './../interface/token-payload.interface';
+import { User } from 'src/users/user.entity';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -28,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: TokenPayload): Promise<UserPrincipal> {
+  async validate(payload: TokenPayload): Promise<User> {
     const { sub, username } = payload;
     const user = await lastValueFrom(this.usersService.findByUuid(sub));
 
@@ -37,6 +34,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    return getUserPrincipal(user);
+    return user;
   }
 }

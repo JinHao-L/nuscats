@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsUrl } from 'class-validator';
 import {
   Entity,
@@ -11,33 +10,28 @@ import {
 } from 'typeorm';
 import { User } from '../users/user.entity';
 
+import { Profile as IProfile } from '@api/profiles';
 @Entity()
-export class Profile {
-  @ApiProperty()
+export class Profile implements IProfile {
   @OneToOne((type) => User, { cascade: true })
   @JoinColumn({ referencedColumnName: 'uuid' })
   @PrimaryColumn()
   user: string;
 
-  @ApiProperty()
   @Column('varchar')
   first_name: string;
 
-  @ApiProperty()
   @Column('varchar')
   last_name: string;
 
-  @ApiProperty()
   @IsUrl()
   @IsOptional()
   @Column('varchar', { nullable: true })
   profile_pic: string;
 
-  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
-  @ApiProperty()
   @UpdateDateColumn()
   updated_at: Date;
 }

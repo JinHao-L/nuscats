@@ -12,7 +12,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@api/*": ["../api/src/*"]
+      "@api/*": ["../api/src/*"],
+      "@api": ["../../api/src"]
     },
     "incremental": true,
     "skipLibCheck": true,

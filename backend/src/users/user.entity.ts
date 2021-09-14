@@ -8,10 +8,12 @@ import {
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Exclude } from 'class-transformer';
-import { RoleType } from '../shared/enum/role-type.enum';
+import { ApiHideProperty } from '@nestjs/swagger';
+
+import { User as IUser, RoleType } from '@api/users';
 
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,10 +29,12 @@ export class User {
   username: string;
 
   @Exclude()
+  @ApiHideProperty()
   @Column('varchar')
   password_hash: string;
 
   @Exclude()
+  @ApiHideProperty()
   @Column('varchar', { nullable: true })
   refresh_token_hash: string;
 
@@ -38,11 +42,15 @@ export class User {
     type: 'enum',
     enum: RoleType,
   })
-  roles: RoleType;
+  roles: RoleType[];
 
+  @Exclude()
+  @ApiHideProperty()
   @CreateDateColumn()
   created_at: Date;
 
+  @Exclude()
+  @ApiHideProperty()
   @UpdateDateColumn()
   updated_at: Date;
 }
