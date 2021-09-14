@@ -4,7 +4,7 @@ import { map, Observable, from, catchError, of } from 'rxjs';
 import { Repository } from 'typeorm';
 
 import { User } from './user.entity';
-import { RoleType } from 'src/shared/enum/role-type.enum';
+import { RoleType } from '../shared/enum/role-type.enum';
 
 @Injectable()
 export class UsersService {

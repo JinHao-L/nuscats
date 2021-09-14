@@ -1,8 +1,5 @@
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import {
-  getUserPrincipal,
-  UserPrincipal,
-} from './interface/user-principal.interface';
+import { UserPrincipal } from './interface/user-principal.interface';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Body, Controller, Post, Req, UseGuards, Get } from '@nestjs/common';

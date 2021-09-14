@@ -13,6 +13,7 @@ import { S3ConfigService } from './config/s3.config';
 import { AppConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     CatsModule,
     AuthModule,
     UsersModule,
+    ProfilesModule,
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       useClass: DatabaseConfigService,

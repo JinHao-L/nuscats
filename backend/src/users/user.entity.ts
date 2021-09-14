@@ -8,14 +8,14 @@ import {
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Exclude } from 'class-transformer';
-import { RoleType } from 'src/shared/enum/role-type.enum';
+import { RoleType } from '../shared/enum/role-type.enum';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'uuid', unique: true })
   @Generated('uuid')
   uuid: string;
 
