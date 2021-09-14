@@ -7,23 +7,25 @@ import { CreateSightingDto } from './dtos/create-sighting.dto';
 
 @Injectable()
 export class SightingsService {
-	constructor(
-		@InjectRepository(CatSighting)
-		private sightingsRepository: Repository<CatSighting>,
-	) {}
+  constructor(
+    @InjectRepository(CatSighting)
+    private sightingsRepository: Repository<CatSighting>,
+  ) {}
 
-	listAllSightings(): Observable<CatSighting[]> {
-		return from(this.sightingsRepository.find());
-	}
+  listAllSightings(): Observable<CatSighting[]> {
+    return from(this.sightingsRepository.find());
+  }
 
-	getSighting(id): Observable<CatSighting> {
-		return from(this.sightingsRepository.findOne(id));
-	}
+  getSighting(id: number): Observable<CatSighting> {
+    return from(this.sightingsRepository.findOne(id, { relations: ['cat'] }));
+  }
 
-	createSighting(createSightingDto: CreateSightingDto): Observable<CatSighting> {
-		const sighting = this.sightingsRepository.create({
-			...createSightingDto,
-		});
-		return from(this.sightingsRepository.save(sighting));
-	}
+  createSighting(
+    createSightingDto: CreateSightingDto,
+  ): Observable<CatSighting> {
+    const sighting = this.sightingsRepository.create({
+      ...createSightingDto,
+    });
+    return from(this.sightingsRepository.save(sighting));
+  }
 }

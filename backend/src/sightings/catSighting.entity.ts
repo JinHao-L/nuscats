@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -15,32 +16,40 @@ export enum SightingType {
 
 @Entity()
 export class CatSighting {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   // Not sure about this
-  @Column('bytea')
+  @ApiProperty()
+  @Column('varchar')
   image: string;
 
+  @ApiProperty()
   @ManyToOne(() => Cat, (cat: Cat) => cat.id)
   cat: number;
 
   // Double check
+  @ApiProperty()
   @Column('geometry')
   location: string;
 
+  @ApiProperty()
   @Column({
     type: 'enum',
     enum: SightingType,
   })
   type: SightingType;
 
+  @ApiProperty()
   @Column('varchar')
   description: string;
 
+  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updated_at: Date;
 }
