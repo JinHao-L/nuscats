@@ -9,8 +9,6 @@ The backend can be found at [http://localhost:3001](http://localhost:3001)
 
 ### With Docker
 
-Note that our local setup currently uses all `host` networks due to some complications with `minio`. 
-
 #### Prerequisites
 
 1. [Docker](https://docs.docker.com/get-docker/)

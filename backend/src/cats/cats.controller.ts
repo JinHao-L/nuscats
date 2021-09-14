@@ -22,7 +22,7 @@ import {
 
 import { Roles } from 'src/shared/decorators/role.decorator';
 import { RoleType } from 'src/shared/enum/role-type.enum';
-import { Cat } from './cat.entity';
+import { Cat } from './cats.entity';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dtos/create-cat.dto';
 import { RolesGuard } from './../auth/guard/roles.guard';

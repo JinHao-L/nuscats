@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { UniversityZone } from '../cat.entity';
+import { UniversityZone } from '@api/cats';
 
 export class CreateCatDto {
   /**

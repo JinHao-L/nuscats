@@ -10,7 +10,7 @@ import {
 import { Point } from 'geojson';
 import { IsUrl } from 'class-validator';
 
-import { Cat } from '../cats/cat.entity';
+import { Cat } from '../cats/cats.entity';
 
 export enum SightingType {
   Emergency = 'Emergency',
