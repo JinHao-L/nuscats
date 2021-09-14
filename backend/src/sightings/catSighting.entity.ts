@@ -1,46 +1,68 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
-	ManyToOne,
-	CreateDateColumn,
-	UpdateDateColumn
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Index,
 } from 'typeorm';
+import { Point } from 'geojson';
+
 import { Cat } from '../cats/cat.entity';
 
 export enum SightingType {
-	Emergency = 'Emergency',
-	CatSighted = 'CatSighted',
+  Emergency = 'Emergency',
+  CatSighted = 'CatSighted',
 }
 
 @Entity()
 export class CatSighting {
-	@PrimaryGeneratedColumn()
-	id: number;
-	
-	// Not sure about this
-	@Column('bytea')
-	image: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id: number;
 
-	@ManyToOne(() => Cat, (cat: Cat) => cat.id)
-	cat: number;
+  // Not sure about this
+  @ApiProperty()
+  @Column('varchar')
+  image: string;
 
-	// Double check
-	@Column('geometry')
-	location: string;
+  @ApiProperty()
+  @ManyToOne(() => Cat, (cat: Cat) => cat.id)
+  cat: number;
 
-	@Column({
-		type: 'enum',
-		enum: SightingType,
-	})
-	type: SightingType;
+  // Double check
+  @ApiProperty({
+    type: String,
+    title: 'location',
+    example: '{"type":"Point","coordinates":[29.612849, 77.229883]}',
+  })
+  @Index({ spatial: true })
+  @Column({
+    type: 'geometry',
+    srid: 4326,
+    nullable: true,
+    spatialFeatureType: 'Point',
+  })
+  location: Point;
 
-	@Column('varchar')
-	description: string;
+  @ApiProperty()
+  @Column({
+    type: 'enum',
+    enum: SightingType,
+  })
+  type: SightingType;
 
-	@CreateDateColumn()
-	created_at: Date;
+  @ApiProperty()
+  @Column('varchar')
+  description: string;
 
-	@UpdateDateColumn()
-	updated_at: Date;
+  @ApiProperty()
+  @CreateDateColumn()
+  created_at: Date;
+
+  @ApiProperty()
+  @UpdateDateColumn()
+  updated_at: Date;
 }

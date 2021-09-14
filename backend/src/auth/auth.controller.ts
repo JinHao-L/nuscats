@@ -1,8 +1,5 @@
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import {
-  getUserPrincipal,
-  UserPrincipal,
-} from './interface/user-principal.interface';
+import { UserPrincipal } from './interface/user-principal.interface';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Body, Controller, Post, Req, UseGuards, Get } from '@nestjs/common';
@@ -10,11 +7,31 @@ import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { LoginAuthGuard } from './guard/login-auth.guard';
 import { map, Observable } from 'rxjs';
 import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
+import {
+  ApiTags,
+  ApiForbiddenResponse,
+  ApiCreatedResponse,
+  ApiBody,
+  ApiOkResponse,
+  ApiConflictResponse,
+  ApiBadRequestResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { LoginUserDto } from 'src/users/dtos/login-user.dto';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @ApiBody({
+    type: LoginUserDto,
+  })
+  @ApiCreatedResponse({
+    description: 'Successfully logged in',
+    type: UserPrincipal,
+  })
+  @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
   @UseGuards(LoginAuthGuard)
   @Post('/login')
   login(@Req() req: Request): Observable<UserPrincipal> {
@@ -41,11 +58,24 @@ export class AuthController {
       );
   }
 
+  @ApiCreatedResponse({
+    description: 'Successfully created. Proceed to login',
+    type: UserPrincipal,
+  })
+  @ApiBadRequestResponse({
+    description: 'Missing or invalid registration details',
+  })
+  @ApiConflictResponse({ description: 'Username or email already exists' })
   @Post('/signup')
   signup(@Body() createUserDto: CreateUserDto): Observable<UserPrincipal> {
     return this.authService.signup(createUserDto);
   }
 
+  @ApiOkResponse({
+    description: 'Successfully refreshed access token',
+    type: UserPrincipal,
+  })
+  @ApiUnauthorizedResponse({ description: 'Invalid refresh token' })
   @UseGuards(JwtRefreshGuard)
   @Get('/refresh')
   refresh(@Req() request: Request): UserPrincipal {
@@ -57,6 +87,8 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'Successfully logged out' })
+  @ApiUnauthorizedResponse({ description: 'Not logged in' })
   @Get('/logout')
   logout(@Req() request: Request) {
     const user = request.user as UserPrincipal;

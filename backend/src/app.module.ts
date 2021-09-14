@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { AppLoggerMiddleware } from './shared/middleware/logger.middleware';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
@@ -13,6 +14,7 @@ import { S3ConfigService } from './config/s3.config';
 import { AppConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { UsersModule } from './users/users.module';
     CatsModule,
     AuthModule,
     UsersModule,
+    ProfilesModule,
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       useClass: DatabaseConfigService,
@@ -41,4 +44,8 @@ import { UsersModule } from './users/users.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
+}

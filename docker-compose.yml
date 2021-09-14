@@ -25,7 +25,7 @@ services:
       exit 0;
       "
   postgres:
-    image: postgres
+    image: postgis/postgis
     network_mode: host
     environment: 
       - POSTGRES_PASSWORD=postgres

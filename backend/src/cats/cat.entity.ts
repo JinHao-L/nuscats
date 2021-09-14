@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -15,49 +16,38 @@ export enum UniversityZone {
 
 @Entity()
 export class Cat {
-  constructor({
-    id,
-    name,
-    neutered = false,
-    description = '',
-    zone,
-  }: {
-    id: number;
-    name: string;
-    neutered?: boolean;
-    description?: string;
-    zone: UniversityZone;
-  }) {
-    this.id = id;
-    this.name = name;
-    this.neutered = neutered;
-    this.description = description;
-    this.zone = zone;
-    this.created_at = new Date();
-    this.updated_at = new Date();
-  }
-
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column('varchar')
   name: string;
 
+  @ApiProperty()
   @Column({ type: 'boolean', default: false })
   neutered: boolean;
 
+  @ApiProperty()
+  @Column({ type: 'text', default: false })
+  one_liner: string;
+
+  @ApiProperty()
   @Column('text')
   description: string;
 
+  @ApiProperty()
   @Column({
     type: 'enum',
     enum: UniversityZone,
   })
   zone: UniversityZone;
 
+  @ApiProperty()
   @CreateDateColumn()
   created_at: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updated_at: Date;
 }

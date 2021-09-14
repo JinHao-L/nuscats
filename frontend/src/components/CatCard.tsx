@@ -1,6 +1,6 @@
 import { IonIcon } from '@ionic/react'
 import { locationOutline } from 'ionicons/icons'
-import { Cat } from '../../../backend/src/cats/cat.entity'
+import { Cat } from 'types/cat'
 
 interface CatCardProps {
     cat: Cat
