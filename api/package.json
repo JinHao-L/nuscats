@@ -2,5 +2,8 @@
     "name": "api",
     "version": "1.0.0",
     "author": "NUS Cats",
-    "license": "MIT"
+    "license": "MIT",
+    "devDependencies": {
+        "@types/geojson": "^7946.0.8"
+    }
 }

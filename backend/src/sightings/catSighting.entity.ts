@@ -11,14 +11,10 @@ import { Point } from 'geojson';
 import { IsUrl } from 'class-validator';
 
 import { Cat } from '../cats/cats.entity';
-
-export enum SightingType {
-  Emergency = 'Emergency',
-  CatSighted = 'CatSighted',
-}
+import { SightingType, CatSighting as ICatSighting } from '@api/sightings';
 
 @Entity()
-export class CatSighting {
+export class CatSighting implements ICatSighting {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,7 +23,7 @@ export class CatSighting {
   image: string;
 
   @ManyToOne(() => Cat, (cat: Cat) => cat.id)
-  cat: number;
+  cat?: number;
 
   /**
    * The location of the sighting

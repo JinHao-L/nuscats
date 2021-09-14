@@ -20,8 +20,8 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 
-import { Roles } from 'src/shared/decorators/role.decorator';
-import { RoleType } from 'src/shared/enum/role-type.enum';
+import { RoleType } from '@api/users';
+import { Roles } from '../shared/decorators/role.decorator';
 import { Cat } from './cats.entity';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dtos/create-cat.dto';

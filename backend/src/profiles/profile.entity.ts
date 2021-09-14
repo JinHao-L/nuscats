@@ -10,8 +10,9 @@ import {
 } from 'typeorm';
 import { User } from '../users/user.entity';
 
+import { Profile as IProfile } from '@api/profiles';
 @Entity()
-export class Profile {
+export class Profile implements IProfile {
   @OneToOne((type) => User, { cascade: true })
   @JoinColumn({ referencedColumnName: 'uuid' })
   @PrimaryColumn()

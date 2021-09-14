@@ -9,10 +9,11 @@ import {
 import { IsEmail } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
-import { RoleType } from '../shared/enum/role-type.enum';
+
+import { User as IUser, RoleType } from '@api/users';
 
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 

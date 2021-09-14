@@ -7,7 +7,7 @@ import {
   IsUrl,
 } from 'class-validator';
 
-import { SightingType } from './../catSighting.entity';
+import { SightingType } from '@api/sightings';
 
 export class CreateSightingDto {
   /**

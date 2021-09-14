@@ -1,4 +1,3 @@
-import { Usr } from './../shared/decorators/user.decorator';
 import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
 import {
   Controller,
@@ -9,7 +8,6 @@ import {
   Delete,
   ParseUUIDPipe,
   UseGuards,
-  Req,
   UnauthorizedException,
   NotFoundException,
   Put,
@@ -23,13 +21,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { RoleType } from '@api/users';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../shared/decorators/role.decorator';
-import { RoleType } from '../shared/enum/role-type.enum';
+import { Usr } from './../shared/decorators/user.decorator';
 import { Profile } from './profile.entity';
 import { User } from '../users/user.entity';
 

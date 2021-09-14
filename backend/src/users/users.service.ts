@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable, from, catchError, of } from 'rxjs';
 import { Repository } from 'typeorm';
 
+import { RoleType } from '@api/users';
 import { User } from './user.entity';
-import { RoleType } from '../shared/enum/role-type.enum';
 
 @Injectable()
 export class UsersService {
