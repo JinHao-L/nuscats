@@ -1,6 +1,6 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import CatCard from 'components/CatCard';
-import { Cat, UniversityZone } from '../../../backend/src/cats/cat.entity'
+import { Cat, UniversityZone } from 'types/cat';
 
 const CatsTab: React.FC = () => {
   // Mock data
