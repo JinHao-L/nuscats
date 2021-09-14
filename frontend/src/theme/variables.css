@@ -3,6 +3,9 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+  /** font **/
+  --ion-font-family: "Work Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Roboto", "Noto Sans", sans-serif, "Noto Color Emoji";
+
   /** primary **/
   --ion-color-primary: #3880FF;
   --ion-color-primary-rgb: 56, 128, 255;
