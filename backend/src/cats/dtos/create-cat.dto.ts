@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEnum,
@@ -9,41 +8,41 @@ import {
 import { UniversityZone } from '../cat.entity';
 
 export class CreateCatDto {
-  @ApiProperty({ example: 'Ashy', description: 'The name of the cat' })
+  /**
+   * The name of the cat
+   * @example 'Ashy'
+   */
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({
-    description: 'Whether the cat is neutered',
-    default: false,
-    required: false,
-  })
+  /**
+   * Whether the cat is neutered
+   */
   @IsOptional()
   @IsBoolean()
-  neutered?: boolean;
+  neutered?: boolean = false;
 
-  @ApiProperty({
-    example:
-      "Bachelor's in Laziness, Masters's in Belly Flops and PhD in Napping",
-    description: 'The one-liner description of the cat',
-    required: false,
-  })
+  /**
+   * The one-liner description of the cat
+   * @example 'Bachelor's in Laziness, Masters's in Belly Flops and PhD in Napping'
+   */
   @IsOptional()
   @IsString()
   one_liner?: string;
 
-  @ApiProperty({
-    description: 'Long detailed description of cat',
-  })
+  /**
+   * A long detailed description of the cat
+   * @example 'I am a strong and healthy boy! I have white fur with patches of stripes and yellow eyes.'
+   */
   @IsString()
   @IsNotEmpty()
   description: string;
 
-  @ApiProperty({
-    enum: UniversityZone,
-    description: 'The university zone that the cat belongs to',
-  })
+  /**
+   * The university zone that the cat belongs to
+   * @example 'Utown'
+   */
   @IsEnum(UniversityZone)
   zone: UniversityZone;
 }

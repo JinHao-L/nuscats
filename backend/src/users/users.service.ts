@@ -40,7 +40,7 @@ export class UsersService {
   ): Observable<User> {
     const newUser = this.userRepository.create({
       ...user,
-      roles: RoleType.User,
+      roles: [RoleType.User],
     });
     return from(this.userRepository.save(newUser));
   }

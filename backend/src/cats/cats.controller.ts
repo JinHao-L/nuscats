@@ -32,15 +32,21 @@ import { RolesGuard } from './../auth/guard/roles.guard';
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
-  @Get()
+  /**
+   * Request a list of cats
+   */
   @ApiOkResponse({
     type: [Cat],
     description: 'Successfully get list of cats',
   })
+  @Get()
   listAllCats(): Observable<Cat[]> {
     return this.catsService.listAllCats();
   }
 
+  /**
+   * Request a cat by its id
+   */
   @ApiOkResponse({
     type: Cat,
     description: 'Successfully get indicated cats',
@@ -61,6 +67,9 @@ export class CatsController {
     );
   }
 
+  /**
+   * Create a new cat entry
+   */
   @ApiCreatedResponse({
     type: Cat,
     description: 'Successfully created cat',
@@ -75,6 +84,9 @@ export class CatsController {
     return this.catsService.createCat(createCatDto);
   }
 
+  /**
+   * Delete a cat entry
+   */
   @ApiOkResponse({
     type: Cat,
     description: 'Successfully get indicated cats',

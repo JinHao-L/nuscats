@@ -1,9 +1,9 @@
-import { UserPrincipal } from './../../auth/interface/user-principal.interface';
+import { User } from '../../users/user.entity';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const User = createParamDecorator(
+export const Usr = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return request.user as UserPrincipal;
+    return request.user as User;
   },
 );

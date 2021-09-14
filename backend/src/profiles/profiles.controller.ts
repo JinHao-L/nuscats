@@ -1,3 +1,4 @@
+import { Usr } from './../shared/decorators/user.decorator';
 import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
 import {
   Controller,
@@ -13,16 +14,6 @@ import {
   NotFoundException,
   Put,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { CreateProfileDto } from './dto/create-profile.dto';
-import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ProfilesService } from './profiles.service';
-import { UserPrincipal } from '../auth/interface/user-principal.interface';
-import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
-import { RolesGuard } from '../auth/guard/roles.guard';
-import { Roles } from '../shared/decorators/role.decorator';
-import { RoleType } from '../shared/enum/role-type.enum';
-import { Profile } from './profile.entity';
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -32,6 +23,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { CreateProfileDto } from './dto/create-profile.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ProfilesService } from './profiles.service';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { RolesGuard } from '../auth/guard/roles.guard';
+import { Roles } from '../shared/decorators/role.decorator';
+import { RoleType } from '../shared/enum/role-type.enum';
+import { Profile } from './profile.entity';
+import { User } from '../users/user.entity';
 
 @ApiTags('Profiles')
 @ApiUnauthorizedResponse({ description: 'User not logged in' })
@@ -40,6 +40,9 @@ import {
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
+  /**
+   * Create a new user profile
+   */
   @ApiCreatedResponse({
     description: 'Profile successfully created',
     type: Profile,
@@ -47,15 +50,15 @@ export class ProfilesController {
   @ApiConflictResponse({ description: 'Profile already exists' })
   @Post()
   create(
-    @Req() request: Request,
+    @Usr() user: User,
     @Body() createProfileDto: CreateProfileDto,
   ): Observable<Profile> {
-    return this.profilesService.create(
-      createProfileDto,
-      request.user as UserPrincipal,
-    );
+    return this.profilesService.create(createProfileDto, user.uuid);
   }
 
+  /**
+   * Gets a list of profile
+   */
   @ApiOkResponse({
     description: 'Successfully get list of profiles',
     type: [Profile],
@@ -65,6 +68,9 @@ export class ProfilesController {
     return this.profilesService.findAll();
   }
 
+  /**
+   * Gets a user profile by uuid
+   */
   @ApiOkResponse({
     description: 'Successfully get requested profile',
     type: Profile,
@@ -84,6 +90,9 @@ export class ProfilesController {
     );
   }
 
+  /**
+   * Updates a user profile
+   */
   @ApiOkResponse({
     description: 'Successfully updated requested profile',
     type: Profile,
@@ -91,25 +100,27 @@ export class ProfilesController {
   @ApiParam({ name: 'uuid', description: 'The id of the profile to update' })
   @Put(':uuid')
   update(
-    @Req() request: Request,
+    @Usr() user: User,
     @Param('uuid', ParseUUIDPipe) uuid: string,
     @Body() updateProfileDto: UpdateProfileDto,
   ): Observable<Profile> {
-    const user = request.user as UserPrincipal;
     if (user.uuid !== uuid && !user.roles.includes(RoleType.Admin)) {
       throw new UnauthorizedException('Cannot modify user');
     }
     return this.profilesService.update(uuid, updateProfileDto);
   }
 
+  /**
+   * Deletes a user profile
+   */
   @ApiOkResponse({
     description: 'Successfully deleted requested profile',
     type: Profile,
   })
-  @ApiParam({ name: 'uuid', description: 'The id of the profile to delete' })
   @ApiForbiddenResponse({
     description: 'Forbidden. Operation allowed only for admin',
   })
+  @ApiParam({ name: 'uuid', description: 'The id of the profile to delete' })
   @UseGuards(RolesGuard)
   @Roles(RoleType.Admin)
   @Delete(':uuid')
