@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserPrincipal } from './../auth/interface/user-principal.interface';
 import { Profile } from './profile.entity';
-import { from, mergeMap, Observable } from 'rxjs';
+import { from, map, mergeMap, Observable } from 'rxjs';
 
 @Injectable()
 export class ProfilesService {
@@ -18,11 +18,19 @@ export class ProfilesService {
     createProfileDto: CreateProfileDto,
     user: UserPrincipal,
   ): Observable<Profile> {
-    const profile = this.profileRepository.create({
-      ...createProfileDto,
-      user: user.uuid,
-    });
-    return from(this.profileRepository.save(profile));
+    return from(this.profileRepository.findOne({ user: user.uuid })).pipe(
+      map((existingProfile) => {
+        if (existingProfile) {
+          throw new ConflictException('Profile already exists');
+        } else {
+          return this.profileRepository.create({
+            ...createProfileDto,
+            user: user.uuid,
+          });
+        }
+      }),
+      mergeMap((profile) => this.profileRepository.save(profile)),
+    );
   }
 
   findAll(): Observable<Profile[]> {

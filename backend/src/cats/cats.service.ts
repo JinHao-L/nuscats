@@ -16,8 +16,8 @@ export class CatsService {
     return from(this.catRepository.find());
   }
 
-  findCatById(id: string): Observable<Cat> {
-    return from(this.catRepository.findOne(id));
+  findCatById(id: number): Observable<Cat> {
+    return from(this.catRepository.findOne({ id }));
   }
 
   createCat(createCatDto: CreateCatDto): Observable<Cat> {
