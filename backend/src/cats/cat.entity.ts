@@ -15,6 +15,28 @@ export enum UniversityZone {
 
 @Entity()
 export class Cat {
+  constructor({
+    id,
+    name,
+    neutered = false,
+    description = '',
+    zone,
+  }: {
+    id: number;
+    name: string;
+    neutered?: boolean;
+    description?: string;
+    zone: UniversityZone;
+  }) {
+    this.id = id;
+    this.name = name;
+    this.neutered = neutered;
+    this.description = description;
+    this.zone = zone;
+    this.created_at = new Date();
+    this.updated_at = new Date();
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
