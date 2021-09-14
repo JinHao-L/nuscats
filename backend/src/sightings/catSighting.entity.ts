@@ -6,7 +6,10 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
+import { Point } from 'geojson';
+
 import { Cat } from '../cats/cat.entity';
 
 export enum SightingType {
@@ -30,9 +33,19 @@ export class CatSighting {
   cat: number;
 
   // Double check
-  @ApiProperty()
-  @Column('geometry')
-  location: string;
+  @ApiProperty({
+    type: String,
+    title: 'location',
+    example: '{"type":"Point","coordinates":[29.612849, 77.229883]}',
+  })
+  @Index({ spatial: true })
+  @Column({
+    type: 'geometry',
+    srid: 4326,
+    nullable: true,
+    spatialFeatureType: 'Point',
+  })
+  location: Point;
 
   @ApiProperty()
   @Column({

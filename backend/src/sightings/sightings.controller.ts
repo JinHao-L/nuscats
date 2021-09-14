@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -13,7 +14,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { Observable } from 'rxjs';
+import { catchError, EMPTY, mergeMap, Observable } from 'rxjs';
 import { CatSighting } from './catSighting.entity';
 import { SightingsService } from './sightings.service';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
@@ -39,7 +40,16 @@ export class SightingsController {
   @ApiParam({ name: 'id', description: 'The id of the sighting to query' })
   @Get('/:id')
   getSighting(@Param('id', ParseIntPipe) id: number): Observable<CatSighting> {
-    return this.sightingsService.getSighting(id);
+    return this.sightingsService.getSighting(id).pipe(
+      catchError(() => EMPTY),
+      mergeMap(async (val) => {
+        if (val) {
+          return val;
+        } else {
+          throw new NotFoundException('Sighting not found');
+        }
+      }),
+    );
   }
 
   @ApiCreatedResponse({

@@ -1,3 +1,4 @@
+import { Point } from 'geojson';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CatSighting } from './catSighting.entity';
@@ -17,14 +18,23 @@ export class SightingsService {
   }
 
   getSighting(id: number): Observable<CatSighting> {
-    return from(this.sightingsRepository.findOne(id, { relations: ['cat'] }));
+    return from(this.sightingsRepository.findOne(id));
   }
 
   createSighting(
     createSightingDto: CreateSightingDto,
   ): Observable<CatSighting> {
+    const { latlng, ...sightings } = createSightingDto;
+
+    const [lat, lng] = latlng.split(',');
+    const location: Point = {
+      type: 'Point',
+      coordinates: [lat, lng].map(parseFloat),
+    };
+
     const sighting = this.sightingsRepository.create({
-      ...createSightingDto,
+      ...sightings,
+      location,
     });
     return from(this.sightingsRepository.save(sighting));
   }

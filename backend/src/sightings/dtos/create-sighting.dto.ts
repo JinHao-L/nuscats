@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
+
 import { SightingType } from './../catSighting.entity';
 
 export class CreateSightingDto {
@@ -27,9 +28,10 @@ export class CreateSightingDto {
 
   @ApiProperty({
     description: 'Location of sighting',
+    example: '85.3446311,85.2100893',
   })
   @IsLatLong()
-  location: string;
+  latlng: string;
 
   @ApiProperty({
     description: 'Sighting type',
