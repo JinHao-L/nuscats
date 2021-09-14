@@ -1,28 +1,42 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AwsSdkModule } from 'nest-aws-sdk';
+import { S3 } from 'aws-sdk';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
-import {
-  DatabaseConfigService,
-  databaseConfig,
-} from './config/database.config';
-import validationSchema from './config/config.schema';
 import { SightingsModule } from './sightings/sightings.module';
+import { DatabaseConfigService } from './config/database.config';
+import { UploadsModule } from './uploads/uploads.module';
+import { S3ConfigService } from './config/s3.config';
+import { AppConfigModule } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [databaseConfig],
-      validationSchema: validationSchema,
-    }),
+    AppConfigModule,
     CatsModule,
+    AuthModule,
+    UsersModule,
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AppConfigModule],
       useClass: DatabaseConfigService,
     }),
     SightingsModule,
+    UploadsModule,
+    AwsSdkModule.forRootAsync({
+      defaultServiceOptions: {
+        useFactory: ({ values }: S3ConfigService) => ({
+          ...values,
+          s3ForcePathStyle: true,
+        }),
+        imports: [AppConfigModule],
+        inject: [S3ConfigService],
+      },
+      services: [S3],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

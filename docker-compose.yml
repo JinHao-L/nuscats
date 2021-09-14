@@ -1,10 +1,32 @@
 # For local development purposes only!
 version: '3.8'
 services:
+  s3:
+    image: minio/minio
+    volumes: 
+      - s3:/data
+    command: server /data
+    network_mode: host
+    environment: 
+      - MINIO_ACCESS_KEY=access_key
+      - MINIO_SECRET_KEY=secret_key
+  # Creates buckets and sets policy for viewing objects
+  setup-s3:
+    image: minio/mc
+    depends_on: 
+      - s3
+    network_mode: host
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add s3 http://localhost:9000 access_key secret_key;
+      /usr/bin/mc rm -r --force s3/nuscats;
+      /usr/bin/mc mb s3/nuscats;
+      /usr/bin/mc policy set download s3/nuscats;
+      exit 0;
+      "
   postgres:
     image: postgres
-    ports: 
-      - 5432:5432
+    network_mode: host
     environment: 
       - POSTGRES_PASSWORD=postgres
     volumes: 
@@ -13,8 +35,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-    ports: 
-      - 3000:3000
+    network_mode: host
     volumes: 
       - /app/node_modules
       - /app/frontend/node_modules
@@ -25,13 +46,25 @@ services:
       dockerfile: backend/Dockerfile
     depends_on: 
       - postgres
+      - s3
+      - setup-s3
     environment: 
-      - DB_HOST=postgres
+      # Database Configuration
+      - DB_HOST=localhost
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       - DB_SYNCHRONIZE=true
-    ports:
-      - 3001:3001
+      # JWT Configuration
+      - JWT_ACCESS_TOKEN_SECRET=accSecret
+      - JWT_REFRESH_TOKEN_SECRET=refSecret
+      # Object Storage Configuration
+      - AWS_REGION=ap-southeast-1
+      - AWS_S3_ENDPOINT=http://localhost:9000
+      - AWS_ACCESS_KEY_ID=access_key
+      - AWS_SECRET_ACCESS_KEY=secret_key
+      - AWS_S3_SIGNATURE_VERSION=v4
+      - AWS_S3_BUCKET_NAME=nuscats
+    network_mode: host
     volumes: 
       - /app/node_modules
       - /app/backend/node_modules
@@ -39,4 +72,5 @@ services:
 
 
 volumes: 
+  s3:
   postgres:
