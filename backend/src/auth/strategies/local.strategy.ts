@@ -8,15 +8,18 @@ import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super();
+    super({
+      usernameField: 'email',
+      usernameQueryFields: ['email'],
+    });
   }
 
-  async validate(username: string, password: string): Promise<UserPrincipal> {
+  async validate(email: string, password: string): Promise<UserPrincipal> {
     const user: UserPrincipal = await lastValueFrom(
-      this.authService.validateLogin(username, password),
+      this.authService.validateLogin(email, password),
     );
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Wrong email or password');
     }
     return user;
   }

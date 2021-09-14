@@ -21,6 +21,10 @@ export class UsersService {
     return from(this.userRepository.findOne({ uuid }));
   }
 
+  findByEmail(email: string): Observable<User> {
+    return from(this.userRepository.findOne({ email }));
+  }
+
   doesUsernameExist(username: string): Observable<boolean> {
     return from(
       this.userRepository.findOne({ username }).then((user) => !!user),

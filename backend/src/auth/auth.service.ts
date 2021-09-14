@@ -25,10 +25,10 @@ export class AuthService {
   ) {}
 
   /**
-   * Check login using username and password
+   * Check login using email and password
    */
-  validateLogin(username: string, pass: string): Observable<UserPrincipal> {
-    return this.usersService.findByUsername(username).pipe(
+  validateLogin(email: string, pass: string): Observable<UserPrincipal> {
+    return this.usersService.findByEmail(email).pipe(
       // check password
       mergeMap((user) => {
         if (user && user.password_hash) {
@@ -44,13 +44,13 @@ export class AuthService {
                 return userObj;
               } else {
                 // password does not match
-                throw new UnauthorizedException('Wrong username or password');
+                throw new UnauthorizedException('Wrong email or password');
               }
             }),
           );
         }
         // username not found
-        throw new UnauthorizedException('Wrong username or password');
+        throw new UnauthorizedException('Wrong email or password');
       }),
     );
   }

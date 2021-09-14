@@ -9,7 +9,6 @@ import { map, Observable } from 'rxjs';
 import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
 import {
   ApiTags,
-  ApiForbiddenResponse,
   ApiCreatedResponse,
   ApiBody,
   ApiOkResponse,
@@ -24,17 +23,17 @@ import { LoginUserDto } from 'src/users/dtos/login-user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @ApiBody({
-    type: LoginUserDto,
-  })
   @ApiCreatedResponse({
     description: 'Successfully logged in',
     type: UserPrincipal,
   })
-  @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
+  @ApiUnauthorizedResponse({ description: 'Wrong email or password' })
   @UseGuards(LoginAuthGuard)
   @Post('/login')
-  login(@Req() req: Request): Observable<UserPrincipal> {
+  login(
+    @Req() req: Request,
+    @Body() _loginUserDto: LoginUserDto,
+  ): Observable<UserPrincipal> {
     const user = req.user as UserPrincipal;
 
     const accessTokenCookie = this.authService.getJwtAccessTokenCookie(user);
