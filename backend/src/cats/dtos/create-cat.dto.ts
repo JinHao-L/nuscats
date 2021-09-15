@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUrl,
 } from 'class-validator';
 import { UniversityZone } from '@api/cats';
 
@@ -38,6 +39,14 @@ export class CreateCatDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  /**
+   * An image of the cat
+   * @example 'https://picsum.photos/200'
+   */
+  @IsUrl()
+  @IsNotEmpty()
+  image: string;
 
   /**
    * The university zone that the cat belongs to

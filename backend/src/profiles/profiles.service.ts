@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from './profile.entity';
 import { from, map, mergeMap, Observable } from 'rxjs';
+import { User } from '@api/users';
 
 @Injectable()
 export class ProfilesService {
@@ -13,18 +14,15 @@ export class ProfilesService {
     private profileRepository: Repository<Profile>,
   ) {}
 
-  create(
-    createProfileDto: CreateProfileDto,
-    uuid: string,
-  ): Observable<Profile> {
-    return from(this.profileRepository.findOne({ user: uuid })).pipe(
+  create(createProfileDto: CreateProfileDto, user: User): Observable<Profile> {
+    return from(this.profileRepository.findOne({ user: user })).pipe(
       map((existingProfile) => {
         if (existingProfile) {
           throw new ConflictException('Profile already exists');
         } else {
           return this.profileRepository.create({
             ...createProfileDto,
-            user: uuid,
+            user: user,
           });
         }
       }),
@@ -38,7 +36,10 @@ export class ProfilesService {
 
   findOne(uuid: string): Observable<Profile> {
     return from(
-      this.profileRepository.findOne({ user: uuid }, { relations: ['user'] }),
+      this.profileRepository.findOne(
+        { user: { uuid } },
+        { relations: ['user'] },
+      ),
     );
   }
 
@@ -47,7 +48,10 @@ export class ProfilesService {
     updateProfileDto: UpdateProfileDto,
   ): Observable<Profile> {
     return from(
-      this.profileRepository.update({ user: uuid }, { ...updateProfileDto }),
+      this.profileRepository.update(
+        { user: { uuid } },
+        { ...updateProfileDto },
+      ),
     ).pipe(mergeMap(() => this.findOne(uuid)));
   }
 

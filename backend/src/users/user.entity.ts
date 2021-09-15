@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +12,7 @@ import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
 
 import { User as IUser, RoleType } from '@api/users';
+import { Profile } from 'src/profiles/profile.entity';
 
 @Entity()
 export class User implements IUser {
@@ -43,6 +45,9 @@ export class User implements IUser {
     enum: RoleType,
   })
   roles: RoleType[];
+
+  @OneToOne((type) => Profile, (profile) => profile.user)
+  profile?: Profile;
 
   @Exclude()
   @ApiHideProperty()
