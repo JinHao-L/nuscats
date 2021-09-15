@@ -6,12 +6,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { UsersService } from '../../users/users.service';
-import {
-  getUserPrincipal,
-  UserPrincipal,
-} from '../interface/user-principal.interface';
 import { JwtConfigService } from './../../config/jwt.config';
 import { TokenPayload } from '../interface/token-payload.interface';
+import { User } from '../../users/user.entity';
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
@@ -33,7 +30,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: Request, payload: TokenPayload): Promise<UserPrincipal> {
+  async validate(req: Request, payload: TokenPayload): Promise<User> {
     const { sub, username } = payload;
     const refreshToken = req.cookies?.ref;
     const user = await lastValueFrom(this.usersService.findByUuid(sub));
@@ -47,6 +44,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
       throw new UnauthorizedException();
     }
 
-    return getUserPrincipal(user);
+    return user;
   }
 }

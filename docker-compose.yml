@@ -1,12 +1,18 @@
 # For local development purposes only!
 version: '3.8'
 services:
+  proxy:
+    build: 
+      context: ./proxy
+    ports: 
+      - 9000:80
+    depends_on: 
+      - s3
   s3:
     image: minio/minio
     volumes: 
       - s3:/data
     command: server /data
-    network_mode: host
     environment: 
       - MINIO_ACCESS_KEY=access_key
       - MINIO_SECRET_KEY=secret_key
@@ -15,10 +21,9 @@ services:
     image: minio/mc
     depends_on: 
       - s3
-    network_mode: host
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add s3 http://localhost:9000 access_key secret_key;
+      /usr/bin/mc config host add s3 http://s3:9000 access_key secret_key;
       /usr/bin/mc rm -r --force s3/nuscats;
       /usr/bin/mc mb s3/nuscats;
       /usr/bin/mc policy set download s3/nuscats;
@@ -26,20 +31,22 @@ services:
       "
   postgres:
     image: postgis/postgis
-    network_mode: host
     environment: 
       - POSTGRES_PASSWORD=postgres
     volumes: 
       - postgres:/var/lib/postgresql/data
+    ports: 
+      - 5432:5432
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-    network_mode: host
     volumes: 
       - /app/node_modules
       - /app/frontend/node_modules
       - .:/app
+    ports: 
+      - 3000:3000
   backend:
     build:
       context: .
@@ -50,7 +57,7 @@ services:
       - setup-s3
     environment: 
       # Database Configuration
-      - DB_HOST=localhost
+      - DB_HOST=postgres
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       - DB_SYNCHRONIZE=true
@@ -64,7 +71,8 @@ services:
       - AWS_SECRET_ACCESS_KEY=secret_key
       - AWS_S3_SIGNATURE_VERSION=v4
       - AWS_S3_BUCKET_NAME=nuscats
-    network_mode: host
+    ports: 
+      - 3001:3001
     volumes: 
       - /app/node_modules
       - /app/backend/node_modules

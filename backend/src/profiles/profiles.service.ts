@@ -3,7 +3,6 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserPrincipal } from './../auth/interface/user-principal.interface';
 import { Profile } from './profile.entity';
 import { from, map, mergeMap, Observable } from 'rxjs';
 
@@ -16,16 +15,16 @@ export class ProfilesService {
 
   create(
     createProfileDto: CreateProfileDto,
-    user: UserPrincipal,
+    uuid: string,
   ): Observable<Profile> {
-    return from(this.profileRepository.findOne({ user: user.uuid })).pipe(
+    return from(this.profileRepository.findOne({ user: uuid })).pipe(
       map((existingProfile) => {
         if (existingProfile) {
           throw new ConflictException('Profile already exists');
         } else {
           return this.profileRepository.create({
             ...createProfileDto,
-            user: user.uuid,
+            user: uuid,
           });
         }
       }),

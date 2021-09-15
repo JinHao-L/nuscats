@@ -24,6 +24,9 @@ import { CreateSightingDto } from './dtos/create-sighting.dto';
 export class SightingsController {
   constructor(private sightingsService: SightingsService) {}
 
+  /**
+   * Get all sightings
+   */
   @ApiOkResponse({
     description: 'Successfully get list of sightings',
     type: [CatSighting],
@@ -33,6 +36,9 @@ export class SightingsController {
     return this.sightingsService.listAllSightings();
   }
 
+  /**
+   * Get a cat sighting by post id
+   */
   @ApiOkResponse({
     description: 'Successfully get list of sightings',
     type: [CatSighting],
@@ -52,6 +58,9 @@ export class SightingsController {
     );
   }
 
+  /**
+   * Create a new cat sighting
+   */
   @ApiCreatedResponse({
     description: 'Successfully created new sighting',
     type: CatSighting,
@@ -63,6 +72,9 @@ export class SightingsController {
     return this.sightingsService.createSighting(createSightingDto);
   }
 
+  /**
+   * Update a cat sighting
+   */
   @ApiOkResponse({
     description: 'Successfully updated sighting',
     type: CatSighting,

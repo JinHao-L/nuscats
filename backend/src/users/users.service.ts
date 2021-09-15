@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable, from, catchError, of } from 'rxjs';
 import { Repository } from 'typeorm';
 
+import { RoleType } from '@api/users';
 import { User } from './user.entity';
-import { RoleType } from '../shared/enum/role-type.enum';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +19,10 @@ export class UsersService {
 
   findByUuid(uuid: string): Observable<User> {
     return from(this.userRepository.findOne({ uuid }));
+  }
+
+  findByEmail(email: string): Observable<User> {
+    return from(this.userRepository.findOne({ email }));
   }
 
   doesUsernameExist(username: string): Observable<boolean> {
@@ -36,7 +40,7 @@ export class UsersService {
   ): Observable<User> {
     const newUser = this.userRepository.create({
       ...user,
-      roles: RoleType.User,
+      roles: [RoleType.User],
     });
     return from(this.userRepository.save(newUser));
   }

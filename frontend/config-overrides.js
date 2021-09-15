@@ -1,4 +1,4 @@
-const { addPostcssPlugins, removeModuleScopePlugin, override, babelInclude } = require("customize-cra");
+const { addPostcssPlugins, removeModuleScopePlugin, override, babelInclude, addWebpackAlias } = require("customize-cra");
 const path = require("path");
 
 module.exports = override(
@@ -6,5 +6,8 @@ module.exports = override(
     addPostcssPlugins([
         require("tailwindcss"), require("autoprefixer")
     ]),
-    babelInclude([path.resolve("src"), path.resolve("../backend")])
+    addWebpackAlias({
+        "@api": path.resolve("../api/src")
+    }),
+    babelInclude([path.resolve("src"), path.resolve("../api")])
 );

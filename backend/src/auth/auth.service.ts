@@ -9,12 +9,9 @@ import {
 } from '@nestjs/common';
 import { map, mergeMap, Observable, from } from 'rxjs';
 
-import {
-  getUserPrincipal,
-  UserPrincipal,
-} from './interface/user-principal.interface';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -25,37 +22,37 @@ export class AuthService {
   ) {}
 
   /**
-   * Check login using username and password
+   * Check login using email and password
    */
-  validateLogin(username: string, pass: string): Observable<UserPrincipal> {
-    return this.usersService.findByUsername(username).pipe(
+  validateLogin(email: string, pass: string): Observable<User> {
+    return this.usersService.findByEmail(email).pipe(
       // check password
       mergeMap((user) => {
         if (user && user.password_hash) {
           return from(bcrypt.compare(pass, user.password_hash)).pipe(
             map((isMatch) => {
               if (isMatch) {
-                const userObj: UserPrincipal = {
+                const userObj = {
                   uuid: user.uuid,
                   username: user.username,
                   email: user.email,
                   roles: user.roles,
-                };
+                } as User;
                 return userObj;
               } else {
                 // password does not match
-                throw new UnauthorizedException('Wrong username or password');
+                throw new UnauthorizedException('Wrong email or password');
               }
             }),
           );
         }
         // username not found
-        throw new UnauthorizedException('Wrong username or password');
+        throw new UnauthorizedException('Wrong email or password');
       }),
     );
   }
 
-  getJwtAccessTokenCookie(user: UserPrincipal) {
+  getJwtAccessTokenCookie(user: User) {
     const payload: TokenPayload = {
       username: user.username,
       sub: user.uuid,
@@ -69,7 +66,7 @@ export class AuthService {
     return { cookie, token };
   }
 
-  getJwtRefreshTokenCookie(user: UserPrincipal) {
+  getJwtRefreshTokenCookie(user: User) {
     const payload: TokenPayload = {
       username: user.username,
       sub: user.uuid,
@@ -90,10 +87,7 @@ export class AuthService {
     return [unsetRefreshCookie, unsetAccessCookie];
   }
 
-  saveRefreshToken(
-    refreshToken: string,
-    user: UserPrincipal,
-  ): Observable<boolean> {
+  saveRefreshToken(refreshToken: string, user: User): Observable<boolean> {
     return from(bcrypt.hash(refreshToken, 12)).pipe(
       mergeMap((hashedToken) =>
         this.usersService.setRefreshToken(hashedToken, user.uuid),
@@ -101,11 +95,11 @@ export class AuthService {
     );
   }
 
-  deleteRefreshToken(user: UserPrincipal): Observable<boolean> {
+  deleteRefreshToken(user: User): Observable<boolean> {
     return this.usersService.removeRefreshToken(user.uuid);
   }
 
-  signup(createUserDto: CreateUserDto): Observable<UserPrincipal> {
+  signup(createUserDto: CreateUserDto): Observable<User> {
     return this.usersService.doesUsernameExist(createUserDto.username).pipe(
       mergeMap((exists) => {
         if (exists) {
@@ -127,7 +121,6 @@ export class AuthService {
                 password_hash,
               });
             }),
-            map((user) => getUserPrincipal(user)),
           );
         }
       }),

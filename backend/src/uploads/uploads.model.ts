@@ -1,9 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { UploadResponse as IUploadResponse } from '@api/uploads';
 
-export class UploadResponse {
-  @ApiProperty()
+export class UploadResponse implements IUploadResponse {
   signedUrl: string;
 
-  @ApiProperty()
   imageUrl: string;
 }
