@@ -11,16 +11,17 @@ const CatCard: React.FC<CatCardProps> = ({ cat }) => {
 
     return (
         <IonRouterLink routerLink={`/cats/${cat.id}`}>
-            <div className="flex justify-between px-4 mx-5 mt-5 bg-gray-200 shadow-xl rounded-2xl">
+            <div className="flex justify-between px-4 mx-5 mt-5 shadow-xl bg-secondary-100 rounded-2xl bg-opacity-90">
                 <div className="flex-shrink-0 mb-4 mt-7">
                     <img className="object-cover w-24 h-24 rounded-full" src={placerHolderCatImgUrl} alt="very cute cat"></img>
                 </div>
                 <div className="flex flex-col justify-start flex-auto mt-5 mb-4 ml-4">
                     <p className="text-xl font-semibold text-gray-700">{cat.name}</p>
                     <div className="flex items-center mt-1">
-                        <IonIcon color="primary" icon={locationOutline}></IonIcon>
-                        <p className="ml-1 text-sm font-semibold text-blue-500">Tembusu</p>
+                        <IonIcon color="secondary" icon={locationOutline}></IonIcon>
+                        <p className="ml-1 text-sm font-semibold text-secondary-500">Tembusu</p>
                     </div>
+                    <p className="mt-2 text-sm font-medium text-gray-600 line-clamp-2">{cat.description}</p>
                 </div>
             </div>
         </IonRouterLink>

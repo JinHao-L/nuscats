@@ -13,7 +13,31 @@ import HomeTab from './HomeTab';
 import CatsTab from './CatsTab';
 import Tab3 from './Tab3';
 
+interface TabInfo {
+    href: string
+    label: string
+    icon: string
+}
+
 const Tabs: React.FC = () => {
+    const tabs: TabInfo[] = [
+        {
+            href: "/home",
+            label: "Home",
+            icon: triangle
+        },
+        {
+            href: "/cats",
+            label: "Cats",
+            icon: ellipse
+        },
+        {
+            href: "/tab3",
+            label: "Tab 3",
+            icon: square
+        }
+    ]
+
     return (
         <IonPage>
             <IonTabs>
@@ -27,18 +51,12 @@ const Tabs: React.FC = () => {
                 </IonRouterOutlet>
 
                 <IonTabBar slot="bottom">
-                    <IonTabButton tab="tab1" href="/home">
-                        <IonIcon icon={triangle} />
-                        <IonLabel>Home</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="tab2" href="/cats">
-                        <IonIcon icon={ellipse} />
-                        <IonLabel>Cats</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="tab3" href="/tab3">
-                        <IonIcon icon={square} />
-                        <IonLabel>Tab 3</IonLabel>
-                    </IonTabButton>
+                    {tabs.map((tab, idx) =>
+                        <IonTabButton key={idx} tab={`tab-${idx}`} href={tab.href}>
+                            <IonIcon icon={tab.icon} />
+                            <IonLabel className="font-semibold tracking-wide" >{tab.label}</IonLabel>
+                        </IonTabButton>
+                    )}
                 </IonTabBar>
 
             </IonTabs>

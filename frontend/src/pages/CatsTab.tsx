@@ -50,7 +50,7 @@ const CatsTab: React.FC = () => {
         </IonHeader>
         <div>
           {cats.map(cat =>
-            <div key={cat.id} className="mt-7">
+            <div key={cat.id} className="mt-6">
               <CatCard cat={cat} ></CatCard>
             </div>)}
         </div>

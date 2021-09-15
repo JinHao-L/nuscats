@@ -8,7 +8,8 @@ import {
 import { close } from "ionicons/icons"
 import SwiperCore, { Pagination } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Cat, UniversityZone } from "../../../backend/src/cats/cat.entity"
+import { makeCat, UniversityZone } from "@api/cats"
+import type { Cat } from "@api/cats"
 
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/components/pagination/pagination.min.css'
@@ -20,7 +21,7 @@ interface CatDetailsProps {
 }
 
 const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
-    cat = cat ? cat : new Cat({
+    cat = cat ? cat : makeCat({
         id: 1,
         name: "Garfield",
         description: "I am a strong and healthy boy! I have black and white fur and I love to sleep :)",
@@ -39,13 +40,13 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
                 </IonFab>
                 <img src={placeholderCatImgUrl}
                     alt="extremely cute cat"
-                    className="object-cover object-center absolute top-0 left-0 z-0"
+                    className="absolute top-0 left-0 z-0 object-cover object-center"
                 />
 
-                <div className="h-full w-full mt-20 relative snap overflow-auto">
-                    <div className="h-1/3 w-full snap-start" />
+                <div className="relative w-full h-full mt-20 overflow-auto snap">
+                    <div className="w-full h-1/3 snap-start" />
                     <div className="h-full bg-gray-100 rounded-3xl snap-start">
-                        <div className="py-4 px-3 flex flex-col items-center">
+                        <div className="flex flex-col items-center px-3 py-4">
                             <div className="text-2xl font-semibold font-gray-900">{cat.name}</div>
                             <div className="h-0.5 w-full my-4 bg-gray-200 rounded-md" />
                         </div>
@@ -62,13 +63,13 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
                             <div className="swiper-pagination" />
                             <div>
                                 <SwiperSlide>
-                                    <div className="min-h-36 w-full px-4 mb-8">{cat.description}</div>
+                                    <div className="w-full px-4 mb-8 min-h-36">{cat.description}</div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="h-full w-full">HELLO</div>
+                                    <div className="w-full h-full">HELLO</div>
                                 </SwiperSlide>
                                 <SwiperSlide>
-                                    <div className="h-full w-full">HELLO</div>
+                                    <div className="w-full h-full">HELLO</div>
                                 </SwiperSlide>
                             </div>
                         </Swiper>
