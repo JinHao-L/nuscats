@@ -1,34 +1,39 @@
-import {useState, useEffect, useRef} from "react";
-import { Geolocation, Position, PositionOptions } from "@capacitor/geolocation";
+import { useState, useEffect, useRef } from 'react';
+import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 
-export type Coords = Position["coords"]
+export type Coords = Position['coords'];
 
 const options: PositionOptions = {
-    enableHighAccuracy: false,
-    timeout: 10000,
-    maximumAge: 0
-}
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 1,
+};
 
 const useGeolocation = (): Coords | undefined => {
-    const idRef = useRef<string>()
-    const [coords, setCoords] = useState<Coords | undefined>();
+  const idRef = useRef<string>();
+  const [coords, setCoords] = useState<Coords | undefined>();
 
-    const setUpWatch = async () => {
-        // This might drain battery so maybe change to polling
-        const id = await Geolocation.watchPosition(options, (pos) => setCoords(pos?.coords));
-        idRef.current = id
-    }
+  const setUpWatch = async () => {
+    // This might drain battery so maybe change to polling
+    const id = await Geolocation.watchPosition(options, (pos) =>
+      setCoords(pos?.coords),
+    );
+    idRef.current = id;
+  };
 
-    useEffect(() => {
-        setUpWatch()
-        return () => {
-            if (idRef.current) Geolocation.clearWatch({id: idRef.current})
-        }
-    }, [])
+  useEffect(() => {
+    setUpWatch();
+    return () => {
+      if (idRef.current) Geolocation.clearWatch({ id: idRef.current });
+    };
+  }, []);
 
-    return coords
-}
+  return coords;
+};
 
-export default useGeolocation
+export default useGeolocation;
 
-export const getCenter = (c: Coords): [number, number] => [c.longitude, c.latitude]
+export const getCenter = (c: Coords): [number, number] => [
+  c.longitude,
+  c.latitude,
+];

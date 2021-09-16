@@ -1,7 +1,11 @@
 import { IonFab, IonFabButton, IonIcon } from '@ionic/react';
 import { camera } from 'ionicons/icons';
 
-const CameraFab = () => {
+type CameraFabProps = {
+  onClick: () => void;
+};
+
+const CameraFab = ({ onClick }: CameraFabProps) => {
   return (
     <IonFab
       className="mb-5 mr-5"
@@ -9,7 +13,7 @@ const CameraFab = () => {
       vertical="bottom"
       horizontal="end"
     >
-      <IonFabButton>
+      <IonFabButton onClick={onClick}>
         <IonIcon icon={camera} />
       </IonFabButton>
     </IonFab>
