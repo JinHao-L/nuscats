@@ -1,7 +1,8 @@
 import { User } from './users';
 
 export interface Profile {
-  user: string | User; // uuid reference to user
+  uuid: string; // uuid reference to user
+  user?: User;
   first_name: string;
   last_name: string;
   profile_pic: string;

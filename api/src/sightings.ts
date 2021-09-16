@@ -9,7 +9,8 @@ export enum SightingType {
 export class CatSighting {
   id: number;
   image: string; // url to image
-  cat?: number | Cat; // id reference to cat
+  catId?: number; // id reference to cat
+  cat?: Cat;
   location: Point;
   type: SightingType;
   description: string;

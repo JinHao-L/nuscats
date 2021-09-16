@@ -20,4 +20,7 @@ export default Joi.object({
   JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().default('1200'),
   JWT_REFRESH_TOKEN_SECRET: Joi.string().required(), // in seconds
   JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().default('1209600'),
+
+  SEEDER_SHOULD_SEED: Joi.boolean().default(false),
+  SEEDER_SHOULD_REFRESH: Joi.boolean().default(false),
 });

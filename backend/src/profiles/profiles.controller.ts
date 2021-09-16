@@ -52,7 +52,7 @@ export class ProfilesController {
     @Usr() user: User,
     @Body() createProfileDto: CreateProfileDto,
   ): Observable<Profile> {
-    return this.profilesService.create(createProfileDto, user.uuid);
+    return this.profilesService.create(createProfileDto, user);
   }
 
   /**

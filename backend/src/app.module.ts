@@ -15,6 +15,8 @@ import { AppConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { SeederModule } from './seeders/seeder.module';
+import { SeederService } from './seeders/seeder.service';
 
 @Module({
   imports: [
@@ -23,12 +25,12 @@ import { ProfilesModule } from './profiles/profiles.module';
     AuthModule,
     UsersModule,
     ProfilesModule,
+    SightingsModule,
+    UploadsModule,
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       useClass: DatabaseConfigService,
     }),
-    SightingsModule,
-    UploadsModule,
     AwsSdkModule.forRootAsync({
       defaultServiceOptions: {
         useFactory: ({ values }: S3ConfigService) => ({
@@ -40,6 +42,7 @@ import { ProfilesModule } from './profiles/profiles.module';
       },
       services: [S3],
     }),
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],
