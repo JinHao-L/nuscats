@@ -55,6 +55,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/line-clamp'),
-    require('tailwindcss-scroll-snap')
+    require('@tailwindcss/aspect-ratio'),
+    require('tailwindcss-scroll-snap'),
   ],
 }

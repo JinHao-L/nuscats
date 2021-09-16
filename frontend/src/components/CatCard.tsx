@@ -7,7 +7,7 @@ interface CatCardProps {
 }
 
 const CatCard: React.FC<CatCardProps> = ({ cat }) => {
-    const placerHolderCatImgUrl = "https://images.unsplash.com/photo-1586042091284-bd35c8c1d917?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    const placerHolderCatImgUrl = `https://placekitten.com/20${cat.id}/21${cat.id}`
 
     return (
         <IonRouterLink routerLink={`/cats/${cat.id}`}>
