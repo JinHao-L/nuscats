@@ -36,7 +36,10 @@ import store from './app/store';
 import { Provider } from 'react-redux';
 
 /* Tailwind Setup */
-import "tailwindcss/tailwind.css"
+import 'tailwindcss/tailwind.css';
+
+/* MapBox Setup */
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const App: React.FC = () => (
   <Provider store={store}>

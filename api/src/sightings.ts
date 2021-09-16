@@ -6,7 +6,7 @@ export enum SightingType {
   CatSighted = "CatSighted",
 }
 
-export class CatSighting {
+export interface CatSighting {
   id: number;
   image: string; // url to image
   catId?: number; // id reference to cat

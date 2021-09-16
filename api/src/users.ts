@@ -5,7 +5,7 @@ export enum RoleType {
   User = "user",
 }
 
-export class User {
+export interface User {
   id: number;
   uuid: string;
   email: string;
