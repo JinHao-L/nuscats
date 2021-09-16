@@ -70,7 +70,7 @@ const HomeTab: React.FC = () => {
         </Map>
         <CameraFab onClick={newSighting} />
         <LocationFab
-          disabled={isCentered && Boolean(coords)}
+          disabled={isCentered || !coords}
           onClick={centerMapToUser}
         />
         {photo && (

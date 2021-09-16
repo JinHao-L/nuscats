@@ -3,8 +3,7 @@ import ReactMapboxGl from 'react-mapbox-gl';
 import { State } from 'react-mapbox-gl/lib/map';
 
 const Mapbox = ReactMapboxGl({
-  accessToken:
-    'pk.eyJ1IjoidGFua2FuZ2xpYW5nIiwiYSI6ImNrczJ2cmk3djFhaXgzMHFnczN2c2gwZDEifQ.C7B8A0Y-MhBdS98zxnDbeg',
+  accessToken: process.env.REACT_APP_MAPBOX_TOKEN as string,
 });
 
 type MapSettings = {

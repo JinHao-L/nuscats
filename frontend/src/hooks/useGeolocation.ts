@@ -6,7 +6,7 @@ export type Coords = Position['coords'];
 const options: PositionOptions = {
   enableHighAccuracy: true,
   timeout: 5000,
-  maximumAge: 1,
+  maximumAge: 5000,
 };
 
 const useGeolocation = (): Coords | undefined => {
@@ -15,9 +15,9 @@ const useGeolocation = (): Coords | undefined => {
 
   const setUpWatch = async () => {
     // This might drain battery so maybe change to polling
-    const id = await Geolocation.watchPosition(options, (pos) =>
-      setCoords(pos?.coords),
-    );
+    const id = await Geolocation.watchPosition(options, (pos) => {
+      setCoords(pos?.coords);
+    });
     idRef.current = id;
   };
 
