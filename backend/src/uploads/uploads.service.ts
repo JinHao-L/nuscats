@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 
 const FIVE_MINUTES_IN_SECONDS = 300;
 const FORMAT_DATE = 'YYYY-MM-DD';
+const IMAGE_TYPE = '.png';
 
 interface SignedUrlParams extends Omit<PutObjectRequest, 'Expires'> {
   Expires: number;
@@ -26,7 +27,7 @@ export class UploadsService {
   }
 
   createCatUploadLink(catId: string): UploadResponse {
-    const key = `cats/${catId}`;
+    const key = `cats/${catId}${IMAGE_TYPE}`;
     return {
       signedUrl: this.getSignedUrl(key),
       imageUrl: this.getImageUrl(key),
@@ -34,7 +35,7 @@ export class UploadsService {
   }
 
   createUserUploadLink(userId: string): UploadResponse {
-    const key = `users/${userId}`;
+    const key = `users/${userId}${IMAGE_TYPE}`;
     return {
       signedUrl: this.getSignedUrl(key),
       imageUrl: this.getImageUrl(key),
@@ -43,7 +44,7 @@ export class UploadsService {
 
   createSightingUploadLink(): UploadResponse {
     const date = moment(new Date()).format(FORMAT_DATE);
-    const key = `sightings/${date}/${uuid()}`;
+    const key = `sightings/${date}/${uuid()}${IMAGE_TYPE}`;
 
     return {
       signedUrl: this.getSignedUrl(key),
@@ -63,7 +64,7 @@ export class UploadsService {
     return {
       Bucket: this.bucketName,
       Expires: FIVE_MINUTES_IN_SECONDS,
-      ContentType: 'image',
+      ContentType: 'image/png',
       Key,
     };
   }

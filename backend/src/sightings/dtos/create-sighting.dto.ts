@@ -22,7 +22,7 @@ export class CreateSightingDto {
    */
   @IsInt()
   @IsOptional()
-  cat?: number;
+  catId?: number;
 
   /**
    * The (lat, lng) location of the sighting

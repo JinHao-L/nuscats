@@ -6,12 +6,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  JoinColumn,
 } from 'typeorm';
 import { Point } from 'geojson';
 import { IsUrl } from 'class-validator';
 
 import { Cat } from '../cats/cats.entity';
 import { SightingType, CatSighting as ICatSighting } from '@api/sightings';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class CatSighting implements ICatSighting {
@@ -22,8 +24,15 @@ export class CatSighting implements ICatSighting {
   @Column('varchar')
   image: string;
 
-  @ManyToOne(() => Cat, (cat: Cat) => cat.id)
-  cat?: number;
+  @Column('number', { nullable: true })
+  catId?: number;
+
+  @ManyToOne(() => Cat, (cat: Cat) => cat.sightings, {
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'catId', referencedColumnName: 'id' })
+  cat?: Cat;
 
   /**
    * The location of the sighting
@@ -43,6 +52,13 @@ export class CatSighting implements ICatSighting {
     enum: SightingType,
   })
   type: SightingType;
+
+  /**
+   * Used to identify seeded sightings
+   */
+  @Exclude()
+  @Column({ type: 'boolean', default: false })
+  is_seed: boolean;
 
   @Column('varchar')
   description: string;

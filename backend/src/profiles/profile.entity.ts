@@ -13,10 +13,15 @@ import { User } from '../users/user.entity';
 import { Profile as IProfile } from '@api/profiles';
 @Entity()
 export class Profile implements IProfile {
-  @OneToOne((type) => User, { cascade: true })
-  @JoinColumn({ referencedColumnName: 'uuid' })
+  @OneToOne((type) => User, (user) => user.profile, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'uuid', referencedColumnName: 'uuid' })
+  user: User;
+
   @PrimaryColumn()
-  user: string;
+  uuid: string;
 
   @Column('varchar')
   first_name: string;

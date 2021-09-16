@@ -9,13 +9,15 @@ services:
     depends_on: 
       - s3
   s3:
-    image: minio/minio
+    image: minio/minio:latest
     volumes: 
       - s3:/data
-    command: server /data
+    command: server /data --console-address=":9001" 
     environment: 
-      - MINIO_ACCESS_KEY=access_key
-      - MINIO_SECRET_KEY=secret_key
+      - MINIO_ROOT_USER=access_key
+      - MINIO_ROOT_PASSWORD=secret_key
+    ports: 
+      - 9001:9001
   # Creates buckets and sets policy for viewing objects
   setup-s3:
     image: minio/mc
@@ -24,7 +26,6 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add s3 http://s3:9000 access_key secret_key;
-      /usr/bin/mc rm -r --force s3/nuscats;
       /usr/bin/mc mb s3/nuscats;
       /usr/bin/mc policy set download s3/nuscats;
       exit 0;
@@ -71,6 +72,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=secret_key
       - AWS_S3_SIGNATURE_VERSION=v4
       - AWS_S3_BUCKET_NAME=nuscats
+      # Should seed
+      - SEEDER_SHOULD_SEED=true
+      - SEEDER_SHOULD_REFRESH=false
     ports: 
       - 3001:3001
     volumes: 
