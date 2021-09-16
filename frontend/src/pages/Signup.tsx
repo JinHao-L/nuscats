@@ -1,17 +1,17 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
-import { arrowBackOutline } from "ionicons/icons";
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from "@ionic/react";
 
 const Signup: React.FC = () => {
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-					<IonTitle>Signup</IonTitle>
+					<IonButtons slot="start">
+						<IonBackButton />
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<IonIcon icon={arrowBackOutline} size="large" className="ml-3 mt-3" />
-				<div className="mx-5 mb-5 mt-2">
+				<div className="mx-5 mt-5 mb-5 mt-2">
 					<p className="text-3xl font-bold mb-1">Join the awesome cat community</p>
 					<p>Fill in your details to begin</p>
 				</div>

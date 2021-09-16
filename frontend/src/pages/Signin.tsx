@@ -1,17 +1,17 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonPage, IonRouterLink, IonTitle, IonToolbar } from "@ionic/react";
-import { arrowBackOutline } from "ionicons/icons";
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonRouterLink, IonToolbar } from "@ionic/react";
 
 const Signin: React.FC = () => {
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-					<IonTitle>Signup</IonTitle>
+					<IonButtons slot="start">
+						<IonBackButton />
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<IonIcon icon={arrowBackOutline} size="large" className="ml-3 mt-3" />
-				<div className="mx-5 mb-5 mt-2">
+				<div className="mx-5 mb-5 mt-5">
 					<p className="text-3xl font-bold mb-1">Welcome back!</p>
 					<p>NUS cats are waiting for you</p>
 				</div>
