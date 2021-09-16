@@ -16,6 +16,7 @@
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@reduxjs/toolkit": "^1.6.1",
+    "@tailwindcss/aspect-ratio": "^0.2.1",
     "@tailwindcss/line-clamp": "^0.2.1",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
@@ -37,6 +38,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "swiper": "^6.8.4",
     "typescript": "^4.1.3",
     "use-position": "^0.0.8",
     "web-vitals": "^0.2.4",
@@ -85,7 +87,8 @@
     "customize-cra": "^1.0.0",
     "postcss": "^7",
     "react-app-rewired": "^2.1.8",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "tailwindcss-scroll-snap": "^1.1.0"
   },
   "description": "An Ionic project"
 }

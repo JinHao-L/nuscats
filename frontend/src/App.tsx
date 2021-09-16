@@ -1,18 +1,9 @@
-import { Redirect, Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from '@ionic/react';
+import { Route } from 'react-router-dom';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import HomeTab from './pages/HomeTab';
-import CatsTab from './pages/CatsTab';
-import Tab3 from './pages/Tab3';
+import Tabs from 'pages/Tabs';
+import CatDetailPage from 'pages/CatDetailPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,51 +24,27 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import store from './app/store';
-import { Provider } from 'react-redux';
 
 /* Tailwind Setup */
 import 'tailwindcss/tailwind.css';
+import './theme/tailwind.css';
 
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const App: React.FC = () => (
-  <Provider store={store}>
-    <IonApp>
-      <IonReactRouter>
-        <IonTabs>
+const App: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <IonApp>
+        <IonReactRouter>
           <IonRouterOutlet>
-            <Route exact path="/home">
-              <HomeTab />
-            </Route>
-            <Route exact path="/cats">
-              <CatsTab />
-            </Route>
-            <Route path="/tab3">
-              <Tab3 />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
+            <Route path={'/cats/:id'} component={CatDetailPage} />
+            <Route render={() => <Tabs />} />
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="tab1" href="/home">
-              <IonIcon icon={triangle} />
-              <IonLabel>Home</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab2" href="/cats">
-              <IonIcon icon={ellipse} />
-              <IonLabel>Cats</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
-              <IonIcon icon={square} />
-              <IonLabel>Tab 3</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-      </IonReactRouter>
-    </IonApp>
-  </Provider>
-);
+        </IonReactRouter>
+      </IonApp>
+    </Provider>
+  );
+};
 
 export default App;
