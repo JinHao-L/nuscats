@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 
 const Signup: React.FC = () => {
@@ -16,7 +16,7 @@ const Signup: React.FC = () => {
 					<p>Fill in your details to begin</p>
 				</div>
 				<form className="flex flex-col mt-5">
-					<div className="block mx-5 mb-6 bg-gray-200 rounded-xl">
+					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
 						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="email">
 							Email
 						</label>
@@ -26,7 +26,7 @@ const Signup: React.FC = () => {
 							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
 						/>
 					</div>
-					<div className="block mx-5 mb-6 bg-gray-200 rounded-xl">
+					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
 						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="username">
 							Username	
 						</label>
@@ -36,7 +36,7 @@ const Signup: React.FC = () => {
 							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
 						/>
 					</div>
-					<div className="block mx-5 mb-6 bg-gray-200 rounded-xl">
+					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
 						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="password">
 							Password	
 						</label>
@@ -46,7 +46,7 @@ const Signup: React.FC = () => {
 							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
 						/>
 					</div>
-					<div className="block mx-5 mb-6 bg-gray-200 rounded-xl">
+					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
 						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="cfmPassword">
 							Confirm password	
 						</label>
@@ -58,7 +58,7 @@ const Signup: React.FC = () => {
 					</div>
 				</form>
 				<IonButton 
-					className="mx-5 h-12 cursor-pointer text-lg text-white"
+					className="mx-5 h-14 cursor-pointer text-lg text-white"
 					color="primary"
 					expand="block"
 				>
@@ -68,14 +68,14 @@ const Signup: React.FC = () => {
 					or
 				</p>
 				<IonButton
-					className="mx-5 h-12 mb-3 cursor-pointer text-lg"
+					className="mx-5 h-14 mb-3 cursor-pointer text-lg"
 					color="facebook"
 					expand="block"
 				>
 					Connect with Facebook
 				</IonButton>
 				<IonButton
-					className="mx-5 h-12 mb-3 cursor-pointer text-lg text-black"
+					className="mx-5 h-14 mb-3 cursor-pointer text-lg text-black"
 					expand="block"
 					color="white"
 				>

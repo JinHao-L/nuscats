@@ -9,6 +9,8 @@ import HomeTab from './pages/HomeTab';
 import CatsTab from './pages/CatsTab';
 import Tab3 from './pages/Tab3';
 import Signup from './pages/Signup';
+import Signin from './pages/Signin';
+import Landing from './pages/Landing';
 import Tabs from 'pages/Tabs';
 import CatDetailPage from 'pages/CatDetailPage';
 
@@ -52,6 +54,12 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/signup">
               <Signup />
+            </Route>
+            <Route exact path="/signin">
+              <Signin />
+            </Route>
+            <Route exact path="/landing">
+              <Landing />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />
