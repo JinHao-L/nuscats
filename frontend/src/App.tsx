@@ -1,8 +1,5 @@
 import { Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonRouterOutlet,
-} from '@ionic/react';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
 import Tabs from 'pages/Tabs';
@@ -29,7 +26,11 @@ import './theme/variables.css';
 import store from './app/store';
 
 /* Tailwind Setup */
-import "./theme/tailwind.css"
+import 'tailwindcss/tailwind.css';
+import './theme/tailwind.css';
+
+/* MapBox Setup */
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const App: React.FC = () => {
   return (
@@ -37,13 +38,13 @@ const App: React.FC = () => {
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
-            <Route path={"/cats/:id"} component={CatDetailPage} />
+            <Route path={'/cats/:id'} component={CatDetailPage} />
             <Route render={() => <Tabs />} />
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
     </Provider>
   );
-}
+};
 
 export default App;
