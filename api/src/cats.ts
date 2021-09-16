@@ -1,52 +1,52 @@
 import { CatSighting } from "./sightings";
 
 export enum UniversityZone {
-    Computing = "Computing",
-    Arts = "Arts",
-    Engineering = "Engineering",
-    Utown = "Utown",
-    Science = "Science",
+  Computing = "Computing",
+  Arts = "Arts",
+  Engineering = "Engineering",
+  Utown = "Utown",
+  Science = "Science",
 }
 
 export interface Cat {
-    id: number;
-    name: string;
-    neutered: boolean;
-    one_liner: string;
-    description: string;
-    zone: UniversityZone;
-    sightings?: CatSighting[];
-    created_at: Date;
-    updated_at: Date;
+  id: number;
+  name: string;
+  neutered: boolean;
+  one_liner: string;
+  description: string;
+  zone: UniversityZone;
+  sightings?: CatSighting[];
+  created_at: Date;
+  updated_at: Date;
 }
 
 export function makeCat({
-    id,
-    name,
-    neutered = false,
-    one_liner = '',
-    description = '',
-    zone,
-    sightings = [],
+  id,
+  name,
+  neutered = false,
+  one_liner = '',
+  description = '',
+  zone,
+  sightings = [],
 }: {
-    id: number;
-    name: string;
-    neutered?: boolean;
-    one_liner?: string;
-    description?: string;
-    zone: UniversityZone;
-    sightings?: CatSighting[]
+  id: number;
+  name: string;
+  neutered?: boolean;
+  one_liner?: string;
+  description?: string;
+  zone: UniversityZone;
+  sightings?: CatSighting[]
 }): Cat {
 
-    return {
-        id: id,
-        name: name,
-        neutered: neutered,
-        one_liner: one_liner,
-        description: description,
-        zone: zone,
-        sightings: sightings,
-        created_at: new Date(),
-        updated_at: new Date()
-    }
+  return {
+    id: id,
+    name: name,
+    neutered: neutered,
+    one_liner: one_liner,
+    description: description,
+    zone: zone,
+    sightings: sightings,
+    created_at: new Date(),
+    updated_at: new Date()
+  }
 }
