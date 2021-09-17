@@ -1,10 +1,13 @@
-import { Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonRouterOutlet,
-} from '@ionic/react';
+import { Route, Redirect } from 'react-router-dom';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
+import HomeTab from './pages/HomeTab';
+import CatsTab from './pages/CatsTab';
+import Tab3 from './pages/Tab3';
+import Signup from './pages/Signup';
+import Signin from './pages/Signin';
+import Landing from './pages/Landing';
 import Tabs from 'pages/Tabs';
 import CatDetailPage from 'pages/CatDetailPage';
 
@@ -29,6 +32,11 @@ import './theme/variables.css';
 import store from './app/store';
 
 /* Tailwind Setup */
+import 'tailwindcss/tailwind.css';
+import './theme/tailwind.css';
+
+/* MapBox Setup */
+import 'mapbox-gl/dist/mapbox-gl.css';
 import "./theme/tailwind.css"
 
 const App: React.FC = () => {
@@ -37,13 +45,34 @@ const App: React.FC = () => {
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
-            <Route path={"/cats/:id"} component={CatDetailPage} />
+            <Route exact path="/home">
+              <HomeTab />
+            </Route>
+            <Route exact path="/cats">
+              <CatsTab />
+            </Route>
+            <Route path="/tab3">
+              <Tab3 />
+            </Route>
+            <Route exact path="/signup">
+              <Signup />
+            </Route>
+            <Route exact path="/signin">
+              <Signin />
+            </Route>
+            <Route exact path="/landing">
+              <Landing />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
+            <Route path={'/cats/:id'} component={CatDetailPage} />
             <Route render={() => <Tabs />} />
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
     </Provider>
   );
-}
+};
 
 export default App;
