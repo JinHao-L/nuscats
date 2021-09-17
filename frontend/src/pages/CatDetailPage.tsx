@@ -15,10 +15,13 @@ import { makeCat, UniversityZone } from "@api/cats"
 import type { Cat } from "@api/cats"
 import { makeSighting, SightingType } from "@api/sightings"
 import { ConvenientDateTimeFormatOptions } from 'lib/datetime'
+import { ImageGallery, } from 'components/ImageGallery'
+import type { ImageDetail } from 'components/ImageGallery'
 
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
+
 
 interface CatDetailsProps {
     cat: Cat
@@ -57,6 +60,14 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
     const subPages = ["About", "Location", "Photos"]
 
     const placeholderCatImgUrl = "https://images.unsplash.com/photo-1598935888738-cd2622bcd437?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+    const placeholderCatImgGalleryDetails: ImageDetail[] =
+        Array.from({ length: 16 })
+            .map((_, idx) => ({
+                altText: `cat pic ${idx}`,
+                src: `http://placekitten.com/${400 + idx}/${300 + idx}`
+            }))
+
+
 
     return (
         <IonPage>
@@ -106,7 +117,9 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
                                 <CatLocation {...cat} />
                             </SwiperSlide>
                             <SwiperSlide>
-                                <CatPhotos />
+                                <div className="h-cat-profile-content">
+                                    <ImageGallery details={placeholderCatImgGalleryDetails} />
+                                </div>
                             </SwiperSlide>
                         </Swiper>
                     </div>
@@ -172,20 +185,6 @@ const CatLocation: React.FC<CatLocationProps> = ({ sightings }) => {
         : <div className="flex justify-center">
             <p className="mt-16 text-xl font-semibold text-gray-700">No cats sightings 😿</p>
         </div>
-}
-
-const CatPhotos: React.FC = () => {
-    return <div className="w-screen h-cat-profile-content grid grid-cols-3 gap-0.5 px-0.5 py-0.5 border-t border-gray-400 overflow-auto">
-        {Array.from({ length: 15 }).map((_, idx) => {
-            return <div key={idx} className="aspect-w-1 aspect-h-1">
-                <img
-                    className="object-cover"
-                    alt={`cat pic ${idx}`}
-                    src={`http://placekitten.com/${400 + idx}/${300 + idx}`}
-                />
-            </div>
-        })}
-    </div>
 }
 
 export default CatDetailPage
