@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UniversityZone, Cat as ICat } from '@api/cats';
 import { CatSighting } from 'src/sightings/catSighting.entity';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Cat implements ICat {
@@ -32,6 +33,10 @@ export class Cat implements ICat {
   @Column({ type: 'enum', enum: UniversityZone })
   zone: UniversityZone;
 
+  /**
+   * Referential mapping of cats -> sightings
+   */
+  @ApiHideProperty()
   @OneToMany(() => CatSighting, (catSighting) => catSighting.cat)
   sightings?: CatSighting[];
 

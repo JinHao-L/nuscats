@@ -10077,6 +10077,13 @@ nest-aws-sdk@^2.0.0:
   resolved "https://registry.yarnpkg.com/nest-aws-sdk/-/nest-aws-sdk-2.0.0.tgz#b8853f3a219c5b75bbf113a4d980f0e38272be0b"
   integrity sha512-TpvusbIK5jXr20drzBwoY7Cj8bBd00D5k/p8XF4iDToSrG02+oPD5ZL3NDs4wXEJdVlzFLYU/ffa9G3c8qxR5g==
 
+nestjs-typeorm-paginate@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/nestjs-typeorm-paginate/-/nestjs-typeorm-paginate-2.6.2.tgz#a9848b333720e049ed8236ec88c467d34eebb347"
+  integrity sha512-FgPR1vP+/Vurwx9Q9HfnF6P4GfljpXvJ74PR8unVnZKcRN9DYaAi3APndeGAgZKme8tTeVxhPNwoSFSHvc3KZw==
+  dependencies:
+    chalk "^4.1.2"
+
 next-tick@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"

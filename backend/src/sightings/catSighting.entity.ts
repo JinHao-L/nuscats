@@ -1,3 +1,4 @@
+import { Profile } from './../profiles/profile.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -14,6 +15,7 @@ import { IsUrl } from 'class-validator';
 import { Cat } from '../cats/cats.entity';
 import { SightingType, CatSighting as ICatSighting } from '@api/sightings';
 import { Exclude } from 'class-transformer';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity()
 export class CatSighting implements ICatSighting {
@@ -57,11 +59,23 @@ export class CatSighting implements ICatSighting {
    * Used to identify seeded sightings
    */
   @Exclude()
+  @ApiHideProperty()
   @Column({ type: 'boolean', default: false })
   is_seed: boolean;
 
   @Column('varchar')
   description: string;
+
+  @Column('varchar', { nullable: true })
+  ownerId?: string;
+
+  @ManyToOne(() => Profile, (user: Profile) => user.uuid, {
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'ownerId', referencedColumnName: 'uuid' })
+  @ApiHideProperty()
+  owner?: Profile;
 
   @CreateDateColumn()
   created_at: Date;

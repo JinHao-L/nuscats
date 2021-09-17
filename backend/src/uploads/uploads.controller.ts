@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiParam, ApiTags, ApiOkResponse } from '@nestjs/swagger';
-import { UploadResponse } from './uploads.model';
+import { UploadResponse } from './uploads.dto';
 import { UploadsService } from './uploads.service';
 
 @ApiTags('Uploads')
