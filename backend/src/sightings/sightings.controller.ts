@@ -7,17 +7,24 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
+  Req,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { catchError, EMPTY, mergeMap, Observable } from 'rxjs';
+import { Request } from 'express';
 import { CatSighting } from './catSighting.entity';
 import { SightingsService } from './sightings.service';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { QuerySightingDto } from './dtos/query-sighting.dto';
 
 @ApiTags('Sightings')
 @Controller('sightings')
@@ -25,15 +32,35 @@ export class SightingsController {
   constructor(private sightingsService: SightingsService) {}
 
   /**
-   * Get all sightings
+   * Get all sightings (based on query result)
    */
   @ApiOkResponse({
     description: 'Successfully get list of sightings',
     type: [CatSighting],
   })
+  @ApiQuery({
+    name: 'catIds',
+    required: false,
+    explode: false,
+  })
+  @ApiQuery({
+    name: 'ownerIds',
+    required: false,
+    explode: false,
+  })
   @Get()
-  listAllSightings(): Observable<CatSighting[]> {
-    return this.sightingsService.listAllSightings();
+  listAllSightings(
+    @Req() request: Request,
+    @Query() querySightingDto: QuerySightingDto,
+  ): Observable<Pagination<CatSighting>> {
+    console.log(querySightingDto);
+    const { limit, page, ...queryOptions } = querySightingDto;
+
+    return this.sightingsService.listSightings(queryOptions, {
+      limit: Math.min(50, limit),
+      page,
+      route: '/sightings',
+    });
   }
 
   /**

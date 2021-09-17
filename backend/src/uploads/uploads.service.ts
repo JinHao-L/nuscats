@@ -3,7 +3,7 @@ import { S3 } from 'aws-sdk';
 import { PutObjectRequest } from 'aws-sdk/clients/s3';
 import { InjectAwsService } from 'nest-aws-sdk';
 import { S3ConfigService } from 'src/config/s3.config';
-import { UploadResponse } from './uploads.model';
+import { UploadResponse } from './uploads.dto';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 

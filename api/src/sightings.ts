@@ -14,29 +14,49 @@ export interface CatSighting {
   location: Point;
   type: SightingType;
   description: string;
+  ownerId?: string;
   created_at: Date;
   updated_at: Date;
 }
 
-export function makeSighting(
-  {
-    id,
-    image,
-    catId = 0,
-    cat = undefined,
-    location,
-    type,
-    description = ""
-  }: {
-    id: number,
-    image: string,
-    catId?: number,
-    cat?: Cat | undefined,
-    location: Point
-    type: SightingType,
-    description?: string,
-  }): CatSighting {
+export enum QuerySightingOrderBy {
+  TIME = "time",
+  LOCATION = "location",
+}
 
+export interface CatSightingQuery {
+  //================ FILTERS ===================
+  catIds?: number[];
+  includeUnknownCats?: boolean;
+  type?: SightingType;
+  ownerIds?: string[];
+
+  //================ ORDERING ===================
+  orderBy?: QuerySightingOrderBy;
+  location?: string;
+
+  //================ PAGINATION ===================
+  limit?: number;
+  page?: number;
+}
+
+export function makeSighting({
+  id,
+  image,
+  catId = 0,
+  cat = undefined,
+  location,
+  type,
+  description = "",
+}: {
+  id: number;
+  image: string;
+  catId?: number;
+  cat?: Cat | undefined;
+  location: Point;
+  type: SightingType;
+  description?: string;
+}): CatSighting {
   return {
     id: id,
     image: image,
@@ -47,5 +67,5 @@ export function makeSighting(
     description: description,
     created_at: new Date(),
     updated_at: new Date(),
-  }
+  };
 }
