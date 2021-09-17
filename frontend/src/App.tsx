@@ -10,6 +10,7 @@ import Signin from './pages/Signin';
 import Landing from './pages/Landing';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import ChangeUsername from './pages/ChangeUsername';
 import Tabs from 'pages/Tabs';
 import CatDetailPage from 'pages/CatDetailPage';
 
@@ -40,6 +41,7 @@ import './theme/tailwind.css';
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
 import "./theme/tailwind.css"
+import ChangePassword from 'pages/ChangePassword';
 
 const App: React.FC = () => {
   return (
@@ -70,6 +72,12 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/profile/settings">
               <Settings />
+            </Route>
+            <Route exact path="/profile/settings/changeusername">
+              <ChangeUsername />
+            </Route>
+            <Route exact path="/profile/settings/changepassword">
+              <ChangePassword />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />
