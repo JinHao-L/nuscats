@@ -2,11 +2,12 @@ import { Route, Redirect } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
 import HomeTab from './pages/HomeTab';
 import CatsTab from './pages/CatsTab';
 import Tab3 from './pages/Tab3';
 import Signup from './pages/Signup';
+import Signin from './pages/Signin';
+import Landing from './pages/Landing';
 import Tabs from 'pages/Tabs';
 import CatDetailPage from 'pages/CatDetailPage';
 
@@ -36,6 +37,7 @@ import './theme/tailwind.css';
 
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
+import "./theme/tailwind.css"
 
 const App: React.FC = () => {
   return (
@@ -54,6 +56,12 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/signup">
               <Signup />
+            </Route>
+            <Route exact path="/signin">
+              <Signin />
+            </Route>
+            <Route exact path="/landing">
+              <Landing />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />
