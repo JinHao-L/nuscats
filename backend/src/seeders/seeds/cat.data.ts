@@ -163,15 +163,3 @@ export const catDatas: Omit<Cat, 'created_at' | 'updated_at'>[] = [
     zone: UniversityZone.Science,
   },
 ];
-
-export const catImages = [
-  'https://static.wixstatic.com/media/4cd187_4a6549587a60437bacd32312fcb02948~mv2_d_1200_1600_s_2.jpg',
-  'https://static.wixstatic.com/media/4cd187_844eaf2f4c6447ac9142f3361eb5c347~mv2.png',
-  'https://static.wixstatic.com/media/4cd187_3a2799bdaac14e9f8f25e1f248b455e4~mv2.jpg',
-  'https://static.wixstatic.com/media/4cd187_89fe498f2d02490dba903a3df766302f~mv2.jpg',
-  'https://static.wixstatic.com/media/4cd187_4b1b1bf7bdc5406aa4132429c08bf84e~mv2.jpeg',
-  'https://static.wixstatic.com/media/4cd187_6404162ebe874374a2e958d8cfaf4a2c~mv2.jpg',
-  'https://static.wixstatic.com/media/4cd187_58c26c45eaa2453981a3294c48c2c63a~mv2_d_6016_4016_s_4_2.jpg',
-  'https://static.wixstatic.com/media/4cd187_7740ae70ff2c4b52b22c510b78b22705~mv2_d_3351_2070_s_2.jpg',
-  'https://static.wixstatic.com/media/4cd187_06e675a37f0645d599e5fd39b74376df~mv2.jpg',
-];

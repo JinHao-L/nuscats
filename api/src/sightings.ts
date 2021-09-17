@@ -10,7 +10,7 @@ export interface CatSighting {
   id: number;
   image: string; // url to image
   catId?: number; // id reference to cat
-  cat?: Cat;
+  cat?: Cat; // when viewing a particular sighting information
   location: Point;
   type: SightingType;
   description: string;

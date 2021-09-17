@@ -1,40 +1,43 @@
 import { SightingType } from '@api/sightings';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmUpsert } from '@nest-toolbox/typeorm-upsert';
-import { firstValueFrom, map, range, toArray } from 'rxjs';
+import { range, toArray, mergeMap, firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 
 import { CatSighting } from '../../sightings/catSighting.entity';
 import { ISeeder } from '../seeder.interface';
-import { catDatas, catImages } from './cat.data';
+import { Cat } from '../../cats/cats.entity';
 
 @Injectable()
 export class SightingsSeeder implements ISeeder {
   constructor(
     @InjectRepository(CatSighting)
     private readonly sightingsRepository: Repository<CatSighting>,
+    @InjectRepository(Cat)
+    private readonly catsRepostiory: Repository<Cat>,
   ) {}
 
   /**
    * Generate specified number of 'random' sightings
    *
    * Recommended: at most 10
-   * Will override any other sightings using the same id
    *
    * @param count number of sightings to generate
    * @returns Array of 'random' sightings
    */
-  private async generateRandomSighting(count: number): Promise<CatSighting[]> {
+  private async generateRandomSighting(
+    cats: Cat[],
+    count: number,
+  ): Promise<CatSighting[]> {
     const observedSightingArray = range(1, count).pipe(
-      map((i: number) => {
-        const randIdx = Math.floor(Math.random() * catDatas.length);
+      mergeMap((i: number) => {
+        const randIdx = Math.floor(Math.random() * cats.length);
 
-        return this.sightingsRepository.create({
+        return this.sightingsRepository.save({
           id: i,
           // randomise cat
-          image: catImages[randIdx],
-          cat: { name: catDatas[randIdx].name },
+          image: cats[randIdx].image,
+          cat: cats[randIdx],
           // randomise location around NUS
           location: {
             type: 'Point',
@@ -67,11 +70,17 @@ export class SightingsSeeder implements ISeeder {
   }
 
   async seed(): Promise<any> {
-    const sightings = await this.generateRandomSighting(10);
+    // delete seeded data
+    const deletePromise = this.sightingsRepository.delete({ is_seed: true });
 
-    return this.sightingsRepository.save(sightings).finally(() => {
-      console.log('* Seeded cats sightings...');
-    });
+    const cats = await this.catsRepostiory.find();
+    const sightings = await this.generateRandomSighting(cats, 10);
+
+    return deletePromise
+      .then(() => this.sightingsRepository.save(sightings))
+      .finally(() => {
+        console.log('* Seeded cats sightings...');
+      });
   }
 
   async drop(): Promise<any> {

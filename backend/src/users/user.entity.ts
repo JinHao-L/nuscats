@@ -17,6 +17,8 @@ import { Profile } from 'src/profiles/profile.entity';
 @Entity()
 export class User implements IUser {
   @PrimaryGeneratedColumn()
+  @ApiHideProperty()
+  @Exclude()
   id: number;
 
   @Column({ type: 'uuid', unique: true })
