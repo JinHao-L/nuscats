@@ -1,6 +1,7 @@
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Get,
   NotFoundException,
@@ -9,6 +10,7 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { catchError, EMPTY, mergeMap, Observable } from 'rxjs';
 import {
@@ -28,6 +30,7 @@ import { CreateCatDto } from './dtos/create-cat.dto';
 import { RolesGuard } from './../auth/guard/roles.guard';
 
 @ApiTags('Cats')
+@UseInterceptors(CacheInterceptor)
 @Controller('cats')
 export class CatsController {
   constructor(private catsService: CatsService) {}

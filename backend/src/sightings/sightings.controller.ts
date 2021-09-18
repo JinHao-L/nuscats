@@ -1,5 +1,6 @@
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Get,
   NotFoundException,
@@ -9,6 +10,7 @@ import {
   Put,
   Query,
   Req,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -26,6 +28,7 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { QuerySightingDto } from './dtos/query-sighting.dto';
 
 @ApiTags('Sightings')
+@UseInterceptors(CacheInterceptor)
 @Controller('sightings')
 export class SightingsController {
   constructor(private sightingsService: SightingsService) {}
