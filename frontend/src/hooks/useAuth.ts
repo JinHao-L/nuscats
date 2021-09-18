@@ -1,27 +1,38 @@
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { apiFetch } from "lib/api";
+import { User } from "@api/users";
+import { Profile } from "@api/profiles";
 
 const loggedInKey = "isLoggedIn"
+const userIdKey = "userId"
 
 export default function useAuth() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!JSON.parse(localStorage.getItem(loggedInKey) || "false"));
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [userId, setUserId] = useState<string | null>(localStorage.getItem(userIdKey))
 
-    const setLogin = () => {
+    const setLogin = (userId: string) => {
         localStorage.setItem(loggedInKey, "true");
         setIsLoggedIn(true);
+
+        localStorage.setItem(userIdKey, userId)
+        setUserId(userId)
     }
 
     const setLogout = () => {
         localStorage.removeItem(loggedInKey);
         setIsLoggedIn(false);
+
+        localStorage.removeItem(userIdKey)
+        setUserId(null)
     };
 
     // Refresh token for persisting session
-    const { data: success, error, isValidating } = useSWR(
+    const { data: refreshData, error: refreshError } = useSWR(
         isLoggedIn ? "/auth/refresh" : null,
-        key => apiFetch(key).then(res => res.ok),
+        key => apiFetch(key).then(async res => {
+            return { success: res.ok, user: await res.json() as User }
+        }),
         {
             // Silently refresh token every 15 minutes
             refreshInterval: 1000 * 60 * 15,
@@ -30,24 +41,64 @@ export default function useAuth() {
     );
 
     useEffect(() => {
-        if (success) {
-            setLogin()
-        }
+        if (refreshData) {
+            if (refreshData.success) {
+                setLogin(refreshData.user.uuid)
+            }
 
-        if (success === false || error) {
-            setLogout()
+            if (!refreshData.success || refreshError) {
+                console.log('logged out')
+                console.log({ data: refreshData, err: refreshError })
+                setLogout()
+            }
         }
-        setIsLoading(isValidating);
-    }, [success, error, isValidating]);
+    }, [refreshData, refreshError]);
 
     useEffect(() => {
-        // Sync all tabs on login or logout
-        window.addEventListener("storage", e => {
+        function toggleLoggedIn(e: StorageEvent) {
             if (e.key === loggedInKey) {
                 setIsLoggedIn(!!e.newValue);
             }
-        });
-    });
 
-    return { setLogin, setLogout, isLoggedIn, isLoading };
+            if (e.key === userIdKey) {
+                setUserId(e.newValue)
+            }
+        }
+
+        // Sync all tabs on login or logout
+        window.addEventListener("storage", toggleLoggedIn);
+        return () => {
+            window.removeEventListener("storage", toggleLoggedIn)
+        }
+    }, []);
+
+    const { data: profileData, error: profileError, isValidating } = useSWR(
+        [userId, isLoggedIn],
+        (id, loggedIn) => {
+            return loggedIn && id !== null
+                ? apiFetch(`/users/${id}`).then(async res => {
+                    return { status: res.status, profile: (await res.json()) as Profile }
+                })
+                : undefined
+        },
+    )
+
+    useEffect(() => {
+        if (profileData && profileData.status === 403) {
+            console.log('forbidden, logging out')
+            console.log({ data: profileData, err: profileError })
+            setLogout()
+        }
+    }, [profileData, profileError])
+
+
+    return {
+        setLogin,
+        setLogout,
+        isLoggedIn,
+        userId,
+        userProfile: profileData?.profile,
+        profileError,
+        profileLoading: isValidating
+    };
 }

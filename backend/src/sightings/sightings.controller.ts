@@ -9,7 +9,6 @@ import {
   Put,
   Query,
   Req,
-  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,

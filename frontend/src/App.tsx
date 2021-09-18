@@ -1,10 +1,7 @@
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
-import HomeTab from './pages/HomeTab';
-import CatsTab from './pages/CatsTab';
-import Tab3 from './pages/Tab3';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 import Landing from './pages/Landing';
