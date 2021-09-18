@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch, loginKey, logoutKey } from "./api";
 import { User } from "@api/users"
 
 class LoginResponse {
@@ -9,7 +9,7 @@ class LoginResponse {
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
     let res = await apiFetch(
-        "/auth/login",
+        loginKey,
         { email, password },
         { method: "POST" },
     )
@@ -19,7 +19,6 @@ export async function login(email: string, password: string): Promise<LoginRespo
             err: new Error(msg),
             unauthorized: res.status === 401
         }
-
     }
 
     return {
@@ -29,5 +28,5 @@ export async function login(email: string, password: string): Promise<LoginRespo
 }
 
 export async function logout(): Promise<void> {
-    await apiFetch("/auth/logout", null)
+    await apiFetch(logoutKey, null)
 }

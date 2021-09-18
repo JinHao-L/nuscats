@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { apiFetch } from "lib/api";
+import { apiFetch, refreshLoginKey, swrFetcher } from "lib/api";
 import { User } from "@api/users";
 import { Profile } from "@api/profiles";
 
@@ -29,10 +29,8 @@ export default function useAuth() {
 
     // Refresh token for persisting session
     const { data: refreshData, error: refreshError } = useSWR(
-        isLoggedIn ? "/auth/refresh" : null,
-        key => apiFetch(key).then(async res => {
-            return { success: res.ok, user: await res.json() as User }
-        }),
+        isLoggedIn ? refreshLoginKey : null,
+        swrFetcher<User>(),
         {
             // Silently refresh token every 15 minutes
             refreshInterval: 1000 * 60 * 15,
@@ -43,7 +41,7 @@ export default function useAuth() {
     useEffect(() => {
         if (refreshData) {
             if (refreshData.success) {
-                setLogin(refreshData.user.uuid)
+                setLogin(refreshData.value.uuid)
             }
 
             if (!refreshData.success || refreshError) {

@@ -77,7 +77,7 @@ const Tabs: React.FC = () => {
           <Route exact path={CAT_ROUTE} component={CatsTab} />
           <Route exact path={TAB3_ROUTE} component={Tab3} />
           <Route exact path={FEED_ROUTE} component={FeedTab} />
-          <Route path={`${CAT_ROUTE}/:id`} component={CatDetailPage} />
+          <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
           <Route render={() => <Redirect to={MAP_ROUTE} />} />
         </IonRouterOutlet>
 

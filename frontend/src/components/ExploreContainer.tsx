@@ -21,7 +21,6 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     if (user) {
       setLogin(user.uuid)
     }
-    console.log(`logged in as ${userId}`)
   }
 
   async function logOut() {

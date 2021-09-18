@@ -82,8 +82,8 @@ const FeedTab: React.FC = () => {
         </IonHeader>
 
         <IonList>
-          {sightings.map((sighting) => (
-            <FeedCard sighting={sighting} />
+          {sightings.map((sighting, idx) => (
+            <FeedCard key={idx} sighting={sighting} />
           ))}
         </IonList>
       </IonContent>

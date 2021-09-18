@@ -61,10 +61,10 @@ export class SightingsService {
         ? queryBuilder.andWhere('sighting.catId is not null')
         : queryBuilder;
 
-    const [lat, lng] = location.split(',');
-    const origin: Point = createGeoJsonPoint(lat, lng);
+    if (orderBy === QuerySightingOrderBy.LOCATION && location) {
+      const [lat, lng] = location.split(',');
+      const origin: Point = createGeoJsonPoint(lat, lng);
 
-    if (orderBy === QuerySightingOrderBy.LOCATION) {
       queryBuilder = queryBuilder
         .orderBy({
           'ST_Distance(sighting.location, ST_GeomFromGeoJSON(:origin))': {
