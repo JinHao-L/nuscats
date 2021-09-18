@@ -12,6 +12,7 @@ import { map, mergeMap, Observable, from } from 'rxjs';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
 import { User } from 'src/users/user.entity';
+import { AppConfigService } from 'src/config/app.config';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly jwtConfigService: JwtConfigService,
+    private readonly appConfigService: AppConfigService,
   ) {}
 
   /**
@@ -62,7 +64,16 @@ export class AuthService {
       secret: jwtOptions.secret,
       expiresIn: `${jwtOptions.expiry}s`,
     });
-    const cookie = `tkn=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${jwtOptions.expiry}`;
+
+    const cookie = this.makeCookie({
+      name: 'tkn',
+      value: token,
+      httpOnly: true,
+      sameSite: 'Strict',
+      secure: this.appConfigService.isProd,
+      path: '/',
+      maxAge: jwtOptions.expiry,
+    });
     return { cookie, token };
   }
 
@@ -76,14 +87,40 @@ export class AuthService {
       secret: refreshOptions.secret,
       expiresIn: `${refreshOptions.expiry}s`,
     });
-    const cookie = `ref=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${refreshOptions.expiry}`;
+
+    const cookie = this.makeCookie({
+      name: 'ref',
+      value: token,
+      httpOnly: true,
+      sameSite: 'Strict',
+      secure: this.appConfigService.isProd,
+      path: '/',
+      maxAge: refreshOptions.expiry,
+    });
 
     return { cookie, token };
   }
 
   getLogoutCookies() {
-    const unsetRefreshCookie = `ref=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0`;
-    const unsetAccessCookie = `tkn=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0`;
+    const unsetRefreshCookie = this.makeCookie({
+      name: 'ref',
+      value: '',
+      httpOnly: true,
+      sameSite: 'Strict',
+      secure: this.appConfigService.isProd,
+      path: '/',
+      maxAge: '0',
+    });
+
+    const unsetAccessCookie = this.makeCookie({
+      name: 'tkn',
+      value: '',
+      httpOnly: true,
+      sameSite: 'Strict',
+      secure: this.appConfigService.isProd,
+      path: '/',
+      maxAge: '0',
+    });
     return [unsetRefreshCookie, unsetAccessCookie];
   }
 
@@ -125,5 +162,34 @@ export class AuthService {
         }
       }),
     );
+  }
+
+  makeCookie({
+    name,
+    value,
+    httpOnly,
+    sameSite,
+    secure,
+    path,
+    maxAge,
+  }: {
+    name: string;
+    value: string;
+    httpOnly?: boolean;
+    sameSite?: 'Lax' | 'Strict' | 'None';
+    secure?: boolean;
+    path?: string;
+    maxAge?: string;
+  }): string {
+    const kvPairs: (string | null)[] = [
+      `${name}=${value}`,
+      httpOnly ? 'HttpOnly' : null,
+      sameSite ? `SameSite=${sameSite}` : null,
+      secure ? 'Secure' : null,
+      path ? `Path=${path}` : null,
+      maxAge ? `Max-Age=${maxAge}` : null,
+    ];
+
+    return kvPairs.filter((pair) => pair != null).join('; ');
   }
 }

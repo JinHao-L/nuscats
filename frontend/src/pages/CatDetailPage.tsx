@@ -21,6 +21,7 @@ import type { ImageDetail } from 'components/ImageGallery'
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
+import { PlaceholderCatUrl } from 'lib/utils'
 
 
 interface CatDetailsProps {
@@ -41,14 +42,14 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
         sightings: [
             makeSighting({
                 id: 1,
-                image: "https://placekitten.com/1000/1000",
+                image: PlaceholderCatUrl(1000, 1000),
                 description: "A cat in its natural habitat 😺",
                 location: { type: "Point", coordinates: [1, 2, 3] },
                 type: SightingType.CatSighted
             }),
             makeSighting({
                 id: 1,
-                image: "https://placekitten.com/1001/1000",
+                image: PlaceholderCatUrl(1001, 1000),
                 description: "Cat looks like it's injured 😿",
                 location: { type: "Point", coordinates: [1, 2, 3] },
                 type: SightingType.Emergency
@@ -64,7 +65,7 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
         Array.from({ length: 16 })
             .map((_, idx) => ({
                 altText: `cat pic ${idx}`,
-                src: `http://placekitten.com/${400 + idx}/${300 + idx}`
+                src: PlaceholderCatUrl(400 + idx, 300 + idx)
             }))
 
 
