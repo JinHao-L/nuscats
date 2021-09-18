@@ -4,6 +4,7 @@
     "author": "NUS Cats",
     "license": "MIT",
     "devDependencies": {
-        "@types/geojson": "^7946.0.8"
+        "@types/geojson": "^7946.0.8",
+        "nestjs-typeorm-paginate": "^2.6.2"
     }
 }
