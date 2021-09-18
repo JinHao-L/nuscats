@@ -26,14 +26,14 @@ export class CatSighting implements ICatSighting {
   @Column('varchar')
   image: string;
 
-  @Column('number', { nullable: true })
-  catId?: number;
+  @Column('decimal', { nullable: true })
+  cat_id?: number;
 
   @ManyToOne(() => Cat, (cat: Cat) => cat.sightings, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'catId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'cat_id', referencedColumnName: 'id' })
   cat?: Cat;
 
   /**
@@ -67,13 +67,13 @@ export class CatSighting implements ICatSighting {
   description: string;
 
   @Column('varchar', { nullable: true })
-  ownerId?: string;
+  owner_id?: string;
 
   @ManyToOne(() => Profile, (user: Profile) => user.uuid, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'ownerId', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'owner_id', referencedColumnName: 'uuid' })
   @ApiHideProperty()
   owner?: Profile;
 

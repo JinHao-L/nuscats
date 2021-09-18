@@ -9,12 +9,12 @@ export enum SightingType {
 export interface CatSighting {
   id: number;
   image: string; // url to image
-  catId?: number; // id reference to cat
+  cat_id?: number; // id reference to cat
   cat?: Cat; // when viewing a particular sighting information
   location: Point;
   type: SightingType;
   description: string;
-  ownerId?: string;
+  owner_id?: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -22,7 +22,7 @@ export interface CatSighting {
 export function makeSighting({
   id,
   image,
-  catId = 0,
+  cat_id = 0,
   cat = undefined,
   location,
   type,
@@ -30,7 +30,7 @@ export function makeSighting({
 }: {
   id: number;
   image: string;
-  catId?: number;
+  cat_id?: number;
   cat?: Cat | undefined;
   location: Point;
   type: SightingType;
@@ -39,7 +39,7 @@ export function makeSighting({
   return {
     id: id,
     image: image,
-    catId: catId,
+    cat_id: cat_id,
     cat: cat,
     location: location,
     type: type,

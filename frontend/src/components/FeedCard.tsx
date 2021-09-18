@@ -22,12 +22,6 @@ interface FeedCardProps {
   sighting: CatSighting;
 }
 
-// catId?: number; // id reference to cat
-// cat?: Cat; // when viewing a particular sighting information
-// location: Point;
-// created_at: Date;
-// updated_at: Date;
-
 const FeedCard: React.FC<FeedCardProps> = ({ sighting }) => {
   const baseColor = useMemo(
     () => (sighting.type === SightingType.Emergency ? undefined : undefined),
