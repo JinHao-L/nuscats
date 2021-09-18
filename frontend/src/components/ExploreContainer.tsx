@@ -8,18 +8,20 @@ interface ContainerProps {
 }
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
-  const { isLoggedIn, setLogin, setLogout } = useAuth();
+  const { isLoggedIn, userId, userProfile, setLogin, setLogout } = useAuth();
   const [err, setError] = useState<Error | undefined>(undefined)
 
   async function logIn() {
-    let { err, unauthorized } = await login("admin@gmail.com", "admin")
+    const { user, err, unauthorized } = await login("admin@gmail.com", "admin")
     if (err || unauthorized) {
       setError(err)
       return
     }
 
-    console.log("logged in!")
-    setLogin()
+    if (user) {
+      setLogin(user.uuid)
+    }
+    console.log(`logged in as ${userId}`)
   }
 
   async function logOut() {
@@ -47,6 +49,20 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         <div className="text-lg font-normal text-gray-800">
           {isLoggedIn ? "logged in" : "not logged in!"}
           {err?.message}<br />
+        </div>
+        <div>
+          <p >
+            User ID: {userId ?? "none"}
+          </p>
+          {userProfile
+            ?
+            <>
+              <p> Name: {`${userProfile.first_name} ${userProfile.last_name}`}</p>
+              <img src={userProfile.profile_pic} alt="profile pic"></img>
+            </>
+            : <p>No profile available</p>
+          }
+
         </div>
       </div>
     </div>

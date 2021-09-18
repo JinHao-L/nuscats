@@ -6,76 +6,76 @@ const Signup: React.FC = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonBackButton />
+						<IonBackButton defaultHref="/" />
 					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<div className="mx-5 mt-5 mb-5 mt-2">
-					<p className="text-3xl font-bold mb-1">Join the awesome cat community</p>
+				<div className="mx-5 mt-2 mt-5 mb-5">
+					<p className="mb-1 text-3xl font-bold">Join the awesome cat community</p>
 					<p>Fill in your details to begin</p>
 				</div>
 				<form className="flex flex-col mt-5">
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="email">
+					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
+						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="email">
 							Email
 						</label>
-						<input 
-							id="email" 
-							type="email" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
+						<input
+							id="email"
+							type="email"
+							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
 						/>
 					</div>
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="username">
-							Username	
+					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
+						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="username">
+							Username
 						</label>
-						<input 
-							id="username" 
-							type="text" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
+						<input
+							id="username"
+							type="text"
+							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
 						/>
 					</div>
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="password">
-							Password	
+					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
+						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="password">
+							Password
 						</label>
-						<input 
-							id="password" 
-							type="password" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
+						<input
+							id="password"
+							type="password"
+							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
 						/>
 					</div>
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="cfmPassword">
-							Confirm password	
+					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
+						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="cfmPassword">
+							Confirm password
 						</label>
-						<input 
-							id="cfmPassword" 
-							type="password" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
+						<input
+							id="cfmPassword"
+							type="password"
+							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
 						/>
 					</div>
 				</form>
-				<IonButton 
-					className="mx-5 h-14 cursor-pointer text-lg text-white"
+				<IonButton
+					className="mx-5 text-lg text-white cursor-pointer h-14"
 					color="primary"
 					expand="block"
 				>
 					Sign up
 				</IonButton>
-				<p className="my-2 text-center text-lg font-semibold">
+				<p className="my-2 text-lg font-semibold text-center">
 					or
 				</p>
 				<IonButton
-					className="mx-5 h-14 mb-3 cursor-pointer text-lg"
+					className="mx-5 mb-3 text-lg cursor-pointer h-14"
 					color="facebook"
 					expand="block"
 				>
 					Connect with Facebook
 				</IonButton>
 				<IonButton
-					className="mx-5 h-14 mb-3 cursor-pointer text-lg text-black"
+					className="mx-5 mb-3 text-lg text-black cursor-pointer h-14"
 					expand="block"
 					color="white"
 				>
