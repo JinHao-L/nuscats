@@ -1,13 +1,14 @@
 import { IonIcon, IonRouterLink } from '@ionic/react'
 import { locationOutline } from 'ionicons/icons'
 import { Cat } from '@api/cats'
+import { PlaceholderCatUrl } from 'lib/utils'
 
 interface CatCardProps {
     cat: Cat
 }
 
 const CatCard: React.FC<CatCardProps> = ({ cat }) => {
-    const placerHolderCatImgUrl = `https://placekitten.com/20${cat.id}/21${cat.id}`
+    const placerHolderCatImgUrl = PlaceholderCatUrl(200 + cat.id, 210 + cat.id)
 
     return (
         <IonRouterLink routerLink={`/cats/${cat.id}`}>
