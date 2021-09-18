@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 import {
     IonContent,
     IonFab,
@@ -22,7 +22,7 @@ import 'swiper/swiper-bundle.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import { PlaceholderCatUrl } from 'lib/utils'
-
+import { CAT_ROUTE } from 'app/routes';
 
 interface CatDetailsProps {
     cat: Cat;
@@ -85,7 +85,7 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
                         size="small"
                         color="medium"
                         translucent
-                        onClick={_ => goBack("/cats")}
+                        onClick={_ => goBack(CAT_ROUTE)}
                     >
                         <IonIcon icon={close} />
                     </IonFabButton>

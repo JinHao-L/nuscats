@@ -1,5 +1,6 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from "@ionic/react"
 import { Camera, CameraResultType } from "@capacitor/camera";
+import { CHANGE_PASSWORD_ROUTE, CHANGE_USERNAME_ROUTE } from "app/routes";
 
 const Settings: React.FC = () => {
 
@@ -31,10 +32,10 @@ const Settings: React.FC = () => {
 			</IonHeader>
 			<IonContent>
 				<IonList>
-					<IonItem button routerLink="/profile/settings/changeusername">
+					<IonItem button routerLink={CHANGE_USERNAME_ROUTE}>
 						<IonLabel>Change username</IonLabel>
 					</IonItem>
-					<IonItem button routerLink="/profile/settings/changepassword">
+					<IonItem button routerLink={CHANGE_PASSWORD_ROUTE}>
 						<IonLabel>Change password</IonLabel>
 					</IonItem>
 					<IonItem button onClick={handleChangeProfilePic}>

@@ -1,4 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from "@ionic/react";
+import { ROOT_ROUTE } from "app/routes";
 
 const Signup: React.FC = () => {
 	return (
@@ -61,6 +62,8 @@ const Signup: React.FC = () => {
 					className="mx-5 h-14 cursor-pointer text-lg text-white"
 					color="primary"
 					expand="block"
+					routerLink={ROOT_ROUTE}
+					routerDirection="forward"
 				>
 					Sign up
 				</IonButton>
@@ -71,6 +74,8 @@ const Signup: React.FC = () => {
 					className="mx-5 h-14 mb-3 cursor-pointer text-lg"
 					color="facebook"
 					expand="block"
+					routerLink={ROOT_ROUTE}
+					routerDirection="forward"
 				>
 					Connect with Facebook
 				</IonButton>
@@ -78,6 +83,8 @@ const Signup: React.FC = () => {
 					className="mx-5 h-14 mb-3 cursor-pointer text-lg text-black"
 					expand="block"
 					color="white"
+					routerLink={ROOT_ROUTE}
+					routerDirection="forward"
 				>
 					Connect with Google
 				</IonButton>
