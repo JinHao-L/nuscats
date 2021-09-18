@@ -12,6 +12,7 @@ import { ellipse, square, triangle } from 'ionicons/icons';
 import HomeTab from './HomeTab';
 import CatsTab from './CatsTab';
 import Tab3 from './Tab3';
+import CatDetailPage from './CatDetailPage';
 
 interface TabInfo {
     href: string

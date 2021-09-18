@@ -1,4 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from "@ionic/react";
+import { Link } from "react-router-dom";
 
 const Signup: React.FC = () => {
 	return (

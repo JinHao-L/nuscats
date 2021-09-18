@@ -1,6 +1,12 @@
+import { Fetcher } from "swr";
 import { IsDev } from "./config";
 
 export const ApiBaseUrl = IsDev ? "http://localhost:3001" : "http://localhost:3001" // TODO: update when deployed to prod
+
+export const catsKey = "/cats"
+export const loginKey = "/auth/login"
+export const logoutKey = "/auth/logout"
+export const refreshLoginKey = "/auth/refresh"
 
 export const apiFetch = async (path: string, body?: any, options?: RequestInit): Promise<Response> => {
     return fetch(`${ApiBaseUrl}${path}`, {
@@ -13,4 +19,16 @@ export const apiFetch = async (path: string, body?: any, options?: RequestInit):
         ...options,
         body: body ? JSON.stringify(body) : null
     })
+}
+
+type Result<T> = {
+    success: boolean,
+    status: number
+    value: T
+}
+
+// key can only be a single string
+export const swrFetcher = <T>(body?: any, options?: RequestInit): Fetcher<Result<T>> => async (key: string) => {
+    const res = await apiFetch(key, body, options);
+    return { success: res.ok, status: res.status, value: await res.json() as T };
 }

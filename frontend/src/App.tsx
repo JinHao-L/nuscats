@@ -1,6 +1,5 @@
 import { Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
-import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
@@ -42,37 +41,35 @@ import ChangePassword from 'pages/ChangePassword';
 
 const App: React.FC = () => {
   return (
-    <Provider store={store}>
-      <IonApp>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route exact path="/signup">
-              <Signup />
-            </Route>
-            <Route exact path="/signin">
-              <Signin />
-            </Route>
-            <Route exact path="/landing">
-              <Landing />
-            </Route>
-            <Route exact path="/profile">
-              <Profile />
-            </Route>
-            <Route exact path="/profile/settings">
-              <Settings />
-            </Route>
-            <Route exact path="/profile/settings/changeusername">
-              <ChangeUsername />
-            </Route>
-            <Route exact path="/profile/settings/changepassword">
-              <ChangePassword />
-            </Route>
-            <Route path={'/cats/:id'} component={CatDetailPage} />
-            <Route render={() => <Tabs />} />
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </IonApp>
-    </Provider>
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/signup">
+            <Signup />
+          </Route>
+          <Route exact path="/signin">
+            <Signin />
+          </Route>
+          <Route exact path="/landing">
+            <Landing />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
+          </Route>
+          <Route exact path="/profile/settings">
+            <Settings />
+          </Route>
+          <Route exact path="/profile/settings/changeusername">
+            <ChangeUsername />
+          </Route>
+          <Route exact path="/profile/settings/changepassword">
+            <ChangePassword />
+          </Route>
+          <Route path={'/cats/:id(\\d+)'} component={CatDetailPage} />
+          <Route render={() => <Tabs />} />
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
   );
 };
 
