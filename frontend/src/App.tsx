@@ -4,11 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 import Landing from './pages/Landing';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import ChangeUsername from './pages/ChangeUsername';
 import Tabs from 'pages/Tabs';
-import CatDetailPage from 'pages/CatDetailPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -28,7 +24,6 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import store from './app/store';
 
 /* Tailwind Setup */
 import 'tailwindcss/tailwind.css';
@@ -36,36 +31,42 @@ import './theme/tailwind.css';
 
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
-import "./theme/tailwind.css"
+import './theme/tailwind.css';
+import {
+  CHANGE_PASSWORD_ROUTE,
+  CHANGE_USERNAME_ROUTE,
+  LANDING_ROUTE,
+  PROFILE_ROUTE,
+  PROFILE_SETTINGS_ROUTE,
+  SIGNIN_ROUTE,
+  SIGNUP_ROUTE,
+} from 'app/routes';
 import ChangePassword from 'pages/ChangePassword';
+import ChangeUsername from 'pages/ChangeUsername';
+import Profile from 'pages/Profile';
+import Settings from 'pages/Settings';
 
 const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/signup">
-            <Signup />
-          </Route>
-          <Route exact path="/signin">
-            <Signin />
-          </Route>
-          <Route exact path="/landing">
-            <Landing />
-          </Route>
-          <Route exact path="/profile">
-            <Profile />
-          </Route>
-          <Route exact path="/profile/settings">
-            <Settings />
-          </Route>
-          <Route exact path="/profile/settings/changeusername">
-            <ChangeUsername />
-          </Route>
-          <Route exact path="/profile/settings/changepassword">
-            <ChangePassword />
-          </Route>
-          <Route path={'/cats/:id(\\d+)'} component={CatDetailPage} />
+          <Route exact path={SIGNUP_ROUTE} component={Signup} />
+          <Route exact path={SIGNIN_ROUTE} component={Signin} />
+          <Route exact path={LANDING_ROUTE} component={Landing} />
+          <Route exact path={PROFILE_ROUTE} component={Profile} />
+          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
+          <Route
+            exact
+            path={CHANGE_USERNAME_ROUTE}
+            component={ChangeUsername}
+          />
+          <Route
+            exact
+            path={CHANGE_PASSWORD_ROUTE}
+            component={ChangePassword}
+          />
+          <Route exact path={LANDING_ROUTE} component={Landing} />
           <Route render={() => <Tabs />} />
         </IonRouterOutlet>
       </IonReactRouter>

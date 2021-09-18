@@ -1,4 +1,14 @@
-import { IonContent, IonModal, IonPage } from '@ionic/react';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonModal,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react';
 import CameraFab from 'components/map/CameraFab';
 import LocationFab from 'components/map/LocationFab';
 import Map from 'components/map/Map';
@@ -8,6 +18,8 @@ import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { useEffect, useRef, useState } from 'react';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
+import { list } from 'ionicons/icons';
+import { FEED_ROUTE } from 'app/routes';
 
 const HomeTab: React.FC = () => {
   /**
@@ -59,7 +71,24 @@ const HomeTab: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen>
+      <IonHeader collapse="condense">
+        <IonToolbar>
+          <IonButtons slot="end">
+            <IonButton
+              fill="clear"
+              color="secondary"
+              slot="start"
+              routerLink={FEED_ROUTE}
+              routerDirection="forward"
+              size={'small'}
+            >
+              <IonIcon slot="end" icon={list} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle>Map</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
         <Map
           onDragStart={() => setIsCentered(false)}
           getRef={(s) => (mapRef.current = s)}

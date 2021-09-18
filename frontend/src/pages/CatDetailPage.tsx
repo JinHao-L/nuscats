@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 import {
     IonContent,
     IonFab,
@@ -25,6 +25,7 @@ import { PlaceholderCatUrl } from 'lib/utils'
 import { RouteComponentProps, matchPath } from "react-router";
 import { useCat } from "hooks/useCats";
 
+import { CAT_ROUTE } from 'app/routes';
 
 interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> { }
 
@@ -77,7 +78,7 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ history }) => {
                         size="small"
                         color="medium"
                         translucent
-                        onClick={_ => goBack("/cats")}
+                        onClick={_ => goBack(CAT_ROUTE)}
                     >
                         <IonIcon icon={close} />
                     </IonFabButton>

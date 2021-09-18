@@ -2,6 +2,7 @@ import { IonIcon } from '@ionic/react'
 import { locationOutline } from 'ionicons/icons'
 import { Cat } from '@api/cats'
 import { Link } from 'react-router-dom'
+import { CAT_ROUTE } from 'app/routes'
 
 interface CatCardProps {
     cat: Cat
@@ -9,7 +10,7 @@ interface CatCardProps {
 
 const CatCard: React.FC<CatCardProps> = ({ cat }) => {
     return (
-        <Link to={`/cats/${cat.id}`}>
+        <Link to={`${CAT_ROUTE}/${cat.id}`}>
             <div className="flex justify-between px-3 shadow-xl bg-secondary-100 rounded-2xl bg-opacity-90">
                 <div className="flex-shrink-0 mt-5 mb-4">
                     <img className="object-cover w-24 h-24 rounded-full" src={cat.image} alt={`cat ${cat.name}`}></img>
