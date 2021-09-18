@@ -43,23 +43,24 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
             one_liner:
                 "Bachelor's in Laziness, Masters's in Belly Flops and PhD in Napping",
             zone: UniversityZone.Arts,
-            sightings: [
-                makeSighting({
-                    id: 1,
-                    image: PlaceholderCatUrl(1000, 1000),
-                    description: "A cat in its natural habitat 😺",
-                    location: { type: "Point", coordinates: [1, 2, 3] },
-                    type: SightingType.CatSighted
-                }),
-                makeSighting({
-                    id: 1,
-                    image: PlaceholderCatUrl(1001, 1000),
-                    description: "Cat looks like it's injured 😿",
-                    location: { type: "Point", coordinates: [1, 2, 3] },
-                    type: SightingType.Emergency
-                })
-            ]
         })
+
+    const sightings = [
+        makeSighting({
+            id: 1,
+            image: PlaceholderCatUrl(1000, 1000),
+            description: "A cat in its natural habitat 😺",
+            location: { type: "Point", coordinates: [1, 2, 3] },
+            type: SightingType.CatSighted
+        }),
+        makeSighting({
+            id: 1,
+            image: PlaceholderCatUrl(1001, 1000),
+            description: "Cat looks like it's injured 😿",
+            location: { type: "Point", coordinates: [1, 2, 3] },
+            type: SightingType.Emergency
+        })
+    ]
 
     const { goBack } = useContext(NavContext)
     const subPages = ["About", "Location", "Photos"]
@@ -119,7 +120,7 @@ const CatDetailPage: React.FC<CatDetailsProps> = ({ cat }) => {
                                 <CatAbout {...cat} />
                             </SwiperSlide>
                             <SwiperSlide>
-                                <CatLocation sightings={cat?.sightings ?? []} />
+                                <CatLocation sightings={sightings} />
                             </SwiperSlide>
                             <SwiperSlide>
                                 <div className="h-cat-profile-content">

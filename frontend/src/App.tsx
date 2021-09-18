@@ -49,15 +49,6 @@ const App: React.FC = () => {
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
-            <Route exact path="/home">
-              <HomeTab />
-            </Route>
-            <Route exact path="/cats">
-              <CatsTab />
-            </Route>
-            <Route path="/tab3">
-              <Tab3 />
-            </Route>
             <Route exact path="/signup">
               <Signup />
             </Route>
@@ -78,9 +69,6 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/profile/settings/changepassword">
               <ChangePassword />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/home" />
             </Route>
             <Route path={'/cats/:id'} component={CatDetailPage} />
             <Route render={() => <Tabs />} />
