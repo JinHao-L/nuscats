@@ -21,7 +21,7 @@ const CatCard: React.FC<CatCardProps> = ({ cat }) => {
                         <IonIcon color="secondary" icon={locationOutline}></IonIcon>
                         <p className="ml-1 text-sm font-semibold text-secondary-500">{cat.zone}</p>
                     </div>
-                    <p className="mt-1 text-xs font-medium text-gray-500 line-clamp-3">{cat.description}</p>
+                    <p className="mt-1 text-xs text-gray-900 line-clamp-3">{cat.description}</p>
                 </div>
             </div>
         </Link>

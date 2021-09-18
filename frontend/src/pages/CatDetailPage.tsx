@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext, useRef, useState } from 'react';
 import {
     IonContent,
     IonFab,
@@ -7,13 +7,15 @@ import {
     IonPage,
     IonicSwiper,
     NavContext,
-    IonSpinner
+    IonSpinner,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent
 } from "@ionic/react"
 import { close, locationOutline, timeOutline } from "ionicons/icons"
 import SwiperCore, { Navigation, Pagination } from "swiper"
 import { Swiper, SwiperSlide } from "swiper/react"
 import type { Cat } from "@api/cats"
-import { CatSighting, makeSighting, SightingType } from "@api/sightings"
+import { CatSighting, CatSightingsResponse, makeSighting, SightingType } from "@api/sightings"
 import { ConvenientDateTimeFormatOptions } from 'lib/datetime'
 import { ImageGallery, } from 'components/ImageGallery'
 import type { ImageDetail } from 'components/ImageGallery'
@@ -22,41 +24,26 @@ import 'swiper/swiper-bundle.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import { PlaceholderCatUrl } from 'lib/utils'
-import { RouteComponentProps, matchPath } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { useCat } from "hooks/useCats";
 
 import { CAT_ROUTE } from 'app/routes';
+import { Result } from 'lib/api';
+import { ReverseGeocoding } from 'components/ReverseGeocoding';
+import { Position } from 'geojson';
 
 interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> { }
 
-const CatDetailPage: React.FC<CatDetailsPageProps> = ({ history }) => {
+const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
     SwiperCore.use([IonicSwiper, Navigation, Pagination]);
 
-    // workaround to unfixed bug with react router: https://github.com/remix-run/react-router/issues/5870
-    const match = matchPath<{ id: string }>(history.location.pathname, {
-        path: '/cats/:id(\\d+)',
-        exact: true,
-        strict: false
-    })
-
-    const { cat, notFound, error, isLoading } = useCat(parseInt(match?.params.id || "NaN"))
-
-    const sightings = [
-        makeSighting({
-            id: 1,
-            image: PlaceholderCatUrl(1000, 1000),
-            description: "A cat in its natural habitat 😺",
-            location: { type: "Point", coordinates: [1, 2, 3] },
-            type: SightingType.CatSighted
-        }),
-        makeSighting({
-            id: 1,
-            image: PlaceholderCatUrl(1001, 1000),
-            description: "Cat looks like it's injured 😿",
-            location: { type: "Point", coordinates: [1, 2, 3] },
-            type: SightingType.Emergency
-        })
-    ]
+    const {
+        cat, notFound, error, catLoading,
+        catSightings, sightingsError, sightingsLoading, sightingsPageSize, setSightingsPageSize
+    } = useCat(
+        parseInt(match.params.id),
+        { includeSightings: true },
+    )
 
     const { goBack } = useContext(NavContext)
     const subPages = ["About", "Location", "Photos"]
@@ -87,7 +74,7 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ history }) => {
                     <>
                         <img src={cat.image}
                             alt={`big pic of cat ${cat.name}`}
-                            className="absolute top-0 left-0 z-0 object-cover object-center"
+                            className="absolute top-0 left-0 z-0 object-cover object-center w-full h-1/2"
                         />
 
                         <div className="relative w-full h-full mt-20 overflow-scroll snap rounded-3xl">
@@ -112,14 +99,21 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ history }) => {
                                         className="flex justify-center mb-5 text-sm font-medium tracking-wide text-center text-white space-x-7 pagination-container"
                                     />
                                     <SwiperSlide>
-                                        <CatAbout {...cat} />
+                                        <CatAbout {...cat} coordinates={catSightings?.[0]?.location?.coordinates} />
                                     </SwiperSlide>
                                     <SwiperSlide>
-                                        <CatLocation sightings={sightings} />
+                                        <CatLocation
+                                            sightings={catSightings}
+                                            error={sightingsError}
+                                            loading={sightingsLoading}
+                                            pageSize={sightingsPageSize}
+                                            setPageSize={setSightingsPageSize}
+                                        />
                                     </SwiperSlide>
                                     <SwiperSlide>
                                         <div className="h-cat-profile-content">
                                             <ImageGallery details={placeholderCatImgGalleryDetails} />
+
                                         </div>
                                     </SwiperSlide>
                                 </Swiper>
@@ -134,34 +128,43 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ history }) => {
                         </p>
                     </div>
                 }
-                {isLoading &&
+                {catLoading &&
                     <div className="flex items-center justify-center w-full h-full">
                         <IonSpinner />
                     </div>
                 }
+
             </IonContent>
         </IonPage >
     )
 }
 
 
-type CatAboutProps = Pick<Cat, "one_liner" | "description" | "zone">;
+type CatAboutProps = {
+    coordinates: Position | undefined
+} & Pick<Cat, "one_liner" | "description" | "zone">;
 
-const CatAbout: React.FC<CatAboutProps> = ({ one_liner, description, zone }) => {
+const CatAbout: React.FC<CatAboutProps> = ({ one_liner, description, zone, coordinates }) => {
+    const [lat, long] = coordinates || []
+
     return (
         <section className="flex flex-col space-y-4 overflow-y-auto h-cat-profile-content px-7">
             <h2 className="font-semibold text-center text-gray-900 transform -skew-x-6">
                 <span className="bg-gray-200 shadow-sm">"{one_liner}"</span>
             </h2>
             <div className="flex justify-start px-4 py-2 space-x-6">
-                <div className="text-xs font-medium text-gray-400">
+                <div className="flex-shrink-0 text-xs font-medium text-gray-400">
                     Hangs out around
-                    <p className="text-base font-semibold text-primary-500">{zone}</p>
+                    <p className="text-sm font-semibold text-primary-500">{zone}</p>
                 </div>
-                <div className="text-xs font-medium text-gray-400">
-                    Last spotted at
-                    <p className="text-base font-semibold text-primary-500">some place</p>
-                </div>
+                {lat && long &&
+                    <div className="text-xs font-medium text-gray-400">
+                        Last spotted at
+                        <div className="text-sm font-semibold text-primary-500">
+                            <ReverseGeocoding lat={lat} long={long} />
+                        </div>
+                    </div>
+                }
             </div>
 
             <div className="px-4 pt-2 rounded-md bg-warmGray-100">
@@ -174,69 +177,102 @@ const CatAbout: React.FC<CatAboutProps> = ({ one_liner, description, zone }) => 
 };
 
 type CatLocationProps = {
-    sightings: CatSighting[];
+    sightings: CatSighting[] | undefined;
+    error: any;
+    loading: boolean;
+    pageSize: number;
+    setPageSize: (size: number | ((_size: number) => number)) => Promise<Result<CatSightingsResponse>[] | undefined>;
 };
 
-const CatLocation: React.FC<CatLocationProps> = ({ sightings }) => {
-    return sightings ? (
-        <div className="flex flex-col items-center justify-start w-full px-4 space-y-3 overflow-auto h-cat-profile-content">
-            {sightings.map((sighting, idx) => {
-                const bgColor =
-                    sighting.type === SightingType.Emergency
-                        ? "bg-red-100"
-                        : "bg-secondary-100";
-                return (
-                    <div
-                        className={`flex items-center justify-start w-full px-2 rounded-md shadow-md ${bgColor} bg-opacity-90`}
-                        key={idx}
-                    >
-                        <div className="flex-shrink-0">
-                            <img
-                                className="object-cover w-20 h-20 my-3 rounded-full"
-                                src={sighting.image}
-                                alt="cat spotted at"
-                            />
-                        </div>
-                        <div className="flex flex-col justify-start w-full mt-1 ml-3">
-                            {sighting.type !== SightingType.Emergency ? (
-                                <p className="text-base font-medium">Spotted</p>
-                            ) : (
-                                <p className="text-base font-medium text-red-700">Emergency!</p>
-                            )}
-                            <div className="flex items-center space-x-2">
-                                <IonIcon color="primary" icon={timeOutline} />
+const CatLocation: React.FC<CatLocationProps> = ({ sightings, error, loading, pageSize, setPageSize }) => {
+    const ref = useRef(null)
+    const onScroll = useCallback(() => {
+        if (ref.current) {
+            const { scrollTop, scrollHeight, clientHeight } = ref.current;
 
-                                <p className="text-xs text-gray-800">
-                                    {new Intl.DateTimeFormat(
-                                        "en-GB",
-                                        ConvenientDateTimeFormatOptions
-                                    ).format(sighting.created_at)}
-                                </p>
+            if (scrollTop + clientHeight === scrollHeight) {
+                setTimeout(() => {
+                    setPageSize(pageSize + 1)
+                }, 500)
+            }
+        }
+    }, [pageSize, setPageSize])
+
+    return <div className="w-full h-full">
+        {sightings && sightings.length !== 0 ? (
+            <div
+                className="flex flex-col items-center justify-start w-full px-4 pb-4 space-y-3 overflow-auto h-cat-profile-content"
+                onScroll={onScroll}
+                ref={ref}
+            >
+                {sightings.map((sighting, idx) => {
+                    const bgColor =
+                        sighting.type === SightingType.Emergency
+                            ? "bg-red-100"
+                            : "bg-secondary-100";
+                    const [lat, long] = sighting.location.coordinates
+
+                    return (
+                        <div
+                            className={`flex items-center justify-start w-full px-2 rounded-md shadow-md ${bgColor} bg-opacity-90`}
+                            key={idx}
+                        >
+                            <div className="flex-shrink-0">
+                                <img
+                                    className="object-cover w-20 h-20 my-3 rounded-full"
+                                    src={sighting.image}
+                                    alt="cat spotted at"
+                                />
                             </div>
-                            <div className="flex items-center mt-1 space-x-2">
-                                <IonIcon color="secondary" icon={locationOutline} />
-                                {/* TODO: resolve to actual location */}
-                                <p className="text-xs text-gray-800">
-                                    {sighting.location.coordinates}
-                                </p>
-                            </div>
-                            <div className="w-full h-full pb-1 m-1 rounded opacity-80 ">
-                                <p className="text-sm font-medium tracking-tight text-gray-800 line-clamp-2">
-                                    {sighting.description}
-                                </p>
+                            <div className="flex flex-col justify-start w-full mt-1 ml-3">
+                                {sighting.type !== SightingType.Emergency ? (
+                                    <p className="text-base font-medium text-gray-700">Spotted</p>
+                                ) : (
+                                    <p className="text-base font-medium text-red-700">Emergency!</p>
+                                )}
+                                <div className="flex items-center space-x-2">
+                                    <IonIcon color="primary" icon={timeOutline} />
+
+                                    <p className="text-xs text-gray-800">
+                                        {new Intl.DateTimeFormat(
+                                            "en-GB",
+                                            ConvenientDateTimeFormatOptions
+                                        ).format(sighting.created_at)}
+                                    </p>
+                                </div>
+                                <div className="flex items-center mt-1 space-x-2 ">
+                                    <IonIcon color="secondary" icon={locationOutline} />
+                                    <div className="text-xs text-gray-800">
+                                        <ReverseGeocoding lat={lat} long={long} />
+                                    </div>
+                                </div>
+                                <div className="w-full h-full pb-1 m-1 rounded opacity-80 ">
+                                    <p className="text-sm font-medium tracking-tight text-gray-800 line-clamp-2">
+                                        {sighting.description}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                );
-            })}
-        </div>
-    ) : (
-        <div className="flex justify-center">
-            <p className="mt-16 text-xl font-semibold text-gray-700">
-                No cats sightings 😿
-            </p>
-        </div>
-    );
+                    );
+                })}
+            </div>
+        ) : (
+            <div className="flex justify-center">
+                <p className="mt-16 text-xl font-semibold text-gray-700">
+                    No cat sightings 😿
+                </p>
+            </div>
+        )}
+        {error &&
+            <div className="flex items-center justify-center w-full h-full">
+                <p className="font-medium text-red-600">
+                    Error loading sightings
+                </p>
+            </div>
+        }
+    </div>
+
+        ;
 };
 
 export default CatDetailPage

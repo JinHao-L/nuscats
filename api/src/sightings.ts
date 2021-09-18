@@ -19,27 +19,6 @@ export interface CatSighting {
   updated_at: Date;
 }
 
-export enum QuerySightingOrderBy {
-  TIME = "time",
-  LOCATION = "location",
-}
-
-export interface CatSightingQuery {
-  //================ FILTERS ===================
-  catIds?: number[];
-  includeUnknownCats?: boolean;
-  type?: SightingType;
-  ownerIds?: string[];
-
-  //================ ORDERING ===================
-  orderBy?: QuerySightingOrderBy;
-  location?: string;
-
-  //================ PAGINATION ===================
-  limit?: number;
-  page?: number;
-}
-
 export function makeSighting({
   id,
   image,
@@ -68,4 +47,46 @@ export function makeSighting({
     created_at: new Date(),
     updated_at: new Date(),
   };
+}
+
+export enum QuerySightingOrderBy {
+  TIME = "time",
+  LOCATION = "location",
+}
+
+export interface CatSightingQuery {
+  //================ FILTERS ===================
+  catIds?: number[];
+  includeUnknownCats?: boolean;
+  type?: SightingType;
+  ownerIds?: string[];
+
+  //================ ORDERING ===================
+  orderBy?: QuerySightingOrderBy;
+  location?: string;
+
+  //================ PAGINATION ===================
+  limit?: number;
+  page?: number;
+}
+
+export interface CatSightingsResponse {
+  items: CatSighting[];
+  meta: PaginationMetadata;
+  links: Links;
+}
+
+export interface Links {
+  first: string;
+  previous: string;
+  next: string;
+  last: string;
+}
+
+export interface PaginationMetadata {
+  totalItems: number;
+  itemCount: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
 }

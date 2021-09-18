@@ -4,6 +4,7 @@ import { IsDev } from "./config";
 export const ApiBaseUrl = IsDev ? "http://localhost:3001" : "http://localhost:3001" // TODO: update when deployed to prod
 
 export const catsKey = "/cats"
+export const sightingsKey = "/sightings"
 export const loginKey = "/auth/login"
 export const logoutKey = "/auth/logout"
 export const refreshLoginKey = "/auth/refresh"
@@ -21,7 +22,7 @@ export const apiFetch = async (path: string, body?: any, options?: RequestInit):
     })
 }
 
-type Result<T> = {
+export type Result<T> = {
     success: boolean,
     status: number
     value: T
