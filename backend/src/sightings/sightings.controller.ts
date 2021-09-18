@@ -1,3 +1,4 @@
+import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import {
   Body,
   CacheInterceptor,
@@ -40,16 +41,8 @@ export class SightingsController {
     description: 'Successfully get list of sightings',
     type: [CatSighting],
   })
-  @ApiQuery({
-    name: 'catIds',
-    required: false,
-    explode: false,
-  })
-  @ApiQuery({
-    name: 'ownerIds',
-    required: false,
-    explode: false,
-  })
+  @ApiQuery({ name: 'catIds', required: false, explode: false })
+  @ApiQuery({ name: 'ownerIds', required: false, explode: false })
   @Get()
   listAllSightings(
     @Req() request: Request,
@@ -58,7 +51,7 @@ export class SightingsController {
     console.log(querySightingDto);
     const { limit, page, ...queryOptions } = querySightingDto;
 
-    return this.sightingsService.listSightings(queryOptions, {
+    return this.sightingsService.listBy(queryOptions, {
       limit: Math.min(50, limit),
       page,
       route: '/sightings',
@@ -75,7 +68,7 @@ export class SightingsController {
   @ApiParam({ name: 'id', description: 'The id of the sighting to query' })
   @Get('/:id')
   getSighting(@Param('id', ParseIntPipe) id: number): Observable<CatSighting> {
-    return this.sightingsService.getSighting(id).pipe(
+    return this.sightingsService.findOne(id).pipe(
       catchError(() => EMPTY),
       mergeMap(async (val) => {
         if (val) {
@@ -98,7 +91,7 @@ export class SightingsController {
   createSighting(
     @Body() createSightingDto: CreateSightingDto,
   ): Observable<CatSighting> {
-    return this.sightingsService.createSighting(createSightingDto);
+    return this.sightingsService.create(createSightingDto);
   }
 
   /**
@@ -110,8 +103,23 @@ export class SightingsController {
   })
   @ApiParam({ name: 'id', description: 'The id of the sighting to update' })
   @Put('/:id')
-  updateSighting() {
-    // TODO, what can users update?
-    return;
+  updateSighting(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSighintDto: UpdateSightingDto,
+  ) {
+    return this.sightingsService.update(id, updateSighintDto);
+  }
+
+  /**
+   * Remove a cat sighting
+   */
+  @ApiOkResponse({
+    description: 'Successfully updated sighting',
+    type: CatSighting,
+  })
+  @ApiParam({ name: 'id', description: 'The id of the sighting to remove' })
+  @Put('/:id')
+  removeSighting(@Param('id', ParseIntPipe) id: number) {
+    return this.sightingsService.remove(id);
   }
 }

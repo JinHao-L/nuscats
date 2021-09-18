@@ -1,3 +1,4 @@
+import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import { Point } from 'geojson';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,7 +8,7 @@ import {
   IPaginationOptions,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { from, Observable } from 'rxjs';
+import { from, mergeMap, Observable } from 'rxjs';
 
 import { QuerySightingOrderBy } from '@api/sightings';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
@@ -22,7 +23,7 @@ export class SightingsService {
     private sightingsRepository: Repository<CatSighting>,
   ) {}
 
-  listSightings(
+  listBy(
     queryOptions: Omit<QuerySightingDto, 'page' | 'limit'>,
     pagingOptions: IPaginationOptions,
   ): Observable<Pagination<CatSighting>> {
@@ -84,13 +85,11 @@ export class SightingsService {
     );
   }
 
-  getSighting(id: number): Observable<CatSighting> {
+  findOne(id: number): Observable<CatSighting> {
     return from(this.sightingsRepository.findOne(id, { relations: ['cat'] }));
   }
 
-  createSighting(
-    createSightingDto: CreateSightingDto,
-  ): Observable<CatSighting> {
+  create(createSightingDto: CreateSightingDto): Observable<CatSighting> {
     const { latlng, ...sightings } = createSightingDto;
 
     const [lat, lng] = latlng.split(',');
@@ -101,5 +100,20 @@ export class SightingsService {
       location,
     });
     return from(this.sightingsRepository.save(sighting));
+  }
+
+  update(
+    id: number,
+    updateSightingDto: UpdateSightingDto,
+  ): Observable<CatSighting> {
+    return from(
+      this.sightingsRepository.update({ id }, { ...updateSightingDto }),
+    ).pipe(mergeMap(() => this.findOne(id)));
+  }
+
+  remove(id: number): Observable<CatSighting> {
+    return this.findOne(id).pipe(
+      mergeMap((post) => this.sightingsRepository.remove(post)),
+    );
   }
 }
