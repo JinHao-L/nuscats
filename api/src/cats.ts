@@ -15,7 +15,6 @@ export interface Cat {
   one_liner: string;
   description: string;
   zone: UniversityZone;
-  sightings?: CatSighting[];
   created_at: Date;
   updated_at: Date;
 }
@@ -27,7 +26,6 @@ export function makeCat({
   one_liner = '',
   description = '',
   zone,
-  sightings = [],
 }: {
   id: number;
   name: string;
@@ -35,7 +33,6 @@ export function makeCat({
   one_liner?: string;
   description?: string;
   zone: UniversityZone;
-  sightings?: CatSighting[]
 }): Cat {
 
   return {
@@ -45,7 +42,6 @@ export function makeCat({
     one_liner: one_liner,
     description: description,
     zone: zone,
-    sightings: sightings,
     created_at: new Date(),
     updated_at: new Date()
   }

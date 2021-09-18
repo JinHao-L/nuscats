@@ -45,6 +45,9 @@ module.exports = {
           '800': '#4f280e',
           '900': '#34190a',
         },
+      },
+      backgroundImage: {
+        'cover-cat': "url('https://placekitten.com/400/908')",
       }
     },
   },

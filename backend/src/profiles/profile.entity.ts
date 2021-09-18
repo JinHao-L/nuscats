@@ -1,4 +1,5 @@
 import { IsOptional, IsUrl } from 'class-validator';
+import { ApiHideProperty } from '@nestjs/swagger';
 import {
   Entity,
   Column,
@@ -7,8 +8,10 @@ import {
   OneToOne,
   JoinColumn,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../users/user.entity';
+import { CatSighting } from '../sightings/catSighting.entity';
 
 import { Profile as IProfile } from '@api/profiles';
 @Entity()
@@ -33,6 +36,10 @@ export class Profile implements IProfile {
   @IsOptional()
   @Column('varchar', { nullable: true })
   profile_pic: string;
+
+  @OneToMany((type) => CatSighting, (post) => post.owner)
+  @ApiHideProperty()
+  posts?: CatSighting[];
 
   @CreateDateColumn()
   created_at: Date;
