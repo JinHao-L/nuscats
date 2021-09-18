@@ -13,7 +13,7 @@ module.exports = {
           '50': '#fcfbf9',
           '100': '#fbf0e3',
           '200': '#f7d2c5',
-          '300': '#eca797',
+          '300': '#fb805e',
           '400': '#fb724c',
           '500': '#d55548',
           '600': '#bc3b30',
@@ -54,6 +54,7 @@ module.exports = {
   variants: {
     extend: {
       scrollSnapType: ['responsive'],
+      backgroundColor: ['active'],
     },
   },
   plugins: [

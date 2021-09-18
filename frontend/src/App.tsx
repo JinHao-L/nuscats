@@ -36,6 +36,8 @@ import './theme/tailwind.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './theme/tailwind.css';
 import {
+  ADMIN_ROUTE,
+  BROADCAST_ANNOUNCEMENT_ROUTE,
   CAT_ROUTE,
   CHANGE_PASSWORD_ROUTE,
   CHANGE_USERNAME_ROUTE,
@@ -49,6 +51,8 @@ import ChangePassword from 'pages/ChangePassword';
 import ChangeUsername from 'pages/ChangeUsername';
 import Profile from 'pages/Profile';
 import Settings from 'pages/Settings';
+import Admin from 'pages/Admin';
+import BroadcastAnnouncement from 'pages/BroadcastAnnouncement';
 
 const App: React.FC = () => {
   return (
@@ -72,6 +76,8 @@ const App: React.FC = () => {
               component={ChangePassword}
             />
             <Route exact path={LANDING_ROUTE} component={Landing} />
+            <Route exact path={ADMIN_ROUTE} component={Admin} />
+            <Route exact path={BROADCAST_ANNOUNCEMENT_ROUTE} component={BroadcastAnnouncement} />
             <Route render={() => <Tabs />} />
           </IonRouterOutlet>
         </IonReactRouter>
