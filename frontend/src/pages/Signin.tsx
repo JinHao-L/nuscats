@@ -1,4 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonRouterLink, IonToolbar } from "@ionic/react";
+import { ROOT_ROUTE } from "app/routes";
 
 const Signin: React.FC = () => {
 	return (
@@ -41,6 +42,8 @@ const Signin: React.FC = () => {
 					className="mx-5 text-lg text-white cursor-pointer h-14"
 					color="primary"
 					expand="block"
+					routerLink={ROOT_ROUTE}
+					routerDirection="forward"
 				>
 					Sign in
 				</IonButton>

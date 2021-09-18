@@ -1,7 +1,8 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { settingsOutline } from "ionicons/icons";
 import { ImageDetail, ImageGallery } from "components/ImageGallery";
 import { Link } from "react-router-dom";
+import { PROFILE_SETTINGS_ROUTE } from "app/routes";
 
 
 const Profile: React.FC = () => {
@@ -19,20 +20,27 @@ const Profile: React.FC = () => {
 
 	return(
 		<IonPage>
-			<IonHeader>
+			<IonHeader collapse="condense">
+				<IonToolbar />
 				<IonToolbar>
-					<IonTitle>
-						Profile
-					</IonTitle>
+					<IonButtons slot="end">
+						<IonButton
+							fill="clear"
+							color="secondary"
+							slot="icon-only"
+							routerLink={PROFILE_SETTINGS_ROUTE}
+							size={'large'}
+							className="pb-2 pr-2"
+						>
+							<IonIcon icon={settingsOutline} />
+						</IonButton>
+					</IonButtons>
+					<IonTitle  slot="start" size="large" className="leading-snug">Profile</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
 				<div className="h-full mx-5 flex flex-col">
-					<div className="flex justify-end">
-						<Link to="/profile/settings">
-							<IonIcon icon={settingsOutline} className="mt-6" />
-						</Link>
-					</div>
+					
 					<div className="border mt-2 bg-primary-400 rounded-3xl p-5">
 						<div className="flex">
 							<img src={profilePicUrl} alt="profile pic" className="h-20 w-20 border-2 border-white rounded-3xl rounded-3xl" />
