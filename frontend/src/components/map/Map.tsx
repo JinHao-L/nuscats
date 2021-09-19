@@ -12,7 +12,7 @@ type MapSettings = {
 };
 
 const defaultMapSettings: MapSettings = {
-  center: [103.77808784502815, 1.4304135719534514],
+  center: [103.772663576, 1.290665504],
   zoom: [15.5],
 };
 

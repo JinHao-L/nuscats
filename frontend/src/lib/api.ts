@@ -5,6 +5,7 @@ export const ApiBaseUrl = IsDev ? "http://localhost:3001" : "http://localhost:30
 
 export const catsKey = "/cats"
 export const sightingsKey = "/sightings"
+export const latestKey = "/sightings/latest"
 export const loginKey = "/auth/login"
 export const logoutKey = "/auth/logout"
 export const refreshLoginKey = "/auth/refresh"
