@@ -80,10 +80,6 @@ const App: React.FC = () => {
               component={ChangePassword}
             />
             <Route exact path={LANDING_ROUTE} component={Landing} />
-            <Route exact path={ADMIN_ROUTE} component={Admin} />
-            <Route exact path={BROADCAST_ANNOUNCEMENT_ROUTE} component={BroadcastAnnouncement} />
-            <Route exact path={REQUEST_LOCATION_ROUTE} component={RequestLocation} />
-            <Route exact path={EDIT_CATS_ROUTE} component={EditCatsList} />
             <Route render={() => <Tabs />} />
           </IonRouterOutlet>
         </IonReactRouter>
