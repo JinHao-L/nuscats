@@ -30,11 +30,35 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
 import { LatestSightingQuery } from './dtos/latest-sighting.dto';
 
+// todo: authentication
 @ApiTags('Sightings')
 @UseInterceptors(CacheInterceptor)
 @Controller('sightings')
 export class SightingsController {
   constructor(private sightingsService: SightingsService) {}
+
+  /**
+   * Gets all sightings (based on query result)
+   */
+  @ApiOkResponse({
+    description: 'Successfully get list of sightings',
+    type: [CatSighting],
+  })
+  @ApiQuery({ name: 'catIds', required: false, explode: false })
+  @ApiQuery({ name: 'ownerIds', required: false, explode: false })
+  @Get()
+  listMultipleSightings(
+    @Req() request: Request,
+    @Query() sightingQuery: MultipleSightingQuery,
+  ): Observable<Pagination<CatSighting>> {
+    const { limit, page, ...queryOptions } = sightingQuery;
+
+    return this.sightingsService.listBy(queryOptions, {
+      limit: Math.min(50, limit),
+      page,
+      route: request.originalUrl,
+    });
+  }
 
   /**
    * Gets the latest sighting for each cat
@@ -72,30 +96,6 @@ export class SightingsController {
         }
       }),
     );
-  }
-
-  /**
-   * Gets all sightings (based on query result)
-   */
-  @ApiOkResponse({
-    description: 'Successfully get list of sightings',
-    type: [CatSighting],
-  })
-  @ApiQuery({ name: 'catIds', required: false, explode: false })
-  @ApiQuery({ name: 'ownerIds', required: false, explode: false })
-  @Get()
-  listAllSightings(
-    @Req() request: Request,
-    @Query() sightingQuery: MultipleSightingQuery,
-  ): Observable<Pagination<CatSighting>> {
-    console.log(sightingQuery);
-    const { limit, page, ...queryOptions } = sightingQuery;
-
-    return this.sightingsService.listBy(queryOptions, {
-      limit: Math.min(50, limit),
-      page,
-      route: request.path,
-    });
   }
 
   /**

@@ -20,16 +20,17 @@ import React, { useMemo } from 'react';
 
 interface FeedCardProps {
   sighting: CatSighting;
+  className?: string;
 }
 
-const FeedCard: React.FC<FeedCardProps> = ({ sighting }) => {
+const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
   const baseColor = useMemo(
     () => (sighting.type === SightingType.Emergency ? undefined : undefined),
     [sighting?.type],
   );
-
+  console.log(sighting.updated_at);
   return (
-    <IonCard color={baseColor}>
+    <IonCard color={baseColor} className={className}>
       <IonItem className="pt-1 overflow-visible" color={baseColor} lines="none">
         <IonAvatar slot="start">
           <IonImg

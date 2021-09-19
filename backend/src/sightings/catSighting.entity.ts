@@ -1,3 +1,4 @@
+import { Point } from 'geojson';
 import { Profile } from './../profiles/profile.entity';
 import {
   Entity,
@@ -9,13 +10,12 @@ import {
   Index,
   JoinColumn,
 } from 'typeorm';
-import { Point } from 'geojson';
 import { IsUrl } from 'class-validator';
 
 import { Cat } from '../cats/cats.entity';
 import { SightingType, CatSighting as ICatSighting } from '@api/sightings';
 import { Exclude } from 'class-transformer';
-import { ApiHideProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class CatSighting implements ICatSighting {
@@ -46,6 +46,18 @@ export class CatSighting implements ICatSighting {
     srid: 4326,
     nullable: true,
     spatialFeatureType: 'Point',
+  })
+  @ApiProperty({
+    type: 'object',
+    properties: {
+      type: { type: 'enum', enum: ['Point'] },
+      coordinates: {
+        type: 'array',
+        items: { type: 'number', format: 'float' },
+        maxItems: 2,
+        minItems: 2,
+      },
+    },
   })
   location: Point;
 

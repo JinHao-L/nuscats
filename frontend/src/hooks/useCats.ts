@@ -1,6 +1,7 @@
 import { Cat } from "@api/cats";
 import { QuerySightingOrderBy, CatSightingsResponse } from "@api/sightings"
 import { catsKey, Result, sightingsKey, swrFetcher } from "lib/api";
+import { parseDate } from "lib/utils";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 
@@ -56,8 +57,8 @@ export function useCat(id: number, { includeSightings }: useCatOptions = {}) {
         .flatMap(res => res.value.items.map(item => {
             // hacky workaround: interface type is a Date, but the actual runtime
             // type is a string
-            item.created_at = fixDate(item.created_at)
-            item.updated_at = fixDate(item.updated_at)
+            item.created_at = parseDate(item.created_at)
+            item.updated_at = parseDate(item.updated_at)
             return item
         }))
 
@@ -73,9 +74,4 @@ export function useCat(id: number, { includeSightings }: useCatOptions = {}) {
         sightingsPageSize: size,
         setSightingsPageSize: setSize
     }
-}
-
-const fixDate = (date: Date): Date => {
-    const strDate = date as unknown as string
-    return new Date(strDate)
 }
