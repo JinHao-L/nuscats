@@ -1,6 +1,7 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonModal } from "@ionic/react";
 import { Cat, makeCat, UniversityZone } from '@api/cats';
 import AdminCatCard from "components/AdminCatCard";
+import EditCatModal from "components/EditCatModal";
 
 const EditCatsList: React.FC =() => {
 	// Dummy data
@@ -35,6 +36,11 @@ const EditCatsList: React.FC =() => {
 		})
 	]
 
+	// Add new cat modal
+	const [presentModal, dismissModal] = useIonModal(EditCatModal, {
+		dismiss: () => dismissModal(),
+	});
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -57,7 +63,7 @@ const EditCatsList: React.FC =() => {
 					className="mx-5 text-lg text-white cursor-pointer h-14"
 					color="primary"
 					expand="block"
-					routerDirection="forward"
+					onClick={() => presentModal()}
 				>
 					Add new cat 
 				</IonButton>
