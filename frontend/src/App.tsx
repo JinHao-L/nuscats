@@ -1,6 +1,5 @@
 import { Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
-import { Provider } from 'react-redux';
 import { IonReactRouter } from '@ionic/react-router';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
@@ -25,7 +24,6 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import store from './app/store';
 
 /* Tailwind Setup */
 import 'tailwindcss/tailwind.css';
@@ -50,31 +48,29 @@ import Settings from 'pages/Settings';
 
 const App: React.FC = () => {
   return (
-    <Provider store={store}>
-      <IonApp>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route exact path={SIGNUP_ROUTE} component={Signup} />
-            <Route exact path={SIGNIN_ROUTE} component={Signin} />
-            <Route exact path={LANDING_ROUTE} component={Landing} />
-            <Route exact path={PROFILE_ROUTE} component={Profile} />
-            <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
-            <Route
-              exact
-              path={CHANGE_USERNAME_ROUTE}
-              component={ChangeUsername}
-            />
-            <Route
-              exact
-              path={CHANGE_PASSWORD_ROUTE}
-              component={ChangePassword}
-            />
-            <Route exact path={LANDING_ROUTE} component={Landing} />
-            <Route render={() => <Tabs />} />
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </IonApp>
-    </Provider>
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path={SIGNUP_ROUTE} component={Signup} />
+          <Route exact path={SIGNIN_ROUTE} component={Signin} />
+          <Route exact path={LANDING_ROUTE} component={Landing} />
+          <Route exact path={PROFILE_ROUTE} component={Profile} />
+          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
+          <Route
+            exact
+            path={CHANGE_USERNAME_ROUTE}
+            component={ChangeUsername}
+          />
+          <Route
+            exact
+            path={CHANGE_PASSWORD_ROUTE}
+            component={ChangePassword}
+          />
+          <Route exact path={LANDING_ROUTE} component={Landing} />
+          <Route render={() => <Tabs />} />
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
   );
 };
 

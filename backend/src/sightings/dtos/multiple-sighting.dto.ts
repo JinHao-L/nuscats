@@ -1,13 +1,15 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsEnum,
   IsInt,
   IsLatLong,
+  IsNumber,
   IsOptional,
   IsPositive,
   IsUUID,
+  Min,
 } from 'class-validator';
 import {
   CatSightingQuery as ICatSightingQuery,
@@ -15,15 +17,15 @@ import {
   SightingType,
 } from '@api/sightings';
 
-export class QuerySightingDto implements ICatSightingQuery {
+export class MultipleSightingQuery implements ICatSightingQuery {
   //================ FILTERS ===================
 
   /**
    * The ids of cats to query
    */
   @IsOptional()
-  @IsArray({})
-  @Transform(({ value }) => value.split(',').map((item) => Number(item)))
+  @IsArray()
+  @Transform(({ value }) => value?.split(',')?.map((item) => Number(item)))
   @IsInt({ each: true })
   @IsPositive({ each: true })
   catIds?: number[];
@@ -50,7 +52,7 @@ export class QuerySightingDto implements ICatSightingQuery {
    */
   @IsOptional()
   @IsArray({})
-  @Transform(({ value }) => value.split(','))
+  @Transform(({ value }) => value?.split(','))
   @IsUUID(4, { each: true })
   ownerIds?: string[];
 
@@ -80,10 +82,18 @@ export class QuerySightingDto implements ICatSightingQuery {
   /**
    * The number of queries per page
    */
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
   limit?: number = 10;
 
   /**
    * The page number to query
    */
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
   page?: number = 1;
 }

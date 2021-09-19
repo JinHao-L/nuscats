@@ -94,7 +94,7 @@ const Tabs: React.FC = () => {
           <Route exact path={BROADCAST_ANNOUNCEMENT_ROUTE} component={BroadcastAnnouncement} />
           <Route exact path={REQUEST_LOCATION_ROUTE} component={RequestLocation} />
           <Route exact path={EDIT_CATS_ROUTE} component={EditCatsList} />
-          <Route path={`${CAT_ROUTE}/:id`} component={CatDetailPage} />
+          <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
           <Route render={() => <Redirect to={MAP_ROUTE} />} />
         </IonRouterOutlet>
 

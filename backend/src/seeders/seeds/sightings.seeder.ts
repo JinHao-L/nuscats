@@ -56,7 +56,7 @@ export class SightingsSeeder implements ISeeder {
               Math.random() * 0.008
             ).toString(),
           ),
-          ownerId: users[randUser].uuid,
+          owner_id: users[randUser].uuid,
           is_seed: true,
           // randomise the sighting type
           ...(Math.random() < 0.7

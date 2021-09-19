@@ -1,54 +1,59 @@
-import { makeCat, UniversityZone } from '@api/cats';
-import { CatSighting, makeSighting, SightingType } from '@api/sightings';
+import { RefresherEventDetail } from '@ionic/core';
 import {
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonList,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
 import { MAP_ROUTE } from 'app/routes';
 import FeedCard from 'components/FeedCard';
+import { useSightings } from 'hooks/useSightings';
 import { map } from 'ionicons/icons';
+import { useEffect, useCallback, useState } from 'react';
 
 const FeedTab: React.FC = () => {
-  const sightings: CatSighting[] = [
-    makeSighting({
-      id: 1,
-      image: 'https://placekitten.com/1000/1000',
-      description:
-        'A cat in its natural habitat 😺A cat in its natural habitat 😺A cat in its natural habitat 😺A cat in its natural habitat 😺',
-      location: { type: 'Point', coordinates: [1, 2, 3] },
-      type: SightingType.CatSighted,
-      cat: makeCat({
-        id: 3,
-        name: 'Ashy',
-        description:
-          'I sleep most of the day for a very good excuse- that’s what I’m wired to do! When most of you are just waking up, or rushing for that 8am tutorial, I am starting the day with a snooze. You might pass me by on the way to the UTown bus stop, at the steps outside UTR. You can probably approach me quietly for a little pat and rub, but please don’t poke me awake – I need my catnaps.',
-        zone: UniversityZone.Utown,
-      }),
-    }),
-    makeSighting({
-      id: 1,
-      image: 'https://placekitten.com/1001/1000',
-      description: "Cat looks like it's injured 😿",
-      location: { type: 'Point', coordinates: [1, 2, 3] },
-      type: SightingType.Emergency,
-      cat: makeCat({
-        id: 1,
-        name: 'Garfield',
-        neutered: false,
-        one_liner: 'Fluffy bowling ball',
-        description:
-          'I am a strong and healthy boy! I have black and white fur and I love to sleep :)',
-        zone: UniversityZone.Arts,
-      }),
-    }),
-  ];
+  const { sightings, error, mutate, isLoading, pageSize, setPageSize } =
+    useSightings({ limit: 5, page: 1 });
+
+  useEffect(() => {
+    error && console.log({ error });
+  }, [error]);
+
+  const doRefreshSightings = useCallback(
+    (event: CustomEvent<RefresherEventDetail>) => {
+      mutate();
+      setTimeout(() => {
+        if (!isLoading) {
+          event.detail.complete();
+        }
+      }, 1000);
+    },
+    [mutate, isLoading],
+  );
+
+  const doLoadMoreSightings = async (event: CustomEvent<void>) => {
+    const originalPage = pageSize;
+    const data = await setPageSize(originalPage + 1);
+    
+    const target = (event.target as HTMLIonInfiniteScrollElement);
+    setTimeout(() => {
+      target.complete();
+      console.log(data)
+      if (data && data.length === originalPage) {
+        target.disabled = true
+      }
+    }, 1000)
+  };
 
   return (
     <IonPage>
@@ -80,12 +85,38 @@ const FeedTab: React.FC = () => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-
-        <IonList>
-          {sightings.map((sighting) => (
-            <FeedCard sighting={sighting} />
-          ))}
-        </IonList>
+        <div>
+          <IonRefresher slot="fixed" onIonRefresh={doRefreshSightings}>
+            <IonRefresherContent></IonRefresherContent>
+          </IonRefresher>
+          {sightings && (
+            <>
+              <IonList>
+                {sightings.map((sighting) => (
+                  <FeedCard key={sighting.id} sighting={sighting} />
+                ))}
+              </IonList>
+              <IonInfiniteScroll
+                threshold="100px"
+                onIonInfinite={doLoadMoreSightings}
+              >
+                <IonInfiniteScrollContent loadingText="Loading more kitty images..."></IonInfiniteScrollContent>
+              </IonInfiniteScroll>
+            </>
+          )}
+          {error && (
+            <div className="flex items-center justify-center w-full h-full">
+              <p className="font-medium text-red-600">
+                Error loading cats, please try again
+              </p>
+            </div>
+          )}
+          {isLoading && (
+            <div className="flex items-center justify-center w-full h-full">
+              <IonSpinner />
+            </div>
+          )}
+        </div>
       </IonContent>
     </IonPage>
   );

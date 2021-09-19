@@ -8,7 +8,7 @@ type CameraFabProps = {
 const CameraFab = ({ onClick }: CameraFabProps) => {
   return (
     <IonFab
-      className="mb-5 mr-5"
+      className="z-40 mb-5 mr-5"
       slot="fixed"
       vertical="bottom"
       horizontal="end"

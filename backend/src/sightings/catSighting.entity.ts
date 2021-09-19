@@ -1,3 +1,4 @@
+import { Point } from 'geojson';
 import { Profile } from './../profiles/profile.entity';
 import {
   Entity,
@@ -9,13 +10,12 @@ import {
   Index,
   JoinColumn,
 } from 'typeorm';
-import { Point } from 'geojson';
 import { IsUrl } from 'class-validator';
 
 import { Cat } from '../cats/cats.entity';
 import { SightingType, CatSighting as ICatSighting } from '@api/sightings';
 import { Exclude } from 'class-transformer';
-import { ApiHideProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class CatSighting implements ICatSighting {
@@ -26,14 +26,14 @@ export class CatSighting implements ICatSighting {
   @Column('varchar')
   image: string;
 
-  @Column('number', { nullable: true })
-  catId?: number;
+  @Column('decimal', { nullable: true })
+  cat_id?: number;
 
   @ManyToOne(() => Cat, (cat: Cat) => cat.sightings, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'catId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'cat_id', referencedColumnName: 'id' })
   cat?: Cat;
 
   /**
@@ -46,6 +46,18 @@ export class CatSighting implements ICatSighting {
     srid: 4326,
     nullable: true,
     spatialFeatureType: 'Point',
+  })
+  @ApiProperty({
+    type: 'object',
+    properties: {
+      type: { type: 'enum', enum: ['Point'] },
+      coordinates: {
+        type: 'array',
+        items: { type: 'number', format: 'float' },
+        maxItems: 2,
+        minItems: 2,
+      },
+    },
   })
   location: Point;
 
@@ -67,13 +79,13 @@ export class CatSighting implements ICatSighting {
   description: string;
 
   @Column('varchar', { nullable: true })
-  ownerId?: string;
+  owner_id?: string;
 
   @ManyToOne(() => Profile, (user: Profile) => user.uuid, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'ownerId', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'owner_id', referencedColumnName: 'uuid' })
   @ApiHideProperty()
   owner?: Profile;
 

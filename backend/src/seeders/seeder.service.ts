@@ -1,6 +1,6 @@
 import { SeederConfigService } from '../config/seeder.config';
 import { ISeeder } from './seeder.interface';
-import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 
 @Injectable()
 export class SeederService implements OnApplicationBootstrap {

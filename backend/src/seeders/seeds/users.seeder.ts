@@ -21,7 +21,6 @@ export class UsersSeeder implements ISeeder {
   private async generateData(
     roles: RoleType[],
     subject: string,
-    index: number,
   ): Promise<User> {
     return bcrypt.hash(subject, 12).then((password_hash) => {
       return this.userRepository.create({
@@ -37,13 +36,13 @@ export class UsersSeeder implements ISeeder {
     const userPromises: Promise<User>[] = [];
 
     // Generate admin account.
-    const adminPromise = this.generateData([RoleType.Admin], 'admin', 1);
+    const adminPromise = this.generateData([RoleType.Admin], 'admin');
     userPromises.push(adminPromise);
 
     // generate 5 accounts with user privilege
     for (let i = 1; i <= 5; i++) {
       const subject = `user${i}`;
-      userPromises.push(this.generateData([RoleType.User], subject, i + 1));
+      userPromises.push(this.generateData([RoleType.User], subject));
     }
 
     return Promise.all(userPromises)

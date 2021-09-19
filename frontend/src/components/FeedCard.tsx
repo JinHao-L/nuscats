@@ -20,22 +20,16 @@ import React, { useMemo } from 'react';
 
 interface FeedCardProps {
   sighting: CatSighting;
+  className?: string;
 }
 
-// catId?: number; // id reference to cat
-// cat?: Cat; // when viewing a particular sighting information
-// location: Point;
-// created_at: Date;
-// updated_at: Date;
-
-const FeedCard: React.FC<FeedCardProps> = ({ sighting }) => {
+const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
   const baseColor = useMemo(
     () => (sighting.type === SightingType.Emergency ? undefined : undefined),
     [sighting?.type],
   );
-
   return (
-    <IonCard color={baseColor}>
+    <IonCard color={baseColor} className={className}>
       <IonItem className="pt-1 overflow-visible" color={baseColor} lines="none">
         <IonAvatar slot="start">
           <IonImg
@@ -55,7 +49,7 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting }) => {
           <div className="flex flex-row items-center justify-center space-x-2">
             <IonIcon color="secondary" icon={logoOctocat} />
             <IonText className="text-sm font-medium text-gray-800">
-              {sighting.cat?.name}
+              {sighting.cat?.name || sighting.cat_id}
             </IonText>
           </div>
           {sighting.type !== SightingType.Emergency ? (

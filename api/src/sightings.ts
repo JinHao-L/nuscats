@@ -9,14 +9,44 @@ export enum SightingType {
 export interface CatSighting {
   id: number;
   image: string; // url to image
-  catId?: number; // id reference to cat
+  cat_id?: number; // id reference to cat
   cat?: Cat; // when viewing a particular sighting information
   location: Point;
   type: SightingType;
   description: string;
-  ownerId?: string;
+  owner_id?: string;
   created_at: Date;
   updated_at: Date;
+}
+
+export function makeSighting({
+  id,
+  image,
+  cat_id = 0,
+  cat = undefined,
+  location,
+  type,
+  description = "",
+}: {
+  id: number;
+  image: string;
+  cat_id?: number;
+  cat?: Cat | undefined;
+  location: Point;
+  type: SightingType;
+  description?: string;
+}): CatSighting {
+  return {
+    id: id,
+    image: image,
+    cat_id: cat_id,
+    cat: cat,
+    location: location,
+    type: type,
+    description: description,
+    created_at: new Date(),
+    updated_at: new Date(),
+  };
 }
 
 export enum QuerySightingOrderBy {
@@ -40,32 +70,23 @@ export interface CatSightingQuery {
   page?: number;
 }
 
-export function makeSighting({
-  id,
-  image,
-  catId = 0,
-  cat = undefined,
-  location,
-  type,
-  description = "",
-}: {
-  id: number;
-  image: string;
-  catId?: number;
-  cat?: Cat | undefined;
-  location: Point;
-  type: SightingType;
-  description?: string;
-}): CatSighting {
-  return {
-    id: id,
-    image: image,
-    catId: catId,
-    cat: cat,
-    location: location,
-    type: type,
-    description: description,
-    created_at: new Date(),
-    updated_at: new Date(),
-  };
+export interface CatSightingsResponse {
+  items: CatSighting[];
+  meta: PaginationMetadata;
+  links: Links;
+}
+
+export interface Links {
+  first: string;
+  previous: string;
+  next: string;
+  last: string;
+}
+
+export interface PaginationMetadata {
+  totalItems: number;
+  itemCount: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
 }

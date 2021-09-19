@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import {
   IonButton,
   IonButtons,
@@ -6,6 +7,7 @@ import {
   IonIcon,
   IonModal,
   IonPage,
+  IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
@@ -15,11 +17,15 @@ import Map from 'components/map/Map';
 import SightingsForm from 'components/map/form/SightingsForm';
 import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
-import { useEffect, useRef, useState } from 'react';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { list } from 'ionicons/icons';
+import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE } from 'app/routes';
+import { useLatestSightings } from 'hooks/useSightings';
+import CatIcon from 'components/map/CatIcon';
+import { CatSighting } from '@api/sightings';
+import FeedCard from 'components/FeedCard';
+// import Modal from 'react-modal';
 
 const HomeTab: React.FC = () => {
   /**
@@ -28,6 +34,13 @@ const HomeTab: React.FC = () => {
   const coords = useGeolocation();
   const [isCentered, setIsCentered] = useState<boolean>(false);
   const mapRef = useRef<State>();
+  const [catDetails, setCatDetails] = useState<CatSighting | null>(null);
+
+  /**
+   * Getting latest sightings
+   */
+  const { sightings, error, isLoading, mutate } = useLatestSightings();
+  const [showFeedback, toggleFeedback] = useState(false);
 
   /**
    * Creating a new sighting
@@ -39,6 +52,22 @@ const HomeTab: React.FC = () => {
     resizeMap();
     centerMapToUser();
   }, [mapRef.current]);
+
+  useEffect(() => {
+    if (!isLoading && !sightings) {
+      console.log('Error loading sightings, please try again');
+    } else {
+      console.log(isLoading, sightings);
+    }
+  }, [isLoading, sightings]);
+
+  const refreshSightings = () => {
+    mutate();
+    toggleFeedback(true);
+    setTimeout(() => {
+      toggleFeedback(false);
+    }, 1000);
+  };
 
   const resizeMap = (): void => {
     // This fixes an issue where the map is not immediately
@@ -86,6 +115,22 @@ const HomeTab: React.FC = () => {
             </IonButton>
           </IonButtons>
           <IonTitle>Map</IonTitle>
+          <IonButtons slot="start">
+            <IonButton
+              fill="clear"
+              color="secondary"
+              slot="start"
+              size={'small'}
+              onClick={refreshSightings}
+              disabled={isLoading}
+            >
+              {showFeedback && !isLoading ? (
+                <IonSpinner name="circular" color="secondary" />
+              ) : (
+                <IonIcon slot="start" icon={refresh} />
+              )}
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -94,14 +139,40 @@ const HomeTab: React.FC = () => {
           getRef={(s) => (mapRef.current = s)}
           className="h-full v-full"
           style="mapbox://styles/mapbox/streets-v10"
+          onClick={() => setCatDetails(null)}
         >
-          <UserIcon coords={coords} />
+          <>
+            <UserIcon coords={coords} />
+            {sightings?.map((sighting) => (
+              <CatIcon
+                key={sighting.id}
+                point={sighting.location}
+                catName={sighting.cat?.name}
+                onClick={() => {
+                  if (catDetails === sighting) {
+                    setCatDetails(null);
+                  } else {
+                    setCatDetails(sighting);
+                  }
+                }}
+              />
+            ))}
+            {catDetails && <FeedCard className="z-50" sighting={catDetails} />}
+            <CameraFab onClick={newSighting} />
+            <LocationFab
+              disabled={isCentered || !coords}
+              onClick={centerMapToUser}
+            />
+          </>
         </Map>
-        <CameraFab onClick={newSighting} />
-        <LocationFab
-          disabled={isCentered || !coords}
-          onClick={centerMapToUser}
-        />
+        {/* {catDetails && (
+          <Modal
+            isOpen={catDetails !== null}
+            onRequestClose={() => setCatDetails(null)}
+          >
+            <FeedCard sighting={catDetails} />
+          </Modal>
+        )} */}
         {photo && (
           <IonModal isOpen={showForm}>
             <SightingsForm photo={photo} onDismiss={() => setShowForm(false)} />

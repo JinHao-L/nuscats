@@ -11,6 +11,7 @@ export enum UniversityZone {
 export interface Cat {
   id: number;
   name: string;
+  image: string
   neutered: boolean;
   one_liner: string;
   description: string;
@@ -22,6 +23,7 @@ export interface Cat {
 export function makeCat({
   id,
   name,
+  image = '',
   neutered = false,
   one_liner = '',
   description = '',
@@ -29,6 +31,7 @@ export function makeCat({
 }: {
   id: number;
   name: string;
+  image?: string;
   neutered?: boolean;
   one_liner?: string;
   description?: string;
@@ -38,6 +41,7 @@ export function makeCat({
   return {
     id: id,
     name: name,
+    image: image,
     neutered: neutered,
     one_liner: one_liner,
     description: description,
