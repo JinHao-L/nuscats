@@ -13,7 +13,10 @@ interface Props {
 const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard}) => {
 	
 	const [presentAlert] = useIonAlert();
-	const [presentModal, dismissModal] = useIonModal(EditCatModal);
+	const [presentModal, dismissModal] = useIonModal(EditCatModal, {
+		dismiss: () => dismissModal(),
+		cat: cat,
+	});
 
 	const alertOptions: AlertOptions = {
 		header: `Request location for ${cat.name}?`,

@@ -1,17 +1,27 @@
-import { UniversityZone } from "@api/cats";
+import { Cat, UniversityZone } from "@api/cats";
 import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker } from "@ionic/react";
 import { PickerColumn, PickerOptions } from "@ionic/core";
+import { useState } from "react";
 
-const EditCatModal: React.FC = () => {
+interface Props {
+	dismiss: () => void,
+	cat: Cat,
+}
+
+const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
+	// State stores cat data for updates on page
+	const [catData, setCatData] = useState({ ...cat })
 	
-	const [presentPicker] = useIonPicker();
+	const [presentZonePicker] = useIonPicker();
+	const [presentNeuteredPicker] = useIonPicker();
 	const zonePickerOptions: PickerOptions = {
 		columns: [{
-			name: "Zone",
+			name: "zone",
 			options: Object.keys(UniversityZone).map(zone => {
 				return ({
 					text: zone,
-					value: zone
+					value: zone,
+					selected: zone == catData.zone,
 				});
 			}),
 		}],
@@ -21,13 +31,16 @@ const EditCatModal: React.FC = () => {
 				role: "cancel",
 			},
 			{
-				text: "Confirm"
+				text: "Confirm",
+				handler: (selected) => {
+					setCatData({...catData, zone: selected.zone.value})
+				},
 			},
 		],
 	}
 	const neuteredPickerOptions: PickerOptions = {
 		columns: [{
-			name: "Neutered status",
+			name: "neuteredStatus",
 			options: [{
 				text: "Unknown",
 				value: undefined,
@@ -47,7 +60,10 @@ const EditCatModal: React.FC = () => {
 				role: "cancel",
 			},
 			{
-				text: "Confirm"
+				text: "Confirm",
+				handler: (selected) => {
+					setCatData({...catData, neutered: selected.neuteredStatus.value})
+				}
 			},
 		],
 	}
@@ -56,9 +72,9 @@ const EditCatModal: React.FC = () => {
 		<div>
 			<IonHeader>
 				<IonToolbar>
-					<IonTitle>Cat name here</IonTitle>
+					<IonTitle>{cat.name}</IonTitle>
 					<IonButtons slot="end">
-						<IonButton>Close</IonButton>
+						<IonButton onClick={dismiss}>Close</IonButton>
 					</IonButtons>
 				</IonToolbar>	
 			</IonHeader>
@@ -68,25 +84,26 @@ const EditCatModal: React.FC = () => {
 					<input
 						id="name"
 						className="block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"
-						value="LSKJDLKJ"
+						value={catData.name}
+						onChange={(e) => setCatData({...catData, name: e.target.value})}
 					/>
 				</label>
 				<label className="block my-5 text-lg">
 					Zone:
 					<div
 						className="block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"
-						onClick={() => presentPicker(zonePickerOptions)}
+						onClick={() => presentZonePicker(zonePickerOptions)}
 					>
-						Display zone
+						{catData.zone}
 					</div>
 				</label>
 				<label className="block my-5 text-lg">
 					Neutered status:
 					<div
 						className="block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"
-						onClick={() => presentPicker(neuteredPickerOptions)}
+						onClick={() => presentNeuteredPicker(neuteredPickerOptions)}
 					>
-						Display zone
+						{catData.neutered ? "Neutered" : catData.neutered == undefined ? "Unknown" : "Not neutered"}
 					</div>
 				</label>
 				<label className="block my-5 text-lg">
@@ -94,12 +111,17 @@ const EditCatModal: React.FC = () => {
 					<textarea
 						id="description"
 						className="block w-full px-3 py-1 mt-3 bg-gray-200 border h-60 rounded-xl focus:outline-none"
+						value={catData.description}
+						onChange={(e) => {
+							setCatData({...catData, description: e.target.value})
+						}}
 					/>
 				</label>
 				<IonButton
 					className="text-lg text-white cursor-pointer h-14"
 					color="primary"
 					expand="block"
+					onClick={() => console.log({...catData, updated_at: new Date()})}
 				>
 					Update cat data
 				</IonButton>
