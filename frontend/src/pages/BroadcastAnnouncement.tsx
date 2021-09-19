@@ -1,6 +1,5 @@
 import { IonBackButton, IonButtons, IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 
-
 const BroadcastAnnouncement: React.FC = () => {
 	return (
 		<IonPage>
@@ -19,7 +18,7 @@ const BroadcastAnnouncement: React.FC = () => {
 					<label className="block my-5 text-lg">
 						Broadcast message:
 						<textarea
-							id="email"
+							id="broadcastMessage"
 							className="block w-full px-3 py-1 mt-3 bg-gray-200 border h-60 rounded-xl focus:outline-none"
 						/>
 					</label>

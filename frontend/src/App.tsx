@@ -44,6 +44,7 @@ import {
   LANDING_ROUTE,
   PROFILE_ROUTE,
   PROFILE_SETTINGS_ROUTE,
+  REQUEST_LOCATION_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
 } from 'app/routes';
@@ -53,6 +54,7 @@ import Profile from 'pages/Profile';
 import Settings from 'pages/Settings';
 import Admin from 'pages/Admin';
 import BroadcastAnnouncement from 'pages/BroadcastAnnouncement';
+import RequestLocation from 'pages/RequestLocation';
 
 const App: React.FC = () => {
   return (
@@ -78,6 +80,7 @@ const App: React.FC = () => {
             <Route exact path={LANDING_ROUTE} component={Landing} />
             <Route exact path={ADMIN_ROUTE} component={Admin} />
             <Route exact path={BROADCAST_ANNOUNCEMENT_ROUTE} component={BroadcastAnnouncement} />
+            <Route exact path={REQUEST_LOCATION_ROUTE} component={RequestLocation} />
             <Route render={() => <Tabs />} />
           </IonRouterOutlet>
         </IonReactRouter>
