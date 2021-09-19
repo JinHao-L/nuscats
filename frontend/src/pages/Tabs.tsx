@@ -17,7 +17,6 @@ import CatDetailPage from './CatDetailPage';
 import { useEffect, useState } from 'react';
 import FeedTab from './FeedTab';
 import Admin from './Admin';
-import useAuth from 'hooks/useAuth';
 import EditCatsList from './EditCatsList';
 import RequestLocation from './RequestLocation';
 import BroadcastAnnouncement from './BroadcastAnnouncement';

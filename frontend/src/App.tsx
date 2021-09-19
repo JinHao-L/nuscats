@@ -6,7 +6,6 @@ import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 import Landing from './pages/Landing';
 import Tabs from 'pages/Tabs';
-import CatDetailPage from 'pages/CatDetailPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -36,16 +35,11 @@ import './theme/tailwind.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './theme/tailwind.css';
 import {
-  ADMIN_ROUTE,
-  BROADCAST_ANNOUNCEMENT_ROUTE,
-  CAT_ROUTE,
   CHANGE_PASSWORD_ROUTE,
   CHANGE_USERNAME_ROUTE,
-  EDIT_CATS_ROUTE,
   LANDING_ROUTE,
   PROFILE_ROUTE,
   PROFILE_SETTINGS_ROUTE,
-  REQUEST_LOCATION_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
 } from 'app/routes';
@@ -53,10 +47,6 @@ import ChangePassword from 'pages/ChangePassword';
 import ChangeUsername from 'pages/ChangeUsername';
 import Profile from 'pages/Profile';
 import Settings from 'pages/Settings';
-import Admin from 'pages/Admin';
-import BroadcastAnnouncement from 'pages/BroadcastAnnouncement';
-import RequestLocation from 'pages/RequestLocation';
-import EditCatsList from 'pages/EditCatsList';
 
 const App: React.FC = () => {
   return (

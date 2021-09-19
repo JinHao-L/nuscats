@@ -1,7 +1,6 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { settingsOutline } from "ionicons/icons";
 import { ImageDetail, ImageGallery } from "components/ImageGallery";
-import { Link } from "react-router-dom";
 import { PROFILE_SETTINGS_ROUTE } from "app/routes";
 
 
@@ -39,12 +38,12 @@ const Profile: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<div className="h-full mx-5 flex flex-col">
+				<div className="flex flex-col h-full mx-5">
 					
-					<div className="border mt-2 bg-primary-400 rounded-3xl p-5">
+					<div className="p-5 mt-2 border bg-primary-400 rounded-3xl">
 						<div className="flex">
-							<img src={profilePicUrl} alt="profile pic" className="h-20 w-20 border-2 border-white rounded-3xl rounded-3xl" />
-							<div className="ml-3 w-full">
+							<img src={profilePicUrl} alt="profile pic" className="w-20 h-20 border-2 border-white rounded-3xl" />
+							<div className="w-full ml-3">
 								<p className="text-xl font-bold text-white">{username}</p>
 								<p className="text-white">{fullname}</p>
 							</div>
