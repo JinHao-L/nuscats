@@ -12,7 +12,7 @@ import { parseDate } from 'lib/utils';
 
 interface UseSightingsOptions extends CatSightingQuery {}
 
-export function useSightings(useSightingsOptions: UseSightingsOptions) {
+export function useSightings(useSightingsOptions?: UseSightingsOptions) {
   // build sightings key
   const query = useSightingsOptions
     ? queryString.stringify(useSightingsOptions)
@@ -22,29 +22,29 @@ export function useSightings(useSightingsOptions: UseSightingsOptions) {
     _pageIndex: number,
     previousPageData: Result<CatSightingsResponse> | null,
   ) => {
+    console.log('1', previousPageData?.value.links);
     if (!previousPageData) {
-      return sightingsKey + query;
+      return sightingsKey + '?' + query;
     }
-    if (previousPageData && previousPageData.value.links.next !== '') {
+    console.log('2', previousPageData?.value.links);
+    if (previousPageData && previousPageData.value?.links?.next === '') {
       // reached the end
       return null;
     }
+    console.log('3', previousPageData?.value.links);
     return previousPageData?.value.links.next;
   };
 
   const { data, error, isValidating, mutate, size, setSize } = useSWRInfinite(
     getKey,
     swrFetcher<CatSightingsResponse>(),
-    {
-      dedupingInterval: 10000,
-    },
+    { dedupingInterval: 10000 },
   );
 
   const sightings = data
     ?.filter((res) => res.success)
     .flatMap((res) =>
       res.value.items.map((item) => {
-        console.log(item);
         item.created_at = parseDate(item.created_at);
         item.updated_at = parseDate(item.updated_at);
         return item;
@@ -53,11 +53,11 @@ export function useSightings(useSightingsOptions: UseSightingsOptions) {
 
   return {
     sightings,
-    sightingsError: error,
+    error,
     mutate,
-    sightingsLoading: isValidating,
-    sightingsPageSize: size,
-    setSightingsPageSize: setSize,
+    isLoading: isValidating,
+    pageSize: size,
+    setPageSize: setSize,
   };
 }
 

@@ -29,6 +29,7 @@ import { CreateSightingDto } from './dtos/create-sighting.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
 import { LatestSightingQuery } from './dtos/latest-sighting.dto';
+import * as QueryString from 'query-string';
 
 // todo: authentication
 @ApiTags('Sightings')
@@ -56,7 +57,7 @@ export class SightingsController {
     return this.sightingsService.listBy(queryOptions, {
       limit: Math.min(50, limit),
       page,
-      route: request.originalUrl,
+      route: QueryString.exclude(request.originalUrl, ['page', 'limit']),
     });
   }
 
@@ -72,7 +73,6 @@ export class SightingsController {
   getLatest(
     @Query() sightingQuery: LatestSightingQuery,
   ): Observable<CatSighting[]> {
-    console.log(sightingQuery);
     return this.sightingsService.listLatest(sightingQuery.catIds);
   }
 

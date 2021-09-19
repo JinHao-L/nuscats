@@ -28,7 +28,6 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
     () => (sighting.type === SightingType.Emergency ? undefined : undefined),
     [sighting?.type],
   );
-  console.log(sighting.updated_at);
   return (
     <IonCard color={baseColor} className={className}>
       <IonItem className="pt-1 overflow-visible" color={baseColor} lines="none">
@@ -50,7 +49,7 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
           <div className="flex flex-row items-center justify-center space-x-2">
             <IonIcon color="secondary" icon={logoOctocat} />
             <IonText className="text-sm font-medium text-gray-800">
-              {sighting.cat?.name}
+              {sighting.cat?.name || sighting.cat_id}
             </IonText>
           </div>
           {sighting.type !== SightingType.Emergency ? (
