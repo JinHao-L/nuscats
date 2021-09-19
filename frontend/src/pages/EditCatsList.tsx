@@ -1,8 +1,8 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, AlertOptions, useIonAlert } from "@ionic/react";
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 import { Cat, makeCat, UniversityZone } from '@api/cats';
 import AdminCatCard from "components/AdminCatCard";
 
-const RequestLocation: React.FC = () => {
+const EditCatsList: React.FC =() => {
 	// Dummy data
 	const cats: Cat[] = [
 		makeCat({
@@ -43,18 +43,26 @@ const RequestLocation: React.FC = () => {
 						<IonBackButton defaultHref="/" />
 					</IonButtons>
 					<IonTitle>
-						Request cat location
+						Edit/Add cats
 					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<div className="flex flex-col h-full mx-5 my-5">
-					{cats.map(cat => 
-						<AdminCatCard key={cat.id} cat={cat} cardColor="bg-secondary-300" />
+				<div className="flex flex-col mx-5 my-5">
+					{cats.map(cat =>
+						<AdminCatCard key={cat.id} cat={cat} cardColor="bg-tertiary-300" editCard />
 					)}
 				</div>
+				<IonButton
+					className="mx-5 text-lg text-white cursor-pointer h-14"
+					color="primary"
+					expand="block"
+					routerDirection="forward"
+				>
+					Add new cat 
+				</IonButton>
 			</IonContent>
 		</IonPage>
 	);
-};
-export default RequestLocation;
+}
+export default EditCatsList;

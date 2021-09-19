@@ -18,3 +18,4 @@ export const CHANGE_PASSWORD_ROUTE = `${PROFILE_ROUTE}/changepassword`;
 export const ADMIN_ROUTE = `${ROOT_ROUTE}/admin`;
 export const BROADCAST_ANNOUNCEMENT_ROUTE = `${ADMIN_ROUTE}/announcement`;
 export const REQUEST_LOCATION_ROUTE = `${ADMIN_ROUTE}/reqlocation`;
+export const EDIT_CATS_ROUTE = `${ADMIN_ROUTE}/edit`;

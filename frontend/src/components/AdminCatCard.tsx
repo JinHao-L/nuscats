@@ -1,15 +1,19 @@
 import { Cat } from "@api/cats";
-import { useIonAlert, AlertOptions, IonIcon } from "@ionic/react";
+import { useIonAlert, AlertOptions, IonIcon, useIonModal } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
 import { PlaceholderCatUrl } from "lib/utils";
+import EditCatModal from "./EditCatModal";
 
 interface Props {
 	cat: Cat,
+	cardColor: string,
+	editCard?: boolean,
 }
 
-const MiniCatCard: React.FC<Props> = ({cat}) => {
+const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard}) => {
 	
-	const [present] = useIonAlert();
+	const [presentAlert] = useIonAlert();
+	const [presentModal, dismissModal] = useIonModal(EditCatModal);
 
 	const alertOptions: AlertOptions = {
 		header: `Request location for ${cat.name}?`,
@@ -22,8 +26,8 @@ const MiniCatCard: React.FC<Props> = ({cat}) => {
 
 	return (
 		<div 
-			className="flex w-full h-24 mb-5 shadow-xl bg-secondary-300 rounded-2xl bg-opacity-90"
-			onClick={() => present(alertOptions)}
+			className={`flex w-full h-24 mb-5 shadow-xl ${cardColor} rounded-2xl bg-opacity-90`}
+			onClick={() => editCard ? presentModal() : presentAlert(alertOptions)}
 		>
 			<div className="flex items-center flex-shrink-0 ml-5">
 				<img className="w-16 h-16 border-2 border-white rounded-full" src={PlaceholderCatUrl(200, 210)} alt="cat" />
@@ -38,4 +42,4 @@ const MiniCatCard: React.FC<Props> = ({cat}) => {
 		</div>
 	);
 }
-export default MiniCatCard
+export default AdminCatCard;
