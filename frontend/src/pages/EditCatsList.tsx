@@ -65,7 +65,7 @@ const EditCatsList: React.FC =() => {
 					expand="block"
 					onClick={() => presentModal()}
 				>
-					Add new cat 
+					Add cat 
 				</IonButton>
 			</IonContent>
 		</IonPage>

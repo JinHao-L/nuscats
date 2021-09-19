@@ -1,7 +1,8 @@
 import { Cat, makeCat, UniversityZone } from "@api/cats";
-import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker, IonPage } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker, IonPage, IonIcon, useIonAlert } from "@ionic/react";
 import { PickerColumn, PickerOptions } from "@ionic/core";
 import { useState } from "react";
+import { trashOutline } from "ionicons/icons";
 
 // Note that if cat prop is not given, it is assumed that this is a new cat entry
 interface Props {
@@ -19,20 +20,25 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 		description: '',
 		neutered: undefined, 
 	});
-	
+
+	// Zone picker and neutered status picker setup
 	const [presentZonePicker] = useIonPicker();
 	const [presentNeuteredPicker] = useIonPicker();
-	const zonePickerOptions: PickerOptions = {
-		columns: [{
-			name: "zone",
-			options: Object.keys(UniversityZone).map(zone => {
+
+	const zonePickerOptionsArr = Object.keys(UniversityZone).map(zone => {
 				return ({
 					text: zone,
 					value: zone,
-					selected: zone == catData.zone,
 				});
-			}),
-		}],
+			}
+		);
+	const zonePickerOptions: PickerOptions = {
+		columns: [
+			{
+				name: "zone",
+				options: zonePickerOptionsArr,
+			},
+		],
 		buttons: [
 			{
 				text: "Cancel",
@@ -75,6 +81,9 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 			},
 		],
 	}
+
+	// Delete cat functions
+	const [presentAlert] = useIonAlert();
 
 	return (
 		<IonPage>
@@ -143,8 +152,25 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 						expand="block"
 						onClick={() => console.log(cat ? {...catData, updated_at: new Date()} : makeCat(catData))}
 					>
-						Update cat data
+						{cat ? "Update cat data" : "Add cat"}
 					</IonButton>
+					{cat ? 
+						<IonButton
+							className="mb-5 text-lg text-white cursor-pointer h-14"
+							color="danger"
+							expand="block"
+							onClick={() => presentAlert({
+								header: "Delete cat",
+								message: `Are you sure you want to delete ${cat.name}?`, 
+								buttons: [
+									"Cancel",
+									{text: "Yes", handler: () => console.log("confirm delete")}
+								]
+							})}
+						>
+							Delete cat
+						</IonButton> : null
+					}
 				</div>
 			</IonContent>
 		</IonPage>
