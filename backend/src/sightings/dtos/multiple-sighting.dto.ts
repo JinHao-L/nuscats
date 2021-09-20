@@ -18,6 +18,24 @@ import {
 } from '@api/sightings';
 
 export class MultipleSightingQuery implements ICatSightingQuery {
+  //================ DATA TYPE ===================
+
+  /**
+   * Whether to include cat data
+   */
+  @IsOptional()
+  @Transform(({ value }) => value == 'true')
+  @IsBoolean()
+  includeCatsData?: boolean = false;
+
+  /**
+   * Whether to include owner data
+   */
+  @IsOptional()
+  @Transform(({ value }) => value == 'true')
+  @IsBoolean()
+  includeOwnerData?: boolean = false;
+
   //================ FILTERS ===================
 
   /**

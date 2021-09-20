@@ -1,60 +1,19 @@
-import { RefresherEventDetail } from '@ionic/core';
+import { QuerySightingOrderBy } from '@api/sightings';
 import {
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonList,
   IonPage,
-  IonRefresher,
-  IonRefresherContent,
-  IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
 import { MAP_ROUTE } from 'app/routes';
-import FeedCard from 'components/FeedCard';
-import { useSightings } from 'hooks/useSightings';
+import FeedList from 'components/FeedList';
 import { map } from 'ionicons/icons';
-import { useEffect, useCallback, useState } from 'react';
 
 const FeedTab: React.FC = () => {
-  const { sightings, error, mutate, isLoading, pageSize, setPageSize } =
-    useSightings({ limit: 5, page: 1 });
-
-  useEffect(() => {
-    error && console.log({ error });
-  }, [error]);
-
-  const doRefreshSightings = useCallback(
-    (event: CustomEvent<RefresherEventDetail>) => {
-      mutate();
-      setTimeout(() => {
-        if (!isLoading) {
-          event.detail.complete();
-        }
-      }, 1000);
-    },
-    [mutate, isLoading],
-  );
-
-  const doLoadMoreSightings = async (event: CustomEvent<void>) => {
-    const originalPage = pageSize;
-    const data = await setPageSize(originalPage + 1);
-    
-    const target = (event.target as HTMLIonInfiniteScrollElement);
-    setTimeout(() => {
-      target.complete();
-      console.log(data)
-      if (data && data.length === originalPage) {
-        target.disabled = true
-      }
-    }, 1000)
-  };
-
   return (
     <IonPage>
       <IonHeader>
@@ -85,38 +44,13 @@ const FeedTab: React.FC = () => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <div>
-          <IonRefresher slot="fixed" onIonRefresh={doRefreshSightings}>
-            <IonRefresherContent></IonRefresherContent>
-          </IonRefresher>
-          {sightings && (
-            <>
-              <IonList>
-                {sightings.map((sighting) => (
-                  <FeedCard key={sighting.id} sighting={sighting} />
-                ))}
-              </IonList>
-              <IonInfiniteScroll
-                threshold="100px"
-                onIonInfinite={doLoadMoreSightings}
-              >
-                <IonInfiniteScrollContent loadingText="Loading more kitty images..."></IonInfiniteScrollContent>
-              </IonInfiniteScroll>
-            </>
-          )}
-          {error && (
-            <div className="flex items-center justify-center w-full h-full">
-              <p className="font-medium text-red-600">
-                Error loading cats, please try again
-              </p>
-            </div>
-          )}
-          {isLoading && (
-            <div className="flex items-center justify-center w-full h-full">
-              <IonSpinner />
-            </div>
-          )}
-        </div>
+        <FeedList
+          queryParams={{
+            includeCatsData: true,
+            includeOwnerData: true,
+            orderBy: QuerySightingOrderBy.TIME,
+          }}
+        />
       </IonContent>
     </IonPage>
   );

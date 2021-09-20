@@ -6,7 +6,7 @@ export const SIGNIN_ROUTE = '/signin';
 // TabsRoute
 export const ROOT_ROUTE = '';
 export const MAP_ROUTE = `${ROOT_ROUTE}/home`;
-export const FEED_ROUTE = `${ROOT_ROUTE}/feeds`;
+export const FEED_ROUTE = `${ROOT_ROUTE}/home/feeds`;
 export const CAT_ROUTE = `${ROOT_ROUTE}/cats`;
 export const TAB3_ROUTE = `${ROOT_ROUTE}/tab3`
 

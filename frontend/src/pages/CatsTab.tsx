@@ -1,5 +1,5 @@
 import { RefresherEventDetail } from '@ionic/core';
-import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonList, IonPage, IonRefresher, IonRefresherContent, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
 import CatCard from 'components/CatCard';
 import { useCats } from 'hooks/useCats';
 import { useCallback, useEffect } from 'react';
@@ -35,7 +35,7 @@ const CatsTab: React.FC = () => {
                     <IonRefresherContent ></IonRefresherContent>
                 </IonRefresher>
 
-                <div className="flex flex-col justify-start w-full h-full px-3 mt-4 space-y-5">
+                <div className="flex flex-col justify-start w-full h-full px-3 mt-4 space-y-2">
                     {cats?.map(cat =>
                         <div className="w-full" key={cat.id}>
                             <CatCard cat={cat} ></CatCard>
