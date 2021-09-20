@@ -2,17 +2,19 @@ import { Cat, makeCat, UniversityZone } from "@api/cats";
 import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker, IonPage, IonIcon, useIonAlert } from "@ionic/react";
 import { PickerColumn, PickerOptions } from "@ionic/core";
 import { useState } from "react";
-import { trashOutline } from "ionicons/icons";
+import { logoOctocat, trashOutline } from "ionicons/icons";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { apiFetch, catsKey } from "lib/api";
+import { apiFetch, catsKey, Result } from "lib/api";
+import { KeyedMutator } from "swr";
 
 // Note that if cat prop is not given, it is assumed that this is a new cat entry
 interface Props {
-	dismiss: () => void,
+	dismissModal: () => void,
 	cat?: Cat,
+	catDataMutate?: KeyedMutator<Result<Cat[]>>,
 }
 
-const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
+const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 	// State stores cat data for updates on page
 	const [catData, setCatData] = useState(cat ? { ...cat } : {
 		id: 2,
@@ -85,7 +87,6 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 		],
 	}
 
-	// Delete cat functions
 	const [presentAlert] = useIonAlert();
 
 	// Handler for take/upload image button
@@ -111,6 +112,13 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 			method: 'PUT',
 		}).then((res) => {
 			console.log(res);
+			(catDataMutate as KeyedMutator<Result<Cat[]>>)();
+			presentAlert({
+				header: 'Cat successfully updated',
+				buttons: [
+					{ text: 'Ok', }
+				]
+			})
 		}).catch((err) => {
 			console.error(err);
 		});
@@ -122,6 +130,8 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 			method: 'DELETE',
 		}).then((res) => {
 			console.log(res);
+			(catDataMutate as KeyedMutator<Result<Cat[]>>)();
+			dismissModal();
 		}).catch((err) => {
 			console.error(err);
 		});
@@ -133,14 +143,20 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 				<IonToolbar>
 					<IonTitle>{cat ? cat.name : "New cat"}</IonTitle>
 					<IonButtons slot="end">
-						<IonButton onClick={dismiss}>Close</IonButton>
+						<IonButton onClick={dismissModal}>Close</IonButton>
 					</IonButtons>
 				</IonToolbar>	
 			</IonHeader>
 			<IonContent className="h-full">
 				<div className="mx-5">
 					<div className="flex flex-col items-center">
-						<img className="mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" />
+						{
+							catData.image ? 
+							<img className="mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" /> : 
+							<div className="flex mt-5 bg-gray-300 rounded-full w-80 h-80">
+								<IonIcon icon={logoOctocat} className="text-center" />
+							</div>
+						}
 						<IonButton fill="solid" size="default" className="mt-3" onClick={handleChangeProfilePic}>
 							Take/upload image
 						</IonButton>
