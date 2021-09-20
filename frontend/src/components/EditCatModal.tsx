@@ -3,6 +3,8 @@ import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, use
 import { PickerColumn, PickerOptions } from "@ionic/core";
 import { useState } from "react";
 import { trashOutline } from "ionicons/icons";
+import { Camera, CameraResultType } from "@capacitor/camera";
+import { apiFetch, catsKey } from "lib/api";
 
 // Note that if cat prop is not given, it is assumed that this is a new cat entry
 interface Props {
@@ -19,6 +21,7 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 		one_liner: '',
 		description: '',
 		neutered: undefined, 
+		image: '',
 	});
 
 	// Zone picker and neutered status picker setup
@@ -85,6 +88,45 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 	// Delete cat functions
 	const [presentAlert] = useIonAlert();
 
+	// Handler for take/upload image button
+	const handleChangeProfilePic = async () => {
+		try {
+			const image  = await Camera.getPhoto({
+				quality: 90,
+				allowEditing: true,
+				resultType: CameraResultType.Uri,
+			});
+			setCatData({
+				...catData,
+				image: image.webPath as string,
+			})
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	// Handler for update cat data button
+	const handleUpdateCatData = () => {
+		apiFetch(`${catsKey}/${catData.id}`, {...catData, updated_at: new Date()}, {
+			method: 'PUT',
+		}).then((res) => {
+			console.log(res);
+		}).catch((err) => {
+			console.error(err);
+		});
+	}
+
+	// Handler for delete cat button
+	const handleDeleteCat = () => {
+		apiFetch(`${catsKey}/${catData.id}`, undefined, {
+			method: 'DELETE',
+		}).then((res) => {
+			console.log(res);
+		}).catch((err) => {
+			console.error(err);
+		});
+	}
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -97,6 +139,12 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 			</IonHeader>
 			<IonContent className="h-full">
 				<div className="mx-5">
+					<div className="flex flex-col items-center">
+						<img className="mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" />
+						<IonButton fill="solid" size="default" className="mt-3" onClick={handleChangeProfilePic}>
+							Take/upload image
+						</IonButton>
+					</div>
 					<label className="block my-5 text-lg">
 						Name:
 						<input
@@ -150,7 +198,7 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 						className="mb-5 text-lg text-white cursor-pointer h-14"
 						color="primary"
 						expand="block"
-						onClick={() => console.log(cat ? {...catData, updated_at: new Date()} : makeCat(catData))}
+						onClick={handleUpdateCatData}
 					>
 						{cat ? "Update cat data" : "Add cat"}
 					</IonButton>
@@ -164,7 +212,7 @@ const EditCatModal: React.FC<Props> = ({dismiss, cat}) => {
 								message: `Are you sure you want to delete ${cat.name}?`, 
 								buttons: [
 									"Cancel",
-									{text: "Yes", handler: () => console.log("confirm delete")}
+									{text: "Yes", handler: handleDeleteCat}
 								]
 							})}
 						>

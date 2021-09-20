@@ -33,7 +33,7 @@ const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard}) => {
 			onClick={() => editCard ? presentModal() : presentAlert(alertOptions)}
 		>
 			<div className="flex items-center flex-shrink-0 ml-5">
-				<img className="w-16 h-16 border-2 border-white rounded-full" src={PlaceholderCatUrl(200, 210)} alt="cat" />
+				<img className="w-16 h-16 border-2 border-white rounded-full" src={cat.image} alt="cat" />
 			</div>
 			<div className="flex flex-col justify-start flex-auto mt-5 mb-4 ml-4">
 				<p className="text-xl font-semibold text-black">{cat.name}</p>
