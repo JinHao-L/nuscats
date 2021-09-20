@@ -19,7 +19,7 @@ import { MAP_ROUTE } from 'app/routes';
 import FeedCard from 'components/FeedCard';
 import { useSightings } from 'hooks/useSightings';
 import { map } from 'ionicons/icons';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 
 const FeedTab: React.FC = () => {
   const { sightings, error, mutate, isLoading, pageSize, setPageSize } =
@@ -48,7 +48,6 @@ const FeedTab: React.FC = () => {
     const target = (event.target as HTMLIonInfiniteScrollElement);
     setTimeout(() => {
       target.complete();
-      console.log(data)
       if (data && data.length === originalPage) {
         target.disabled = true
       }

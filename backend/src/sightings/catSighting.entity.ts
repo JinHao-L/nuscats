@@ -10,7 +10,7 @@ import {
   Index,
   JoinColumn,
 } from 'typeorm';
-import { IsUrl } from 'class-validator';
+import { IsOptional, IsUrl } from 'class-validator';
 
 import { Cat } from '../cats/cats.entity';
 import { SightingType, CatSighting as ICatSighting } from '@api/sightings';
@@ -60,6 +60,10 @@ export class CatSighting implements ICatSighting {
     },
   })
   location: Point;
+
+  @IsOptional()
+  @Column('varchar', { nullable: true })
+  location_name: string;
 
   @Column({
     type: 'enum',

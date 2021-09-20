@@ -103,3 +103,56 @@ export const catDatas: Omit<Cat, 'created_at' | 'updated_at'>[] = [
     zone: UniversityZone.Science,
   },
 ];
+
+export const catLocations: { lat: number; lng: number; name: string }[] = [
+  {
+    name: 'Techno Edge',
+    lat: 1.297987292,
+    lng: 103.7715729,
+  },
+  {
+    name: 'University Hall',
+    lat: 1.297293218,
+    lng: 103.7779172,
+  },
+  {
+    name: 'Yusof Ishak House',
+    lat: 1.298410586,
+    lng: 103.7745539,
+  },
+  {
+    name: 'University Health Centre',
+    lat: 1.298943865,
+    lng: 103.7764982,
+  },
+  {
+    name: 'NUS Enterprise',
+    lat: 1.292429487,
+    lng: 103.7755195,
+  },
+  {
+    name: 'University Hall',
+    lat: 1.297293218,
+    lng: 103.7779172,
+  },
+  {
+    name: 'NUS Business School',
+    lat: 1.294293526,
+    lng: 103.7745665,
+  },
+  {
+    name: 'School of Computing',
+    lat: 1.294896602,
+    lng: 103.7739567,
+  },
+  {
+    name: 'School of Design & Environment',
+    lat: 1.297432799,
+    lng: 103.770836,
+  },
+  {
+    name: 'Faculty of Engineering',
+    lat: 1.300385691,
+    lng: 103.7712593,
+  },
+];

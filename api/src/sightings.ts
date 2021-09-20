@@ -12,6 +12,7 @@ export interface CatSighting {
   cat_id?: number; // id reference to cat
   cat?: Cat; // when viewing a particular sighting information
   location: Point;
+  location_name: string;
   type: SightingType;
   description: string;
   owner_id?: string;
@@ -25,6 +26,7 @@ export function makeSighting({
   cat_id = 0,
   cat = undefined,
   location,
+  location_name,
   type,
   description = "",
 }: {
@@ -33,6 +35,7 @@ export function makeSighting({
   cat_id?: number;
   cat?: Cat | undefined;
   location: Point;
+  location_name: string;
   type: SightingType;
   description?: string;
 }): CatSighting {
@@ -42,6 +45,7 @@ export function makeSighting({
     cat_id: cat_id,
     cat: cat,
     location: location,
+    location_name: location_name,
     type: type,
     description: description,
     created_at: new Date(),

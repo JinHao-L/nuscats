@@ -25,4 +25,6 @@ export default Joi.object({
 
   SEEDER_SHOULD_SEED: Joi.boolean().default(false),
   SEEDER_SHOULD_REFRESH: Joi.boolean().default(false),
+
+  POSITIONSTACK_API_KEY: Joi.string().required(),
 });

@@ -27,7 +27,10 @@ import { CatSighting } from '@api/sightings';
 import FeedCard from 'components/FeedCard';
 // import Modal from 'react-modal';
 
-const HomeTab: React.FC = () => {
+interface HomePageProps {
+  router: HTMLIonRouterOutletElement | null;
+}
+const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   /**
    * Map locationing
    */
@@ -41,6 +44,7 @@ const HomeTab: React.FC = () => {
    */
   const { sightings, error, isLoading, mutate } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   /**
    * Creating a new sighting
@@ -151,13 +155,24 @@ const HomeTab: React.FC = () => {
                 onClick={() => {
                   if (catDetails === sighting) {
                     setCatDetails(null);
+                    setShowModal(false);
                   } else {
                     setCatDetails(sighting);
+                    setShowModal(true);
                   }
                 }}
               />
             ))}
-            {catDetails && <FeedCard className="z-50" sighting={catDetails} />}
+            {/* {catDetails && <FeedCard className="z-50" sighting={catDetails} />} */}
+            <IonModal
+              isOpen={showModal}
+              cssClass="my-custom-class"
+              swipeToClose={true}
+              presentingElement={router || undefined}
+              onDidDismiss={() => setShowModal(false)}
+            >
+              {catDetails && <FeedCard className="z-50" sighting={catDetails} />}
+            </IonModal>
             <CameraFab onClick={newSighting} />
             <LocationFab
               disabled={isCentered || !coords}

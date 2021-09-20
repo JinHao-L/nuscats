@@ -15,7 +15,7 @@ import {
   IonText,
 } from '@ionic/react';
 import { locationOutline, logoOctocat, timeOutline } from 'ionicons/icons';
-import { ConvenientDateTimeFormatOptions } from 'lib/datetime';
+import TimeAgo from 'timeago-react';
 import React, { useMemo } from 'react';
 
 interface FeedCardProps {
@@ -79,10 +79,7 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
           <div className="flex items-center space-x-2">
             <IonIcon color="primary" icon={timeOutline} />
             <IonLabel className="text-sm text-gray-800">
-              {new Intl.DateTimeFormat(
-                'en-GB',
-                ConvenientDateTimeFormatOptions,
-              ).format(sighting.created_at)}
+              <TimeAgo datetime={sighting.created_at} />
             </IonLabel>
           </div>
         </IonRow>

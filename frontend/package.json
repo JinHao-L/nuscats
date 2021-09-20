@@ -31,6 +31,7 @@
     "react-scripts": "4.0.2",
     "swiper": "^6.8.4",
     "swr": "^1.0.1",
+    "timeago-react": "^3.0.3",
     "use-position": "^0.0.8",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.4",
