@@ -32,11 +32,27 @@ export class SightingsService {
     queryOptions: Omit<MultipleSightingQuery, 'page' | 'limit'>,
     pagingOptions: IPaginationOptions,
   ): Observable<Pagination<CatSighting>> {
-    const { catIds, includeUnknownCats, type, ownerIds, orderBy, location } =
-      queryOptions;
+    const {
+      catIds,
+      includeUnknownCats,
+      type,
+      ownerIds,
+      orderBy,
+      location,
+      includeCatsData,
+      includeOwnerData,
+    } = queryOptions;
 
     let queryBuilder: SelectQueryBuilder<CatSighting> =
       this.sightingsRepository.createQueryBuilder('sighting');
+
+    queryBuilder = includeCatsData
+      ? queryBuilder.leftJoinAndSelect('sighting.cat', 'cat')
+      : queryBuilder;
+
+    queryBuilder = includeOwnerData
+      ? queryBuilder.leftJoinAndSelect('sighting.owner', 'owner')
+      : queryBuilder;
 
     queryBuilder = type
       ? queryBuilder.andWhere('sighting.type = :type', { type })

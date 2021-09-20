@@ -90,7 +90,6 @@ export class CatSighting implements ICatSighting {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'owner_id', referencedColumnName: 'uuid' })
-  @ApiHideProperty()
   owner?: Profile;
 
   @CreateDateColumn()

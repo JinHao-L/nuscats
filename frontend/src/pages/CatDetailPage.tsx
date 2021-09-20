@@ -1,4 +1,4 @@
-import { useCallback, useContext, useRef, useState } from 'react';
+import { useContext, useRef } from 'react';
 import {
   IonContent,
   IonFab,
@@ -10,11 +10,12 @@ import {
   IonSpinner,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonRouterLink,
 } from '@ionic/react';
 import { close, locationOutline, timeOutline } from 'ionicons/icons';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import type { Cat } from '@api/cats';
+import { Cat, ZoneLocation } from '@api/cats';
 import {
   CatSighting,
   CatSightingsResponse,
@@ -34,6 +35,7 @@ import { useCat } from 'hooks/useCats';
 import { CAT_ROUTE } from 'app/routes';
 import { Result } from 'lib/api';
 import { Position } from 'geojson';
+import usePinLocation from 'hooks/usePinLocation';
 
 interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> {}
 
@@ -154,16 +156,24 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
 type CatAboutProps = {
   coordinates: Position | undefined;
   locationName: string | undefined;
-} & Pick<Cat, 'one_liner' | 'description' | 'zone'>;
+} & Pick<Cat, 'one_liner' | 'description' | 'zone' | 'name'>;
 
 const CatAbout: React.FC<CatAboutProps> = ({
+  name,
   one_liner,
   description,
   zone,
   coordinates,
   locationName,
 }) => {
-  const [lat, long] = coordinates || [];
+  const [lat, lng] = coordinates || [];
+  const { ionRouterLinkProps: mapRouterProps } = usePinLocation(lat, lng, name);
+  const [zlat, zlng] = ZoneLocation[zone];
+  const { ionRouterLinkProps: zoneRouterProps } = usePinLocation(
+    zlat,
+    zlng,
+    zone,
+  );
 
   return (
     <section className="flex flex-col space-y-4 overflow-y-auto h-cat-profile-content px-7">
@@ -173,25 +183,29 @@ const CatAbout: React.FC<CatAboutProps> = ({
       <div className="flex justify-start px-4 py-2 space-x-6">
         <div className="flex-shrink-0 text-xs font-medium text-gray-400">
           Hangs out around
-          <p className="text-sm font-semibold text-primary-500">{zone}</p>
+          <IonRouterLink {...zoneRouterProps}>
+            <p className="text-sm font-semibold text-primary-500">{zone}</p>
+          </IonRouterLink>
         </div>
-        {lat && long && (
+        {lat && lng && (
           <div className="text-xs font-medium text-gray-400">
             Last spotted at
-            <div className="text-sm font-semibold text-primary-500">
-              {locationName ? (
-                <p>{locationName}</p>
-              ) : (
-                <p className="text-red-500">Error while getting location</p>
-              )}
-            </div>
+            <IonRouterLink {...mapRouterProps}>
+              <div className="text-sm font-semibold text-primary-500">
+                {locationName ? (
+                  <p>{locationName}</p>
+                ) : (
+                  <p className="text-red-500">Error while getting location</p>
+                )}
+              </div>
+            </IonRouterLink>
           </div>
         )}
       </div>
 
       <div className="px-4 pt-2 rounded-md bg-warmGray-100">
         <p className="text-sm tracking-tight text-justify text-gray-700 whitespace-pre-wrap">
-          {description}
+          {description.replaceAll('\n', '\n\n')}
         </p>
         <br />
       </div>
@@ -237,63 +251,9 @@ const CatLocation: React.FC<CatLocationProps> = ({
           className="flex flex-col items-center justify-start w-full px-4 pb-4 space-y-3 overflow-auto h-cat-profile-content"
           ref={ref}
         >
-          {sightings.map((sighting, idx) => {
-            const bgColor =
-              sighting.type === SightingType.Emergency
-                ? 'bg-red-100'
-                : 'bg-secondary-100';
-            const [lat, long] = sighting.location.coordinates;
-
-            return (
-              <div
-                className={`flex items-center justify-start w-full px-2 rounded-md shadow-md ${bgColor} bg-opacity-90`}
-                key={idx}
-              >
-                <div className="flex-shrink-0">
-                  <img
-                    className="object-cover w-20 h-20 my-3 rounded-full"
-                    src={sighting.image}
-                    alt="cat spotted at"
-                  />
-                </div>
-                <div className="flex flex-col justify-start w-full mt-1 ml-3">
-                  {sighting.type !== SightingType.Emergency ? (
-                    <p className="text-base font-medium text-gray-700">
-                      Spotted
-                    </p>
-                  ) : (
-                    <p className="text-base font-medium text-red-700">
-                      Emergency!
-                    </p>
-                  )}
-                  <div className="flex items-center space-x-2">
-                    <IonIcon color="primary" icon={timeOutline} />
-
-                    <p className="text-xs text-gray-800">
-                      <TimeAgo datetime={sighting.created_at} />
-                    </p>
-                  </div>
-                  <div className="flex items-center mt-1 space-x-2 ">
-                    <IonIcon color="secondary" icon={locationOutline} />
-                    <div className="text-xs text-gray-800">
-                      {sighting.location_name ? (
-                        <p>{sighting.location_name}</p>
-                      ) : (
-                        <p className="text-red-500">
-                          Error while getting location name
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-full h-full pb-1 m-1 rounded opacity-80 ">
-                    <p className="text-sm font-medium tracking-tight text-gray-800 line-clamp-2">
-                      {sighting.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {sightings.map((sighting, idx) => (
+            <CatLocationCard sighting={sighting} key={idx} />
+          ))}
 
           <IonInfiniteScroll
             threshold="100px"
@@ -314,6 +274,66 @@ const CatLocation: React.FC<CatLocationProps> = ({
           <p className="font-medium text-red-600">Error loading sightings</p>
         </div>
       )}
+    </div>
+  );
+};
+
+type CatLocationCardProps = {
+  sighting: CatSighting;
+};
+
+const CatLocationCard: React.FC<CatLocationCardProps> = ({ sighting }) => {
+  const [lat, lng] = sighting.location.coordinates;
+  const { ionRouterLinkProps } = usePinLocation(lat, lng, sighting.cat?.name);
+  const bgColor =
+    sighting.type === SightingType.Emergency
+      ? 'bg-red-100'
+      : 'bg-secondary-100';
+
+  return (
+    <div
+      className={`flex items-center justify-start w-full px-2 rounded-md shadow-md ${bgColor} bg-opacity-90`}
+    >
+      <div className="flex-shrink-0">
+        <img
+          className="object-cover w-20 h-20 my-3 rounded-full"
+          src={sighting.image}
+          alt="cat spotted at"
+        />
+      </div>
+      <div className="flex flex-col justify-start w-full mt-1 ml-3">
+        {sighting.type !== SightingType.Emergency ? (
+          <p className="text-base font-medium text-gray-700">Spotted</p>
+        ) : (
+          <p className="text-base font-medium text-red-700">Emergency!</p>
+        )}
+        <div className="flex items-center space-x-2">
+          <IonIcon color="primary" icon={timeOutline} />
+          <p className="text-xs text-gray-800">
+            <TimeAgo datetime={sighting.created_at} />
+          </p>
+        </div>
+
+        <IonRouterLink {...ionRouterLinkProps}>
+          <div className="flex items-center mt-1 space-x-2 ">
+            <IonIcon color="secondary" icon={locationOutline} />
+            <div className="text-xs text-gray-800">
+              {sighting.location_name ? (
+                <p>{sighting.location_name}</p>
+              ) : (
+                <p className="text-red-500">
+                  Error while getting location name
+                </p>
+              )}
+            </div>
+          </div>
+        </IonRouterLink>
+        <div className="w-full h-full pb-1 m-1 rounded opacity-80 ">
+          <p className="text-sm font-medium tracking-tight text-gray-800 line-clamp-2">
+            {sighting.description}
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

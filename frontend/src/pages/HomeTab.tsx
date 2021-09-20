@@ -19,17 +19,21 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { list, refresh } from 'ionicons/icons';
-import { FEED_ROUTE } from 'app/routes';
+import { list, pin, refresh } from 'ionicons/icons';
+import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
-import FeedCard from 'components/FeedCard';
-// import Modal from 'react-modal';
+import FeedModal from 'components/FeedModal';
+import { useHistory, useLocation } from 'react-router-dom';
+import * as QueryString from 'query-string';
+import { Marker } from 'react-mapbox-gl';
+import PinIcon from 'components/map/PinIcon';
 
 interface HomePageProps {
   router: HTMLIonRouterOutletElement | null;
 }
+
 const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   /**
    * Map locationing
@@ -38,6 +42,11 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   const [isCentered, setIsCentered] = useState<boolean>(false);
   const mapRef = useRef<State>();
   const [catDetails, setCatDetails] = useState<CatSighting | null>(null);
+  const location = useLocation();
+  const history = useHistory();
+  const [pinnedLocation, setPinnedLocation] = useState<[number, number]>();
+  const [pinnedTag, setPinnedTag] = useState<string>('');
+  const routerRef = useRef(null);
 
   /**
    * Getting latest sightings
@@ -58,16 +67,30 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   }, [mapRef.current]);
 
   useEffect(() => {
+    const query = QueryString.parse(location.search);
+    if (query.lat && query.lng) {
+      setShowModal(false);
+      const newPinLocation: [number, number] = [
+        parseFloat(query.lng as string),
+        parseFloat(query.lat as string),
+      ];
+      setPinnedLocation(newPinLocation);
+      query.tag && setPinnedTag(query.tag as string);
+      moveTo(newPinLocation);
+      history.push(MAP_ROUTE)
+    }
+  }, [location?.search]);
+
+  useEffect(() => {
     if (!isLoading && !sightings) {
       console.log('Error loading sightings, please try again');
-    } else {
-      console.log(isLoading, sightings);
     }
   }, [isLoading, sightings]);
 
   const refreshSightings = () => {
     mutate();
     toggleFeedback(true);
+    setPinnedLocation(undefined);
     setTimeout(() => {
       toggleFeedback(false);
     }, 1000);
@@ -90,6 +113,17 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
     }
   };
 
+  const moveTo = (point: [number, number]): void => {
+    if (mapRef.current && mapRef.current.map && point) {
+      mapRef.current.map.flyTo({
+        center: point,
+      });
+      if (coords && point !== getCenter(coords)) {
+        setIsCentered(false);
+      }
+    }
+  };
+
   const newSighting = async () => {
     try {
       const photo = await takePhoto();
@@ -103,8 +137,8 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   };
 
   return (
-    <IonPage>
-      <IonHeader collapse="condense">
+    <IonPage ref={routerRef}>
+      <IonHeader>
         <IonToolbar>
           <IonButtons slot="end">
             <IonButton
@@ -143,7 +177,6 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
           getRef={(s) => (mapRef.current = s)}
           className="h-full v-full"
           style="mapbox://styles/mapbox/streets-v10"
-          onClick={() => setCatDetails(null)}
         >
           <>
             <UserIcon coords={coords} />
@@ -152,27 +185,18 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
                 key={sighting.id}
                 point={sighting.location}
                 catName={sighting.cat?.name}
+                time={sighting.created_at}
                 onClick={() => {
-                  if (catDetails === sighting) {
-                    setCatDetails(null);
-                    setShowModal(false);
-                  } else {
-                    setCatDetails(sighting);
-                    setShowModal(true);
-                  }
+                  setCatDetails(sighting);
+                  setShowModal(true);
                 }}
               />
             ))}
-            {/* {catDetails && <FeedCard className="z-50" sighting={catDetails} />} */}
-            <IonModal
-              isOpen={showModal}
-              cssClass="my-custom-class"
-              swipeToClose={true}
-              presentingElement={router || undefined}
-              onDidDismiss={() => setShowModal(false)}
-            >
-              {catDetails && <FeedCard className="z-50" sighting={catDetails} />}
-            </IonModal>
+            <PinIcon
+              coords={pinnedLocation}
+              text={pinnedTag}
+              onClick={() => setPinnedLocation(undefined)}
+            />
             <CameraFab onClick={newSighting} />
             <LocationFab
               disabled={isCentered || !coords}
@@ -180,17 +204,21 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
             />
           </>
         </Map>
-        {/* {catDetails && (
-          <Modal
-            isOpen={catDetails !== null}
-            onRequestClose={() => setCatDetails(null)}
-          >
-            <FeedCard sighting={catDetails} />
-          </Modal>
-        )} */}
         {photo && (
           <IonModal isOpen={showForm}>
             <SightingsForm photo={photo} onDismiss={() => setShowForm(false)} />
+          </IonModal>
+        )}
+        {catDetails?.cat && (
+          <IonModal
+            isOpen={showModal}
+            swipeToClose={true}
+            onDidDismiss={() => setShowModal(false)}
+          >
+            <FeedModal
+              cat={catDetails.cat}
+              dismiss={() => setShowModal(false)}
+            />
           </IonModal>
         )}
       </IonContent>

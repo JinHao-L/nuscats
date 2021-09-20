@@ -1,4 +1,5 @@
 import { Point } from "geojson";
+import { Profile } from "./profiles";
 import { Cat } from "./cats";
 
 export enum SightingType {
@@ -16,6 +17,7 @@ export interface CatSighting {
   type: SightingType;
   description: string;
   owner_id?: string;
+  owner?: Profile;
   created_at: Date;
   updated_at: Date;
 }
@@ -59,6 +61,10 @@ export enum QuerySightingOrderBy {
 }
 
 export interface CatSightingQuery {
+  //================ DATA TYPE ===================
+  includeCatsData?: boolean;
+  includeOwnerData?: boolean;
+
   //================ FILTERS ===================
   catIds?: number[];
   includeUnknownCats?: boolean;

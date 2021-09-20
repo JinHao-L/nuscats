@@ -9,7 +9,7 @@ export const catDatas: Omit<Cat, 'created_at' | 'updated_at'>[] = [
     one_liner:
       "Bachelor's in Laziness, Masters's in Belly Flops and PhD in Napping",
     description:
-      'I am a strong and healthy boy! I have white fur with patches of stripes and yellow eyes. Also, I love flaunting my unique black eyeliner around my eyes! \n I am friendly and I like climbing trees. These days I enjoy napping around the lawn or near the UTR staircase. I just laze around and sleep until I hear food. Sometimes, I also eat more food that I should during feeding times\n By the way, I love butt scratches. Could you give me some when you see me? \n Come find me around the stairs at UTown Fine Food, or the walkway along Tembusu and ERC!',
+      'I am a strong and healthy boy! I have white fur with patches of stripes and yellow eyes. Also, I love flaunting my unique black eyeliner around my eyes!\nI am friendly and I like climbing trees. These days I enjoy napping around the lawn or near the UTR staircase. I just laze around and sleep until I hear food. Sometimes, I also eat more food that I should during feeding times\nBy the way, I love butt scratches. Could you give me some when you see me?\nCome find me around the stairs at UTown Fine Food, or the walkway along Tembusu and ERC!',
     image:
       'https://static.wixstatic.com/media/4cd187_4a6549587a60437bacd32312fcb02948~mv2_d_1200_1600_s_2.jpg',
     zone: UniversityZone.Utown,
@@ -53,7 +53,7 @@ export const catDatas: Omit<Cat, 'created_at' | 'updated_at'>[] = [
     neutered: true,
     one_liner: 'The Wild One',
     description:
-      "Me used to be a beautiful feral kitty defending and survivin on me own...I'm still beautiful as you can see. One day me stumbled onto NUS, basically a meow haven with food served on a platter everyday, no need for huntin'. \nMe warmin' up with hooman feeders nowadays. They don't seem too scary, kinda nice actually. But if me feel somethin' fishy, me run like a bullet, like Bilbo up the hill. My other lady kitty friend Emmy had health issues and was taken in by some kind hooman, so it's just me all on my lonesome again... There now be another young un' near EW2, but she just runs away when she sees me :< \nCome find me at Faculty of Engineering, at the benches along the stairs near good ol' LT7. Approach slowly and reassuringly please, if not hooman will taste me dust while me run with God-like speed.",
+      "Me used to be a beautiful feral kitty defending and survivin on me own...I'm still beautiful as you can see. One day me stumbled onto NUS, basically a meow haven with food served on a platter everyday, no need for huntin'.\nMe warmin' up with hooman feeders nowadays. They don't seem too scary, kinda nice actually. But if me feel somethin' fishy, me run like a bullet, like Bilbo up the hill. My other lady kitty friend Emmy had health issues and was taken in by some kind hooman, so it's just me all on my lonesome again... There now be another young un' near EW2, but she just runs away when she sees me :<\nCome find me at Faculty of Engineering, at the benches along the stairs near good ol' LT7. Approach slowly and reassuringly please, if not hooman will taste me dust while me run with God-like speed.",
     image:
       'https://static.wixstatic.com/media/4cd187_4b1b1bf7bdc5406aa4132429c08bf84e~mv2.jpeg',
     zone: UniversityZone.Engineering,
@@ -64,7 +64,7 @@ export const catDatas: Omit<Cat, 'created_at' | 'updated_at'>[] = [
     neutered: true,
     one_liner: ' The Rare Fellow',
     description:
-      'I have been part of NUS for quite some time now. I do not appear regularly so you might not bump into me. However, if you do, lucky you! \nYou might not be able to find me but my favourite hang out spot is the Business faculty.',
+      'I have been part of NUS for quite some time now. I do not appear regularly so you might not bump into me. However, if you do, lucky you!\nYou might not be able to find me but my favourite hang out spot is the Business faculty.',
     image:
       'https://static.wixstatic.com/media/4cd187_6404162ebe874374a2e958d8cfaf4a2c~mv2.jpg',
     zone: UniversityZone.Computing,
@@ -75,7 +75,7 @@ export const catDatas: Omit<Cat, 'created_at' | 'updated_at'>[] = [
     neutered: true,
     one_liner: 'Stealthy Sweetheart',
     description:
-      "I am a demure cat and I blend quite well with my surroundings. It takes me some time to warm-up to people but once I am comfortable, I am rather affectionate.\nWhen its dinner time, my hooman (but every other two legged hooman calls him 'Professor', whatever that means) would open the magic transparent door to the hallway that is furr-ever cool (hoomans are smart to create such places in hot humid Singapore).\nThen, me and M33y Thai would walk in for dinner outside my hoomans door. \nCome find me at AS4-B1, right near the Social Work Department or Fragrance Garden. Though these days I go out exploring the world, so I am not home very much......",
+      "I am a demure cat and I blend quite well with my surroundings. It takes me some time to warm-up to people but once I am comfortable, I am rather affectionate.\nWhen its dinner time, my hooman (but every other two legged hooman calls him 'Professor', whatever that means) would open the magic transparent door to the hallway that is furr-ever cool (hoomans are smart to create such places in hot humid Singapore).\nThen, me and M33y Thai would walk in for dinner outside my hoomans door.\nCome find me at AS4-B1, right near the Social Work Department or Fragrance Garden. Though these days I go out exploring the world, so I am not home very much......",
     image:
       'https://static.wixstatic.com/media/4cd187_58c26c45eaa2453981a3294c48c2c63a~mv2_d_6016_4016_s_4_2.jpg',
     zone: UniversityZone.Arts,
