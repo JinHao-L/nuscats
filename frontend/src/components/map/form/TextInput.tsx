@@ -29,7 +29,7 @@ const TextInput: React.FC<TextInputProps> = ({
 
     return (
         <div className="block mx-5 mb-7 h-14">
-            <div className={"bg-gray-200 rounded-xl " + (errorMsg ? "border border-red-700" : "")}>
+            <div className={"bg-gray-200 rounded-xl border-2 border-transparent" + (errorMsg ? " border-red-700" : "")}>
                 <label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor={id}>
                     {label}
                 </label>

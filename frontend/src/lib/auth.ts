@@ -43,7 +43,7 @@ export async function login(
 }
 
 export async function logout(): Promise<void> {
-    await apiFetch(logoutKey, null);
+    await apiFetch(logoutKey, null, { method: 'POST' });
 }
 
 export async function signup(email: string, username: string, password: string): Promise<Error | undefined> {

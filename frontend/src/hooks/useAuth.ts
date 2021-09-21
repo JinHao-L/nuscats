@@ -30,7 +30,7 @@ export default function useAuth() {
     // Refresh token for persisting session
     const { data: refreshData, error: refreshError } = useSWR(
         isLoggedIn ? refreshLoginKey : null,
-        swrFetcher<User>(),
+        swrFetcher<User>(null, { method: "POST" }),
         {
             // Silently refresh token every 15 minutes
             refreshInterval: 1000 * 60 * 15,
@@ -72,7 +72,7 @@ export default function useAuth() {
         }
     }, []);
 
-    const { data: profileData, error: profileError, isValidating } = useSWR(
+    const { data: profileData, error: profileError, isValidating, mutate } = useSWR(
         [userId, isLoggedIn, !shouldCreateProfile],
         (id, loggedIn, profileExists) => {
             return loggedIn && profileExists && id !== null
@@ -104,6 +104,9 @@ export default function useAuth() {
         shouldCreateProfile,
         userProfile: profileData?.profile,
         profileError,
-        profileLoading: isValidating
+        profileLoading: isValidating,
+        profileUpdated(profile: Profile) {
+            mutate({ success: true, status: 200, profile })
+        }
     };
 }

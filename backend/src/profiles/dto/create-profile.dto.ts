@@ -16,7 +16,7 @@ export class CreateProfileDto {
   /**
    * URL to profile picture
    */
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   @IsOptional()
   profile_pic: string;
 }

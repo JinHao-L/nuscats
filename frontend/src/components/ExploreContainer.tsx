@@ -9,7 +9,6 @@ interface ContainerProps {
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   const { isLoggedIn, userId, userProfile, setLogin, setLogout, shouldCreateProfile } = useAuth();
-  console.log({ shouldCreateProfile })
   const [err, setError] = useState<Error | undefined>(undefined)
 
   async function logIn() {
@@ -20,6 +19,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     }
 
     if (user) {
+      console.log({ user })
       setLogin(user.uuid)
     }
   }
@@ -53,7 +53,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         <div className="text-3xl font-normal text-gray-800">
           {shouldCreateProfile && "create profile la"}
         </div>
-        <div>
+        <div className="flex flex-col items-center">
           <p >
             User ID: {userId ?? "none"}
           </p>
