@@ -1,4 +1,4 @@
-import { apiFetch, loginKey, logoutKey } from "./api";
+import { apiFetch, loginKey, logoutKey, signupKey } from "./api";
 import { User } from "@api/users"
 
 class LoginResponse {
@@ -29,4 +29,17 @@ export async function login(email: string, password: string): Promise<LoginRespo
 
 export async function logout(): Promise<void> {
     await apiFetch(logoutKey, null)
+}
+
+export async function signup(email: string, username: string, password: string): Promise<Error | undefined> {
+    let res = await apiFetch(
+        signupKey,
+        { email, username, password },
+        { method: "POST" }
+    )
+
+    if (!res.ok) {
+        let msg = ((await res.json()) as any).message
+        return new Error(msg)
+    }
 }

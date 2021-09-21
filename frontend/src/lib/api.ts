@@ -1,17 +1,16 @@
 import { Fetcher } from "swr";
-import { IsDev } from "./config";
-
-export const ApiBaseUrl = IsDev ? "http://localhost:3001" : "http://localhost:3001" // TODO: update when deployed to prod
+import { BackendApiBaseUrl } from "./config";
 
 export const catsKey = "/cats"
 export const sightingsKey = "/sightings"
 export const latestKey = "/sightings/latest"
+export const signupKey = "/auth/signup"
 export const loginKey = "/auth/login"
 export const logoutKey = "/auth/logout"
 export const refreshLoginKey = "/auth/refresh"
 
 export const apiFetch = async (path: string, body?: any, options?: RequestInit): Promise<Response> => {
-    return fetch(`${ApiBaseUrl}${path}`, {
+    return fetch(`${BackendApiBaseUrl}${path}`, {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

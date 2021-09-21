@@ -1,7 +1,9 @@
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from "@ionic/react";
 import { ROOT_ROUTE } from "app/routes";
+// import { signup } from "lib/auth";
 
 const Signup: React.FC = () => {
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -12,7 +14,7 @@ const Signup: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<div className="mx-5 mt-2 mt-5 mb-5">
+				<div className="m-5">
 					<p className="mb-1 text-3xl font-bold">Join the awesome cat community</p>
 					<p>Fill in your details to begin</p>
 				</div>
@@ -62,8 +64,7 @@ const Signup: React.FC = () => {
 					className="mx-5 text-lg text-white cursor-pointer h-14"
 					color="primary"
 					expand="block"
-					routerLink={ROOT_ROUTE}
-					routerDirection="forward"
+					onClick={() => console.log("hi!")}
 				>
 					Sign up
 				</IonButton>
@@ -80,7 +81,7 @@ const Signup: React.FC = () => {
 					Connect with Facebook
 				</IonButton>
 				<IonButton
-					className="mx-5 mb-3 text-lg text-black cursor-pointer h-14"
+					className="mx-5 mb-3 text-lg text-black border border-gray-400 cursor-pointer rounded-xl h-14"
 					expand="block"
 					color="white"
 					routerLink={ROOT_ROUTE}
