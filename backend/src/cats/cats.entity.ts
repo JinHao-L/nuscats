@@ -9,13 +9,14 @@ import {
 import { UniversityZone, Cat as ICat } from '@api/cats';
 import { CatSighting } from 'src/sightings/catSighting.entity';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Cat implements ICat {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar', { unique: true })
+  @Column('varchar')
   name: string;
 
   @Column('varchar')
@@ -32,6 +33,14 @@ export class Cat implements ICat {
 
   @Column({ type: 'enum', enum: UniversityZone })
   zone: UniversityZone;
+
+  /**
+   * Used to identify seeded cats
+   */
+  @Exclude()
+  @ApiHideProperty()
+  @Column({ type: 'boolean', default: false })
+  is_seed?: boolean;
 
   /**
    * Referential mapping of cats -> sightings
