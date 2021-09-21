@@ -92,7 +92,7 @@ const Tabs: React.FC = () => {
       icon: construct,
     },
     {
-      href: '/tab3',
+      href: TAB3_ROUTE,
       label: 'Profile',
       icon: personCircle,
     },

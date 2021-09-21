@@ -9,7 +9,7 @@ import {
 	useIonAlert,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import { ROOT_ROUTE } from "app/routes";
+import { MAP_ROUTE, ROOT_ROUTE } from "app/routes";
 import useAuth from "hooks/useAuth";
 import { login, signup } from "lib/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -45,7 +45,7 @@ const Signup: React.FC = () => {
 
 		if (user) {
 			setLogin(user.uuid)
-			history.push("/home")
+			history.push(MAP_ROUTE)
 		}
 	}
 

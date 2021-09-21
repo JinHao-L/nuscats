@@ -8,6 +8,7 @@ import {
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
+import { MAP_ROUTE } from "app/routes";
 import TextInput from "components/map/form/TextInput";
 import useAuth from "hooks/useAuth";
 import { login } from "lib/auth";
@@ -36,7 +37,7 @@ const Signin: React.FC = () => {
 
     if (user) {
       setLogin(user.uuid)
-      history.push("/home")
+      history.push(MAP_ROUTE)
     }
   }
 
