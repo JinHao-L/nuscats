@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "nuscats" #Must be unique in Heroku
+          heroku_email: "tankangliang98@gmail.com"
+          usedocker: true
+          docker_build_args: |
+            NODE_ENV
+            REACT_APP_MAPBOX_TOKEN
+        env:
+          NODE_ENV: production
+          REACT_APP_MAPBOX_TOKEN: ${{ secrets.REACT_APP_MAPBOX_TOKEN }}
