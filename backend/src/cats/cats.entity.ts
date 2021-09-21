@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UniversityZone, Cat as ICat } from '@api/cats';
-import { CatSighting } from 'src/sightings/catSighting.entity';
+import { CatSighting } from '../sightings/sighting.entity';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 

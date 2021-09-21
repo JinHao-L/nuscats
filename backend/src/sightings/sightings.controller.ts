@@ -1,4 +1,3 @@
-import { RolesGuard } from './../auth/guard/roles.guard';
 import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import {
   Body,
@@ -25,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
 import { Request } from 'express';
-import { CatSighting } from './catSighting.entity';
+import { CatSighting } from './sighting.entity';
 import { SightingsService } from './sightings.service';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
@@ -35,10 +34,7 @@ import * as QueryString from 'query-string';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from 'src/users/user.entity';
 import { Usr } from 'src/shared/decorators/user.decorator';
-import { Roles } from 'src/shared/decorators/role.decorator';
-import { RoleType } from '@api/users';
 
-// todo: authentication
 @ApiTags('Sightings')
 @UseInterceptors(CacheInterceptor)
 @Controller('sightings')

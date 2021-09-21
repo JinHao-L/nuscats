@@ -11,7 +11,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { User } from '../users/user.entity';
-import { CatSighting } from '../sightings/catSighting.entity';
+import { CatSighting } from '../sightings/sighting.entity';
 
 import { Profile as IProfile } from '@api/profiles';
 @Entity()
