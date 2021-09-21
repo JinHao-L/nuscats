@@ -43,3 +43,23 @@ export const swrFetcher =
       value: (await res.json()) as T,
     };
   };
+
+export async function makeRequest<T>(
+  path: RequestInfo,
+  options?: RequestInit,
+): Promise<T> {
+  console.log(options);
+  const response = await fetch(path, options);
+  if (!response.ok) {
+    const message =
+      ((await getResponseAsJson(response))['message'] as string) ||
+      'Request failed, please try again.';
+    throw new Error(message);
+  }
+  return (await getResponseAsJson(response)) as T;
+}
+
+const getResponseAsJson = async (response: Response): Promise<any> => {
+  const text = await response.text();
+  return text.length ? JSON.parse(text) : {};
+};
