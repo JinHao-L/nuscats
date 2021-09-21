@@ -21,6 +21,10 @@ export async function login(email: string, password: string): Promise<LoginRespo
         }
     }
 
+    gtag("event", "login", {
+        method: "Google"
+    });
+
     return {
         user: (await res.json()) as User,
         unauthorized: false
@@ -37,6 +41,10 @@ export async function signup(email: string, username: string, password: string):
         { email, username, password },
         { method: "POST" }
     )
+
+    gtag("event", "sign_up", {
+        method: "Google"
+    });
 
     if (!res.ok) {
         let msg = ((await res.json()) as any).message
