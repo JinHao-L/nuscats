@@ -9,6 +9,7 @@ import { UsersService } from '../../users/users.service';
 import { JwtConfigService } from './../../config/jwt.config';
 import { TokenPayload } from '../interface/token-payload.interface';
 import { User } from '../../users/user.entity';
+
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,

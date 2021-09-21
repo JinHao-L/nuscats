@@ -5,6 +5,7 @@ import {
   Generated,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
@@ -15,6 +16,7 @@ import { User as IUser, RoleType } from '@api/users';
 import { Profile } from 'src/profiles/profile.entity';
 
 @Entity()
+@Unique('uuid_username', ['username', 'uuid'])
 export class User implements IUser {
   @PrimaryGeneratedColumn()
   @ApiHideProperty()
@@ -28,6 +30,9 @@ export class User implements IUser {
   @Column({ type: 'varchar', unique: true })
   @IsEmail()
   email: string;
+
+  @Column({ default: false })
+  isEmailConfirmed: boolean;
 
   @Column({ type: 'varchar', unique: true })
   username: string;

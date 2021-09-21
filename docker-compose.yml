@@ -67,6 +67,8 @@ services:
       # JWT Configuration
       - JWT_ACCESS_TOKEN_SECRET=accSecret
       - JWT_REFRESH_TOKEN_SECRET=refSecret
+      - JWT_MAIL_VERIFY_SECRET=mailSecret
+      - JWT_PASSWORD_RESET_SECRET=pwSecret
       # Object Storage Configuration
       - AWS_REGION=ap-southeast-1
       - AWS_S3_ENDPOINT=http://localhost:9000
@@ -77,6 +79,8 @@ services:
       # Should seed
       - SEEDER_SHOULD_SEED=false
       - SEEDER_SHOULD_REFRESH=false
+      # App secrets
+      - CLIENT_URL=https://localhost:3001
     ports: 
       - 3001:3001
     volumes: 

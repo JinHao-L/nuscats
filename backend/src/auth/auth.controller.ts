@@ -1,3 +1,6 @@
+import { ChangePasswordDto } from './dtos/change-password.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
+import { ConfirmEmailDto } from './dtos/confirm-email.dto';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
 import { Body, Controller, Post, UseGuards, Get, Res } from '@nestjs/common';
@@ -13,12 +16,14 @@ import {
 
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '../users/dtos/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { LoginAuthGuard } from './guard/login-auth.guard';
 import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
-import { LoginUserDto } from '../users/dtos/login-user.dto';
+import { LoginUserDto } from './dtos/login-user.dto';
 import { User } from '../users/user.entity';
 import { Usr } from '../shared/decorators/user.decorator';
+import ForgetPasswordDto from 'src/auth/dtos/forget-password.dto';
+import ResendConfirmationDto from './dtos/resend-confirmation.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -39,7 +44,6 @@ export class AuthController {
   login(
     @Usr() user: User,
     @Res({ passthrough: true }) response: Response,
-    // @Body() _loginUserDto: LoginUserDto,
   ): Observable<User> {
     const accessTokenCookie = this.authService.getJwtAccessTokenCookie(user);
     const refreshTokenCookie = this.authService.getJwtRefreshTokenCookie(user);
@@ -116,5 +120,72 @@ export class AuthController {
         };
       }),
     );
+  }
+
+  //============ Email Confirmation endpoint ===============
+
+  /**
+   * Request email confirmation mail
+   */
+  @ApiCreatedResponse({ description: 'Confirmation request sent to email' })
+  @Post('/resend-confirm')
+  resendConfirmationEmail(
+    @Body() resendConfirmDto: ResendConfirmationDto,
+  ): Observable<string> {
+    return this.authService.sendEmailConfirmation(resendConfirmDto.email).pipe(
+      map(() => {
+        return 'Email sent! Check your mailbox for confirmation email';
+      }),
+    );
+  }
+
+  /**
+   * Validate user's email confirmation request
+   */
+  @ApiCreatedResponse({ description: 'Email confirmed' })
+  @Post('/confirm')
+  confirmEmail(@Body() confirmEmailDto: ConfirmEmailDto): Observable<string> {
+    return this.authService.confirmEmail(confirmEmailDto);
+  }
+
+  // ============ Password related endpoint ===============
+
+  /**
+   * Request password reset email
+   */
+  @ApiCreatedResponse({ description: 'Reset request sent to email' })
+  @Post('/forget-password')
+  requestPasswordResetEmail(
+    @Body() forgetPasswordDto: ForgetPasswordDto,
+  ): Observable<string> {
+    return this.authService.sendPasswordResetUrl(forgetPasswordDto.email).pipe(
+      map(() => {
+        return 'Email sent! Check your mailbox for password reset email';
+      }),
+    );
+  }
+
+  /**
+   * Validate user's password reset request
+   */
+  @ApiCreatedResponse({ description: 'Password successfully reseted' })
+  @Post('/password-reset')
+  confirmPasswordReset(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Observable<string> {
+    return this.authService.resetPassword(resetPasswordDto);
+  }
+
+  /**
+   * Request to Change password
+   */
+  @UseGuards(JwtAuthGuard)
+  @ApiCreatedResponse({ description: 'Password changed' })
+  @Post('/change-password')
+  changePassword(
+    @Usr() requester: User,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Observable<string> {
+    return this.authService.changePassword(requester, changePasswordDto);
   }
 }

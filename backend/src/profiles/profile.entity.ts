@@ -20,11 +20,17 @@ export class Profile implements IProfile {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'uuid', referencedColumnName: 'uuid' })
+  @JoinColumn([
+    { name: 'uuid', referencedColumnName: 'uuid' },
+    { name: 'username', referencedColumnName: 'username' },
+  ])
   user: User;
 
   @PrimaryColumn()
   uuid: string;
+
+  @Column('varchar')
+  username: string;
 
   @Column('varchar')
   first_name: string;

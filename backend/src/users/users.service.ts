@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { map, Observable, from, catchError, of } from 'rxjs';
+import { map, Observable, catchError, of, mergeMap, from } from 'rxjs';
 import { Repository } from 'typeorm';
 
 import { RoleType } from '@api/users';
@@ -73,6 +73,35 @@ export class UsersService {
       map(() => true),
       catchError((err) => {
         console.log('Error deleting token', err);
+        return of(false);
+      }),
+    );
+  }
+
+  activateAccount(email: string): Observable<boolean> {
+    return this.findByEmail(email).pipe(
+      mergeMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        if (user.isEmailConfirmed) {
+          // already verified
+          return of(false);
+        }
+        return this.userRepository
+          .update(user, { isEmailConfirmed: true })
+          .then(() => true);
+      }),
+    );
+  }
+
+  setPassword(uuid: string, passwordHash: string): Observable<boolean> {
+    return from(
+      this.userRepository.update({ uuid }, { password_hash: passwordHash }),
+    ).pipe(
+      map(() => true),
+      catchError((err) => {
+        console.log('Error setting password', err);
         return of(false);
       }),
     );

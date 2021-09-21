@@ -18,10 +18,10 @@ import { HttpService } from '@nestjs/axios';
 
 import { QuerySightingOrderBy } from '@api/sightings';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
-import { CatSighting } from './catSighting.entity';
+import { CatSighting } from './sighting.entity';
 import { createGeoJsonPoint } from '../shared/utils/location';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
-import { ReverseGeocodeConfigService } from 'src/config/reverseGeocode.config';
+import { ReverseGeocodeConfigService } from 'src/config/reverse-geocode.config';
 import { ReverseGeocodingResponse } from '../shared/inteface/geocoding.interface';
 
 @Injectable()
