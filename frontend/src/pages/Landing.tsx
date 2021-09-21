@@ -36,7 +36,7 @@ const Landing: React.FC = () => {
                   Insert tagline here
                 </p>
                 <IonButton
-                  className="mx-5 mb-6 font-bold cursor-pointer h-14"
+                  className="mx-5 mb-6 text-base font-semibold cursor-pointer h-14 md:text-lg"
                   color="primary"
                   expand="block"
                   routerLink={SIGNUP_ROUTE}
