@@ -16,7 +16,7 @@ export class Cat implements ICat {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar')
+  @Column('varchar', { unique: true })
   name: string;
 
   @Column('varchar')
