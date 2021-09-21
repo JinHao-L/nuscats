@@ -14,15 +14,21 @@ export class UsersService {
   ) {}
 
   findByUsername(username: string): Observable<User> {
-    return from(this.userRepository.findOne({ username }));
+    return from(
+      this.userRepository.findOne({ username }, { relations: ['profile'] }),
+    );
   }
 
   findByUuid(uuid: string): Observable<User> {
-    return from(this.userRepository.findOne({ uuid }));
+    return from(
+      this.userRepository.findOne({ uuid }, { relations: ['profile'] }),
+    );
   }
 
   findByEmail(email: string): Observable<User> {
-    return from(this.userRepository.findOne({ email }));
+    return from(
+      this.userRepository.findOne({ email }, { relations: ['profile'] }),
+    );
   }
 
   doesUsernameExist(username: string): Observable<boolean> {

@@ -10,6 +10,7 @@ export const FEED_ROUTE = `${ROOT_ROUTE}/home/feeds`;
 export const CAT_ROUTE = `${ROOT_ROUTE}/cats`;
 export const TAB3_ROUTE = `${ROOT_ROUTE}/tab3`
 
+export const SETUP_PROFILE_ROUTE = `${ROOT_ROUTE}/setup-profile`
 export const PROFILE_ROUTE = `${ROOT_ROUTE}/profile`;
 export const PROFILE_SETTINGS_ROUTE = `${PROFILE_ROUTE}/settings`;
 export const CHANGE_USERNAME_ROUTE = `${PROFILE_ROUTE}/changeusername`;

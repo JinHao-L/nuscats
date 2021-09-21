@@ -49,6 +49,7 @@ const Landing: React.FC = () => {
                   <IonRouterLink
                     routerLink={SIGNIN_ROUTE}
                     routerDirection="forward"
+                    className="font-semibold tracking-wide"
                   >
                     Sign in
                   </IonRouterLink>
@@ -57,6 +58,7 @@ const Landing: React.FC = () => {
                   <IonRouterLink
                     routerLink={MAP_ROUTE}
                     routerDirection="forward"
+                    className="font-medium tracking-wide"
                   >
                     Continue as Guest
                   </IonRouterLink>

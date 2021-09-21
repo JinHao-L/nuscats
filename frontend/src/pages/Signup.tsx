@@ -12,9 +12,8 @@ import { useHistory } from "react-router-dom";
 import { ROOT_ROUTE } from "app/routes";
 import useAuth from "hooks/useAuth";
 import { login, signup } from "lib/auth";
-import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-// import { signup } from "lib/auth";
+import TextInput from "components/map/form/TextInput";
 
 type SignupInputs = {
 	email: string
@@ -38,7 +37,7 @@ const Signup: React.FC = () => {
 			return
 		}
 
-		const { user, err: loginErr, unauthorized } = await login("admin@gmail.com", "admin")
+		const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
 		if (loginErr || unauthorized) {
 			console.log({ loginErr, unauthorized })
 			return
@@ -65,73 +64,51 @@ const Signup: React.FC = () => {
 						<p className="mb-1 text-2xl font-semibold text-transparent bg-clip-text sm:text-3xl md:text-4xl bg-gradient-to-br from-primary-600 to-secondary-600">
 							Join the awesome cat community
 						</p>
-						<p className="my-2 text-lg font-bold tracking-wide text-gray-900 sm:text-xl md:text-2xl">Fill in your details to begin</p>
+						<p className="my-2 text-lg font-bold tracking-wide text-gray-800 sm:text-xl md:text-2xl">Fill in your details to begin</p>
 					</div>
-					<div className="w-full max-w-md mt-3">
+					<div className="w-full max-w-md mt-2">
 						<form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-							<div className="block mx-5 mb-6 h-14">
-								<div className={"bg-gray-200 rounded-xl " + (errors.email ? "border border-red-700" : "")}>
-									<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="email">
-										Email
-									</label>
-									<input
-										id="email"
-										type="email"
-										className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-										{...register("email", { required: true })}
-									/>
-								</div>
-								{errors.email && <span className="ml-1 text-xs font-medium text-red-700">Email is required</span>}
-							</div>
-							<div className="block mx-5 mb-6 h-14">
-								<div className={"bg-gray-200 rounded-xl " + (errors.username ? "border border-red-700" : "")}>
-									<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="username">
-										Username
-									</label>
-									<input
-										id="username"
-										type="text"
-										className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-										{...register("username", { required: true, minLength: 3 })}
-									/>
-								</div>
-								{errors.username?.type === "required" && <span className="ml-1 text-xs font-medium text-red-700">Username is required</span>}
-								{errors.username?.type === "minLength" && <span className="ml-1 text-xs font-medium text-red-700">Username must be at least 3 characters long</span>}
-							</div>
-							<div className="block mx-5 mb-6 h-14">
-								<div className={"bg-gray-200 rounded-xl " + (errors.password ? "border border-red-700" : "")}>
-									<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="password">
-										Password
-									</label>
-									<input
-										id="password"
-										type="password"
-										className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-										{...register("password", { required: true, minLength: 8 })}
-									/>
-								</div>
-								{errors.password?.type === "required" && <span className="ml-1 text-xs font-medium text-red-700">Password is required</span>}
-								{errors.password?.type === "minLength" && <span className="ml-1 text-xs font-medium text-red-700">Password must be at least 8 characters long</span>}
-							</div>
-							<div className="block mx-5 mb-6 h-14">
-								<div className={"bg-gray-200 rounded-xl " + (errors.confirmPassword ? "border border-red-700" : "")}>
-									<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="cfmPassword">
-										Confirm password
-									</label>
-									<input
-										id="cfmPassword"
-										type="password"
-										className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-										{...register("confirmPassword", {
-											required: true,
-											minLength: 8,
-											validate: val => val === watch("password")
-										})}
-									/>
-								</div>
-								{errors.confirmPassword?.type === "required" && <span className="ml-1 text-xs font-medium text-red-700">Please confirm your password</span>}
-								{errors.confirmPassword?.type === "validate" && <span className="ml-1 text-xs font-medium text-red-700">Passwords do not match</span>}
-							</div>
+							<TextInput
+								id="email"
+								type="email"
+								label="Email"
+								register={register("email", { required: true })}
+								errors={[{ isError: !!errors.email, msg: "Email is required" }]}
+							/>
+							<TextInput
+								id="username"
+								type="text"
+								label="Username"
+								register={register("username", { required: true, minLength: 4 })}
+								errors={[
+									{ isError: errors.username?.type === "required", msg: "Username is required" },
+									{ isError: errors.username?.type === "minLength", msg: "Username must be at least 4 characters long" },
+								]}
+							/>
+							<TextInput
+								id="password"
+								type="password"
+								label="Password"
+								register={register("password", { required: true, minLength: 8 })}
+								errors={[
+									{ isError: errors.password?.type === "required", msg: "Password is required" },
+									{ isError: errors.password?.type === "minLength", msg: "Password must be at least 8 characters long" },
+								]}
+							/>
+							<TextInput
+								id="cfmPassword"
+								type="password"
+								label="Confirm password"
+								register={register("confirmPassword", {
+									required: true,
+									minLength: 8,
+									validate: val => val === watch("password")
+								})}
+								errors={[
+									{ isError: errors.confirmPassword?.type === "required", msg: "Please confirm your password" },
+									{ isError: errors.confirmPassword?.type === "validate", msg: "Passwords do not match" }
+								]}
+							/>
 							<input
 								id="submit"
 								className="mx-5 text-lg font-medium text-white h-14 rounded-xl bg-primary-400"

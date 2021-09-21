@@ -38,6 +38,8 @@ export default function useAuth() {
         }
     );
 
+    const shouldCreateProfile = refreshData ? !refreshData.value.profile : false
+
     useEffect(() => {
         if (refreshData) {
             if (refreshData.success) {
@@ -71,17 +73,21 @@ export default function useAuth() {
     }, []);
 
     const { data: profileData, error: profileError, isValidating } = useSWR(
-        [userId, isLoggedIn],
-        (id, loggedIn) => {
-            return loggedIn && id !== null
+        [userId, isLoggedIn, !shouldCreateProfile],
+        (id, loggedIn, profileExists) => {
+            return loggedIn && profileExists && id !== null
                 ? apiFetch(`/users/${id}`).then(async res => {
-                    return { status: res.status, profile: (await res.json()) as Profile }
+                    return { success: res.ok, status: res.status, profile: (await res.json()) as Profile }
                 })
                 : undefined
         },
     )
 
     useEffect(() => {
+        if (profileData && !profileData.success) {
+            console.log({ profileError, profileData })
+        }
+
         if (profileData && profileData.status === 403) {
             console.log('forbidden, logging out')
             console.log({ data: profileData, err: profileError })
@@ -95,6 +101,7 @@ export default function useAuth() {
         setLogout,
         isLoggedIn,
         userId,
+        shouldCreateProfile,
         userProfile: profileData?.profile,
         profileError,
         profileLoading: isValidating

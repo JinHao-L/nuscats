@@ -38,6 +38,7 @@ import {
   LANDING_ROUTE,
   PROFILE_ROUTE,
   PROFILE_SETTINGS_ROUTE,
+  SETUP_PROFILE_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
 } from 'app/routes';
@@ -45,6 +46,7 @@ import ChangePassword from 'pages/ChangePassword';
 import ChangeUsername from 'pages/ChangeUsername';
 import Profile from 'pages/Profile';
 import Settings from 'pages/Settings';
+import SetupProfile from 'pages/SetupProfile';
 
 const App: React.FC = () => {
   return (
@@ -54,6 +56,7 @@ const App: React.FC = () => {
           <Route exact path={SIGNUP_ROUTE} component={Signup} />
           <Route exact path={SIGNIN_ROUTE} component={Signin} />
           <Route exact path={LANDING_ROUTE} component={Landing} />
+          <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
           <Route exact path={PROFILE_ROUTE} component={Profile} />
           <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <Route
