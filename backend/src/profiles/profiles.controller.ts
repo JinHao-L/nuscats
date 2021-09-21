@@ -47,12 +47,13 @@ export class ProfilesController {
     type: Profile,
   })
   @ApiConflictResponse({ description: 'Profile already exists' })
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(
-    @Usr() user: User,
+    @Usr() requester: User,
     @Body() createProfileDto: CreateProfileDto,
   ): Observable<Profile> {
-    return this.profilesService.create(createProfileDto, user);
+    return this.profilesService.create(createProfileDto, requester);
   }
 
   /**
@@ -97,16 +98,14 @@ export class ProfilesController {
     type: Profile,
   })
   @ApiParam({ name: 'uuid', description: 'The id of the profile to update' })
+  @UseGuards(JwtAuthGuard)
   @Put(':uuid')
   update(
-    @Usr() user: User,
+    @Usr() requester: User,
     @Param('uuid', ParseUUIDPipe) uuid: string,
     @Body() updateProfileDto: UpdateProfileDto,
   ): Observable<Profile> {
-    if (user.uuid !== uuid && !user.roles.includes(RoleType.Admin)) {
-      throw new UnauthorizedException('Cannot modify user');
-    }
-    return this.profilesService.update(uuid, updateProfileDto);
+    return this.profilesService.update(uuid, updateProfileDto, requester);
   }
 
   /**

@@ -8,6 +8,7 @@ import {
   ApiConflictResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
+  ApiBody,
 } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
@@ -32,12 +33,13 @@ export class AuthController {
     type: User,
   })
   @ApiUnauthorizedResponse({ description: 'Wrong email or password' })
+  @ApiBody({ type: LoginUserDto })
   @UseGuards(LoginAuthGuard)
   @Post('/login')
   login(
     @Usr() user: User,
     @Res({ passthrough: true }) response: Response,
-    @Body() _loginUserDto: LoginUserDto,
+    // @Body() _loginUserDto: LoginUserDto,
   ): Observable<User> {
     const accessTokenCookie = this.authService.getJwtAccessTokenCookie(user);
     const refreshTokenCookie = this.authService.getJwtRefreshTokenCookie(user);

@@ -1,6 +1,11 @@
+import { RoleType, User } from '@api/users';
 import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import { Point } from 'geojson';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository, SelectQueryBuilder } from 'typeorm';
 import {
@@ -155,15 +160,39 @@ export class SightingsService {
   update(
     id: number,
     updateSightingDto: UpdateSightingDto,
+    requester: User,
   ): Observable<CatSighting> {
-    return from(
-      this.sightingsRepository.update({ id }, { ...updateSightingDto }),
-    ).pipe(mergeMap(() => this.findOne(id)));
+    return from(this.sightingsRepository.findOne(id)).pipe(
+      mergeMap((sighting) => {
+        if (!sighting) {
+          throw new NotFoundException('Sighting does not exist');
+        }
+        if (
+          requester.uuid !== sighting.owner_id &&
+          !requester.roles.includes(RoleType.Admin)
+        ) {
+          throw new UnauthorizedException('Cannot modify sighting');
+        }
+        return this.sightingsRepository.update(sighting, updateSightingDto);
+      }),
+      mergeMap(() => this.findOne(id)),
+    );
   }
 
-  remove(id: number): Observable<CatSighting> {
+  remove(id: number, requester: User): Observable<CatSighting> {
     return this.findOne(id).pipe(
-      mergeMap((post) => this.sightingsRepository.remove(post)),
+      mergeMap((sighting) => {
+        if (!sighting) {
+          throw new NotFoundException('Sighting does not exist');
+        }
+        if (
+          requester.uuid !== sighting.owner_id &&
+          !requester.roles.includes(RoleType.Admin)
+        ) {
+          throw new UnauthorizedException('Cannot delete sighting');
+        }
+        return this.sightingsRepository.remove(sighting);
+      }),
     );
   }
 }

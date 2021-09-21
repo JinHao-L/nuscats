@@ -21,7 +21,7 @@ export class Cat implements ICat {
   @Column('varchar')
   image: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', nullable: true })
   neutered: boolean;
 
   @Column('text')

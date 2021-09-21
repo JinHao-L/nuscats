@@ -1,3 +1,4 @@
+import { RolesGuard } from './../auth/guard/roles.guard';
 import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import {
   Body,
@@ -12,6 +13,7 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -30,6 +32,11 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
 import { LatestSightingQuery } from './dtos/latest-sighting.dto';
 import * as QueryString from 'query-string';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { User } from 'src/users/user.entity';
+import { Usr } from 'src/shared/decorators/user.decorator';
+import { Roles } from 'src/shared/decorators/role.decorator';
+import { RoleType } from '@api/users';
 
 // todo: authentication
 @ApiTags('Sightings')
@@ -120,12 +127,14 @@ export class SightingsController {
     type: CatSighting,
   })
   @ApiParam({ name: 'id', description: 'The id of the sighting to update' })
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   updateSighting(
+    @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateSighintDto: UpdateSightingDto,
   ) {
-    return this.sightingsService.update(id, updateSighintDto);
+    return this.sightingsService.update(id, updateSighintDto, requester);
   }
 
   /**
@@ -136,10 +145,14 @@ export class SightingsController {
     type: CatSighting,
   })
   @ApiParam({ name: 'id', description: 'The id of the sighting to remove' })
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
-  removeSighting(@Param('id', ParseIntPipe) id: number): Observable<string> {
+  removeSighting(
+    @Usr() requester: User,
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<string> {
     return this.sightingsService
-      .remove(id)
+      .remove(id, requester)
       .pipe(map(() => 'Deleted successfully'));
   }
 }
