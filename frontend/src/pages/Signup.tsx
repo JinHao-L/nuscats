@@ -12,7 +12,7 @@ const Signup: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<div className="mx-5 mt-2 mt-5 mb-5">
+				<div className="mx-5 mt-5 mb-5">
 					<p className="mb-1 text-3xl font-bold">Join the awesome cat community</p>
 					<p>Fill in your details to begin</p>
 				</div>

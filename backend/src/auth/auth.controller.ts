@@ -91,7 +91,7 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: 'Invalid refresh token' })
   @UseGuards(JwtRefreshGuard)
-  @Get('/refresh')
+  @Post('/refresh')
   refresh(
     @Usr() user: User,
     @Res({ passthrough: true }) response: Response,
@@ -108,7 +108,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'Successfully logged out' })
   @ApiUnauthorizedResponse({ description: 'Not logged in' })
-  @Get('/logout')
+  @Post('/logout')
   logout(@Usr() user: User, @Res({ passthrough: true }) response: Response) {
     const logoutCookies = this.authService.getLogoutCookies();
     return this.authService.deleteRefreshToken(user).pipe(

@@ -42,13 +42,7 @@ export class AuthService {
           return from(bcrypt.compare(pass, user.password_hash)).pipe(
             map((isMatch) => {
               if (isMatch) {
-                const userObj = {
-                  uuid: user.uuid,
-                  username: user.username,
-                  email: user.email,
-                  roles: user.roles,
-                } as User;
-                return userObj;
+                return user;
               } else {
                 // password does not match
                 throw new UnauthorizedException('Wrong email or password');
@@ -205,7 +199,7 @@ export class AuthService {
     return this.usersService.findByEmail(email).pipe(
       map((user) => {
         if (!user) {
-          throw new BadRequestException('Invalid email');
+          throw new BadRequestException('Email does not exist');
         }
 
         const payload: EmailConfirmPayload = {
@@ -234,7 +228,7 @@ export class AuthService {
     return this.usersService.findByEmail(email).pipe(
       map((user) => {
         if (!user) {
-          throw new BadRequestException('Invalid email');
+          throw new BadRequestException('Email does not exist');
         }
 
         const payload: PasswordResetPayload = {
@@ -260,30 +254,45 @@ export class AuthService {
   }
 
   confirmEmail(confirmEmailDto: ConfirmEmailDto): Observable<string> {
-    const { token } = confirmEmailDto;
-    const payload = this.jwtService.verify<EmailConfirmPayload>(token, {
-      ignoreExpiration: false,
-      secret: this.jwtConfigService.mailVerifyTokenOptions.secret,
-    });
+    try {
+      const { token } = confirmEmailDto;
+      let payload: EmailConfirmPayload;
+      try {
+        payload = this.jwtService.verify<EmailConfirmPayload>(token, {
+          ignoreExpiration: false,
+          secret: this.jwtConfigService.mailVerifyTokenOptions.secret,
+        });
+      } catch (error) {
+        throw new BadRequestException('Invalid token');
+      }
 
-    const { email } = payload;
-    return this.usersService.activateAccount(email).pipe(
-      map((activated) => {
-        if (!activated) {
-          return 'Email already verified. Proceed to login.';
-        } else {
-          return 'Email successfully verified. Proceed to login.';
-        }
-      }),
-    );
+      const { email } = payload;
+      return this.usersService.activateAccount(email).pipe(
+        map((activated) => {
+          if (!activated) {
+            return 'Email already verified. Proceed to login.';
+          } else {
+            return 'Email successfully verified. Proceed to login.';
+          }
+        }),
+      );
+    } catch (err) {
+      throw new BadRequestException('Invalid token');
+    }
   }
 
   resetPassword(resetPasswordDto: ResetPasswordDto): Observable<string> {
     const { token, password } = resetPasswordDto;
-    const payload = this.jwtService.verify<PasswordResetPayload>(token, {
-      ignoreExpiration: false,
-      secret: this.jwtConfigService.passwordResetTokenOptions.secret,
-    });
+    let payload: PasswordResetPayload;
+
+    try {
+      payload = this.jwtService.verify<PasswordResetPayload>(token, {
+        ignoreExpiration: false,
+        secret: this.jwtConfigService.passwordResetTokenOptions.secret,
+      });
+    } catch (error) {
+      throw new BadRequestException('Invalid token');
+    }
 
     const { sub, hash: previousHash } = payload;
     return this.usersService.findByUuid(sub).pipe(

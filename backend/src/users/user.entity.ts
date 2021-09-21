@@ -16,7 +16,7 @@ import { User as IUser, RoleType } from '@api/users';
 import { Profile } from 'src/profiles/profile.entity';
 
 @Entity()
-@Unique('uuid_username', ['username', 'uuid'])
+@Unique(['username', 'uuid'])
 export class User implements IUser {
   @PrimaryGeneratedColumn()
   @ApiHideProperty()
@@ -32,7 +32,7 @@ export class User implements IUser {
   email: string;
 
   @Column({ default: false })
-  isEmailConfirmed: boolean;
+  is_email_confirmed: boolean;
 
   @Column({ type: 'varchar', unique: true })
   username: string;
@@ -53,7 +53,7 @@ export class User implements IUser {
   })
   roles: RoleType[];
 
-  @OneToOne((type) => Profile, (profile) => profile.user)
+  @OneToOne((type) => Profile, (profile) => profile.user, { nullable: true })
   profile?: Profile;
 
   @Exclude()

@@ -79,8 +79,8 @@ services:
       # Should seed
       - SEEDER_SHOULD_SEED=false
       - SEEDER_SHOULD_REFRESH=false
-      # App secrets
-      - CLIENT_URL=https://localhost:3001
+      # App variables
+      - CLIENT_URL=http://localhost:3000
     ports: 
       - 3001:3001
     volumes: 

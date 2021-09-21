@@ -14,16 +14,15 @@ import { User } from '../users/user.entity';
 import { CatSighting } from '../sightings/sighting.entity';
 
 import { Profile as IProfile } from '@api/profiles';
+
 @Entity()
 export class Profile implements IProfile {
   @OneToOne((type) => User, (user) => user.profile, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
-  @JoinColumn([
-    { name: 'uuid', referencedColumnName: 'uuid' },
-    { name: 'username', referencedColumnName: 'username' },
-  ])
+  @JoinColumn({ name: 'uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
 
   @PrimaryColumn()
