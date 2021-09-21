@@ -1,4 +1,4 @@
-import { apiFetch, loginKey, logoutKey, signupKey } from "./api";
+import { apiFetch, loginKey, logoutKey, signupKey } from "lib/api";
 import { User } from "@api/users"
 
 class LoginResponse {

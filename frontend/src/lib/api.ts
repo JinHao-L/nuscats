@@ -1,5 +1,5 @@
 import { Fetcher } from "swr";
-import { BackendApiBaseUrl } from "./config";
+import { BackendApiBaseUrl } from "lib/config";
 
 export const catsKey = "/cats"
 export const sightingsKey = "/sightings"
