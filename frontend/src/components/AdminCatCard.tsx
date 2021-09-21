@@ -1,9 +1,9 @@
 import { Cat } from "@api/cats";
 import { useIonAlert, AlertOptions, IonIcon, useIonModal } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
-import { Result } from "lib/api";
+import { catsKey, Result } from "lib/api";
 import { PlaceholderCatUrl } from "lib/utils";
-import { KeyedMutator } from "swr";
+import { KeyedMutator, mutate } from "swr";
 import EditCatModal from "./EditCatModal";
 
 interface Props {
@@ -17,7 +17,10 @@ const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard, catDataMutate}
 	
 	const [presentAlert] = useIonAlert();
 	const [presentModal, dismissModal] = useIonModal(EditCatModal, {
-		dismissModal: () => dismissModal(),
+		dismissModal: () => {
+			dismissModal();
+			mutate(catsKey);
+		},
 		cat: cat,
 		catDataMutate: catDataMutate,
 	});

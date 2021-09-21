@@ -9,6 +9,7 @@ export const latestKey = "/sightings/latest"
 export const loginKey = "/auth/login"
 export const logoutKey = "/auth/logout"
 export const refreshLoginKey = "/auth/refresh"
+export const catPicUploadKey = "/uploads/cats"
 
 export const apiFetch = async (path: string, body?: any, options?: RequestInit): Promise<Response> => {
     return fetch(`${ApiBaseUrl}${path}`, {

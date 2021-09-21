@@ -83,7 +83,7 @@ export class CatsController {
     description: 'Forbidden. Operation allowed only for admin',
   })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleType.Admin)
+  // @Roles(RoleType.Admin)
   @Post()
   createCat(@Body() createCatDto: CreateCatDto): Observable<Cat> {
     return this.catsService.createCat(createCatDto);

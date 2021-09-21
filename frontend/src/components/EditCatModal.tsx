@@ -4,8 +4,10 @@ import { PickerColumn, PickerOptions } from "@ionic/core";
 import { useState } from "react";
 import { logoOctocat, trashOutline } from "ionicons/icons";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { apiFetch, catsKey, Result } from "lib/api";
-import { KeyedMutator } from "swr";
+import { Filesystem } from '@capacitor/filesystem';
+import { apiFetch, catPicUploadKey, catsKey, Result } from "lib/api";
+import { KeyedMutator, mutate } from "swr";
+import { readAsBase64 } from "lib/camera";
 
 // Note that if cat prop is not given, it is assumed that this is a new cat entry
 interface Props {
@@ -17,7 +19,6 @@ interface Props {
 const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 	// State stores cat data for updates on page
 	const [catData, setCatData] = useState(cat ? { ...cat } : {
-		id: 2,
 		name: '',
 		zone: UniversityZone.Computing,
 		one_liner: '',
@@ -101,36 +102,101 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 				...catData,
 				image: image.webPath as string,
 			})
+			
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 		}
 	}
 
 	// Handler for update cat data button
-	const handleUpdateCatData = () => {
-		apiFetch(`${catsKey}/${catData.id}`, {...catData, updated_at: new Date()}, {
-			method: 'PUT',
-		}).then((res) => {
-			console.log(res);
-			(catDataMutate as KeyedMutator<Result<Cat[]>>)();
-			presentAlert({
-				header: 'Cat successfully updated',
-				buttons: [
-					{ text: 'Ok', }
-				]
+	const handleUpdateCatData = async () => {
+		const imgBlob = await fetch(catData.image).then(res => res.blob());
+		try {
+			// Get urls for uploading/viewing s3 image
+			const response = await apiFetch(`${catPicUploadKey}/${catData.name}`)
+			const { signedUrl, imageUrl } = await response.json();
+			// Upload to s3
+			fetch(signedUrl, {
+				headers: {
+					'Content-Type': 'image/png',
+				},
+				method: 'PUT',
+				body: imgBlob, 
+			}).catch((err) => {
+				console.error("Image upload failed");
+				throw err;
+			});
+			// Send cat entry to database
+			const typedCatData = catData as Cat;
+			apiFetch(`${catsKey}/${typedCatData.id}`, { ...typedCatData, image: imageUrl, updated_at: new Date() }, {
+				method: 'PUT',
+			}).then((res) => {
+				if (res.status == 200) {
+					presentAlert({
+						header: 'Cat successfully updated',
+						buttons: [
+							{ text: 'Ok', }
+						],
+						onDidDismiss: dismissModal,
+					})
+				}
 			})
-		}).catch((err) => {
+		} catch (err) {
 			console.error(err);
-		});
+		}
+	}
+
+	// Handler for add cat button
+	const handleAddCatData = async () => {
+		// DO FORM VALIDATION FIRST
+		const imgBlob = await fetch(catData.image).then(res => res.blob());
+		try {
+			// Get urls for uploading/viewing s3 image 
+			const response = await apiFetch(`${catPicUploadKey}/${catData.name}`)
+			const { signedUrl, imageUrl } = await response.json();
+			// Upload to S3
+			fetch(signedUrl, {
+				headers: {
+					'Content-Type': 'image/png',
+				},
+				method: 'PUT',
+				body: imgBlob, 
+			}).catch((err) => {
+				console.error("Image upload failed");
+				throw err;
+			});
+			// Send cat entry to database
+			console.log({...catData, image: imageUrl});
+			apiFetch(`${catsKey}`, { ...catData, image: imageUrl }, {
+				method: 'POST', 
+			}).then(res => {
+				if (res.status == 201) {
+					// Show success alert, then close modal
+					mutate(catsKey);
+					presentAlert({
+						header: 'Cat successfully added', 
+						buttons: [
+							{ text: 'Ok', }
+						],
+						onDidDismiss: dismissModal, 
+					});
+				}
+			}).catch((err) => {
+				console.error("Uploading cat entry failed");
+				throw err;
+			})
+		} catch (err) {
+			console.error(err);
+		}
+
 	}
 
 	// Handler for delete cat button
 	const handleDeleteCat = () => {
-		apiFetch(`${catsKey}/${catData.id}`, undefined, {
+		const typedCatData = catData as Cat;
+		apiFetch(`${catsKey}/${typedCatData.id}`, undefined, {
 			method: 'DELETE',
 		}).then((res) => {
-			console.log(res);
-			(catDataMutate as KeyedMutator<Result<Cat[]>>)();
 			dismissModal();
 		}).catch((err) => {
 			console.error(err);
@@ -153,8 +219,8 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 						{
 							catData.image ? 
 							<img className="mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" /> : 
-							<div className="flex mt-5 bg-gray-300 rounded-full w-80 h-80">
-								<IonIcon icon={logoOctocat} className="text-center" />
+							<div className="flex items-center justify-center mt-5 bg-gray-300 rounded-full w-80 h-80">
+								<IonIcon icon={logoOctocat} className="text-center text-gray-100 text-9xl" />
 							</div>
 						}
 						<IonButton fill="solid" size="default" className="mt-3" onClick={handleChangeProfilePic}>
@@ -214,7 +280,7 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 						className="mb-5 text-lg text-white cursor-pointer h-14"
 						color="primary"
 						expand="block"
-						onClick={handleUpdateCatData}
+						onClick={ cat ? handleUpdateCatData : handleAddCatData }
 					>
 						{cat ? "Update cat data" : "Add cat"}
 					</IonButton>

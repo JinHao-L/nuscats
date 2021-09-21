@@ -36,7 +36,7 @@ const EditCatsList: React.FC =() => {
 
 	// Add new cat modal
 	const [presentModal, dismissModal] = useIonModal(EditCatModal, {
-		dismiss: () => dismissModal(),
+		dismissModal: () => dismissModal(),
 	});
 
 	return (
