@@ -21,7 +21,7 @@ export const apiFetch = async (
     body?: any,
     options?: RequestInit,
 ): Promise<Response> => {
-    return fetch(`${ApiBaseUrl}${path}`, {
+    return fetch(`${ApiBaseUrl}/v1${path}`, {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
