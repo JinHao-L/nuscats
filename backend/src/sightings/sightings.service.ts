@@ -8,30 +8,51 @@ import {
   IPaginationOptions,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { from, mergeMap, Observable } from 'rxjs';
+import { from, map, mergeMap, Observable } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 import { QuerySightingOrderBy } from '@api/sightings';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
 import { CatSighting } from './catSighting.entity';
 import { createGeoJsonPoint } from '../shared/utils/location';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
+import { ReverseGeocodeConfigService } from 'src/config/reverseGeocode.config';
+import { ReverseGeocodingResponse } from '../shared/inteface/geocoding.interface';
 
 @Injectable()
 export class SightingsService {
   constructor(
     @InjectRepository(CatSighting)
     private sightingsRepository: Repository<CatSighting>,
+    private configService: ReverseGeocodeConfigService,
+    private httpService: HttpService,
   ) {}
 
   listBy(
     queryOptions: Omit<MultipleSightingQuery, 'page' | 'limit'>,
     pagingOptions: IPaginationOptions,
   ): Observable<Pagination<CatSighting>> {
-    const { catIds, includeUnknownCats, type, ownerIds, orderBy, location } =
-      queryOptions;
+    const {
+      catIds,
+      includeUnknownCats,
+      type,
+      ownerIds,
+      orderBy,
+      location,
+      includeCatsData,
+      includeOwnerData,
+    } = queryOptions;
 
     let queryBuilder: SelectQueryBuilder<CatSighting> =
       this.sightingsRepository.createQueryBuilder('sighting');
+
+    queryBuilder = includeCatsData
+      ? queryBuilder.leftJoinAndSelect('sighting.cat', 'cat')
+      : queryBuilder;
+
+    queryBuilder = includeOwnerData
+      ? queryBuilder.leftJoinAndSelect('sighting.owner', 'owner')
+      : queryBuilder;
 
     queryBuilder = type
       ? queryBuilder.andWhere('sighting.type = :type', { type })
@@ -113,12 +134,22 @@ export class SightingsService {
     const [lat, lng] = latlng.split(',');
     const location: Point = createGeoJsonPoint(lat, lng);
 
-    const sighting = this.sightingsRepository.create({
-      ...sightings,
-      cat_id: catId,
-      location,
-    });
-    return from(this.sightingsRepository.save(sighting));
+    return this.httpService
+      .get<ReverseGeocodingResponse>(
+        this.configService.getReverseGeocodeUrl({ lat, lng }),
+      )
+      .pipe(
+        map((res) => res.data.data[0].name),
+        map((locName) =>
+          this.sightingsRepository.create({
+            ...sightings,
+            cat_id: catId,
+            location,
+            location_name: locName,
+          }),
+        ),
+        mergeMap((sighting) => this.sightingsRepository.save(sighting)),
+      );
   }
 
   update(

@@ -9,13 +9,19 @@ const Mapbox = ReactMapboxGl({
 type MapSettings = {
   center: [number, number];
   zoom: [number];
+  maxBounds: [[number, number], [number, number]];
 };
 
 const defaultMapSettings: MapSettings = {
   center: [103.772663576, 1.290665504],
   zoom: [15.5],
+  maxBounds: [
+    [103.602104, 1.201885], // Southwest coordinates
+    [104.048767, 1.491226], // Northeast coordinates
+  ],
 };
-
+// 103.602104,1.201885,104.048767,1.491226
+// 103.674202,1.165157,103.977013,1.506670
 type MapProps = React.ComponentProps<typeof Mapbox> & {
   getRef?: (s: State | undefined) => void;
 };

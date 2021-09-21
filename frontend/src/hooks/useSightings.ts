@@ -10,7 +10,7 @@ import useSWRInfinite from 'swr/infinite';
 import * as queryString from 'query-string';
 import { parseDate } from 'lib/utils';
 
-interface UseSightingsOptions extends CatSightingQuery {}
+export interface UseSightingsOptions extends CatSightingQuery {}
 
 export function useSightings(useSightingsOptions?: UseSightingsOptions) {
   // build sightings key
@@ -22,16 +22,13 @@ export function useSightings(useSightingsOptions?: UseSightingsOptions) {
     _pageIndex: number,
     previousPageData: Result<CatSightingsResponse> | null,
   ) => {
-    console.log('1', previousPageData?.value.links);
     if (!previousPageData) {
       return sightingsKey + '?' + query;
     }
-    console.log('2', previousPageData?.value.links);
     if (previousPageData && previousPageData.value?.links?.next === '') {
       // reached the end
       return null;
     }
-    console.log('3', previousPageData?.value.links);
     return previousPageData?.value.links.next;
   };
 

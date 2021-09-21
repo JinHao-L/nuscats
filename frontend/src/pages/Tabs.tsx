@@ -14,7 +14,7 @@ import CatsTab from './CatsTab';
 import { CAT_ROUTE, TAB3_ROUTE, MAP_ROUTE, FEED_ROUTE, ADMIN_ROUTE, BROADCAST_ANNOUNCEMENT_ROUTE, REQUEST_LOCATION_ROUTE, EDIT_CATS_ROUTE } from 'app/routes';
 import Tab3 from './Tab3';
 import CatDetailPage from './CatDetailPage';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FeedTab from './FeedTab';
 import Admin from './Admin';
 import EditCatsList from './EditCatsList';
@@ -43,6 +43,7 @@ const Tabs: React.FC = () => {
   // const { showTabs } = useContext(UIContext);
   const [showTabs, setShowTabs] = useState(true);
   const location = useLocation();
+  const routerRef = useRef<HTMLIonRouterOutletElement | null>(null);
 
   useEffect(() => {
     const shouldHide = SHOULD_HIDE_TABS.reduce(
@@ -85,8 +86,8 @@ const Tabs: React.FC = () => {
   return (
     <IonPage>
       <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path={MAP_ROUTE} component={HomeTab} />
+        <IonRouterOutlet ref={routerRef}>
+          <Route exact path={MAP_ROUTE} render={() => <HomeTab router={routerRef.current} />} />
           <Route exact path={CAT_ROUTE} component={CatsTab} />
           <Route exact path={TAB3_ROUTE} component={Tab3} />
           <Route exact path={FEED_ROUTE} component={FeedTab} />

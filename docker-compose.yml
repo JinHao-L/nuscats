@@ -75,7 +75,7 @@ services:
       - AWS_S3_SIGNATURE_VERSION=v4
       - AWS_S3_BUCKET_NAME=nuscats
       # Should seed
-      - SEEDER_SHOULD_SEED=true
+      - SEEDER_SHOULD_SEED=false
       - SEEDER_SHOULD_REFRESH=false
     ports: 
       - 3001:3001
