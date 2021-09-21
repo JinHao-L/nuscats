@@ -100,3 +100,31 @@ export interface PaginationMetadata {
   totalPages: number;
   currentPage: number;
 }
+
+export interface CreateSightingRequest {
+  /**
+   * The image of the sighting
+   */
+  image: string;
+
+  /**
+   * The cat id
+   */
+  catId?: number;
+
+  /**
+   * The (lat, lng) location of the sighting
+   * @example '85.3446311,85.2100893'
+   */
+  latlng: string;
+
+  /**
+   * The type of sighting
+   */
+  type: SightingType;
+
+  /**
+   * The description of the sighting
+   */
+  description: string;
+}

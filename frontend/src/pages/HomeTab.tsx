@@ -23,11 +23,12 @@ import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
-import { CatSighting } from '@api/sightings';
+import { CatSighting, makeSighting, SightingType } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
+import { Cat } from '@api/cats';
 
 interface HomePageProps {
   router: HTMLIonRouterOutletElement | null;
@@ -53,12 +54,12 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   const { sightings, error, isLoading, mutate } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  console.log(sightings);
   /**
    * Creating a new sighting
    */
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [photo, setPhoto] = useState<UserPhoto>();
+  const [photo, setPhoto] = useState<UserPhoto | null>();
 
   useEffect(() => {
     resizeMap();
@@ -76,7 +77,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
       setPinnedLocation(newPinLocation);
       query.tag && setPinnedTag(query.tag as string);
       moveTo(newPinLocation);
-      history.push(MAP_ROUTE)
+      history.push(MAP_ROUTE);
     }
   }, [location?.search]);
 
@@ -126,10 +127,8 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   const newSighting = async () => {
     try {
       const photo = await takePhoto();
-      console.log(photo);
       setPhoto(photo);
       setShowForm(true);
-      console.log('end');
     } catch (e) {
       console.log(e);
     }
@@ -196,16 +195,24 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
               text={pinnedTag}
               onClick={() => setPinnedLocation(undefined)}
             />
-            <CameraFab onClick={newSighting} />
+            <CameraFab disabled={!coords} onClick={newSighting} />
             <LocationFab
               disabled={isCentered || !coords}
               onClick={centerMapToUser}
             />
           </>
         </Map>
-        {photo && (
+        {photo && coords && (
           <IonModal isOpen={showForm}>
-            <SightingsForm photo={photo} onDismiss={() => setShowForm(false)} />
+            <SightingsForm
+              photo={photo}
+              onDismiss={() => {
+                setPhoto(null);
+                setShowForm(false);
+              }}
+              onSightingCreate={mutate}
+              coords={coords}
+            />
           </IonModal>
         )}
         {catDetails?.cat && (

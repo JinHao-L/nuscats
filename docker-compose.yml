@@ -60,9 +60,7 @@ services:
       - setup-s3
     environment: 
       # Database Configuration
-      - DB_HOST=postgres
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - DB_SYNCHRONIZE=true
       # JWT Configuration
       - JWT_ACCESS_TOKEN_SECRET=accSecret

@@ -31,7 +31,7 @@ async function bootstrap() {
   }
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
+  app.setGlobalPrefix('v1');
   const config = new DocumentBuilder()
     .setTitle('NUSCats')
     .setDescription("API endpoint for NUSCats's backend")
@@ -42,6 +42,6 @@ async function bootstrap() {
   const swaggerDoc = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, swaggerDoc);
 
-  await app.listen(3001);
+  await app.listen(process.env.PORT || 3001);
 }
 bootstrap();
