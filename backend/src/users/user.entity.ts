@@ -15,7 +15,7 @@ import { ApiHideProperty } from '@nestjs/swagger';
 import { User as IUser, RoleType } from '@api/users';
 import { Profile } from 'src/profiles/profile.entity';
 
-@Entity()
+@Entity({ name: 'users' })
 @Unique(['username', 'uuid'])
 export class User implements IUser {
   @PrimaryGeneratedColumn()

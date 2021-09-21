@@ -1,7 +1,54 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from "@ionic/react";
-import { ROOT_ROUTE } from "app/routes";
+import {
+	IonBackButton,
+	IonButton,
+	IonButtons,
+	IonContent,
+	IonHeader,
+	IonPage,
+	IonToolbar,
+	useIonAlert,
+} from "@ionic/react";
+import { useHistory } from "react-router-dom";
+import { MAP_ROUTE, ROOT_ROUTE } from "app/routes";
+import useAuth from "hooks/useAuth";
+import { login, signup } from "lib/auth";
+import { useForm, SubmitHandler } from "react-hook-form";
+import TextInput from "components/map/form/TextInput";
+
+type SignupInputs = {
+	email: string
+	username: string
+	password: string
+	confirmPassword: string
+}
 
 const Signup: React.FC = () => {
+
+	const [showErrorAlert] = useIonAlert()
+	const { setLogin } = useAuth()
+	const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupInputs>()
+	const history = useHistory()
+
+	const onSubmit: SubmitHandler<SignupInputs> = async data => {
+		const signupErr = await signup(data.email, data.username, data.password)
+		if (signupErr) {
+			showErrorAlert(`${signupErr}. Please try signing up again`, [{ text: 'Ok' }])
+			console.log({ signupErr })
+			return
+		}
+
+		const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
+		if (loginErr || unauthorized) {
+			console.log({ loginErr, unauthorized })
+			return
+		}
+
+		if (user) {
+			setLogin(user.uuid)
+			history.push(MAP_ROUTE)
+		}
+	}
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -12,82 +59,86 @@ const Signup: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<div className="mx-5 mt-5 mb-5">
-					<p className="mb-1 text-3xl font-bold">Join the awesome cat community</p>
-					<p>Fill in your details to begin</p>
+				<div className="flex flex-col items-center">
+					<div className="m-5 text-center">
+						<p className="mb-1 text-2xl font-semibold text-transparent bg-clip-text sm:text-3xl md:text-4xl bg-gradient-to-br from-primary-600 to-secondary-600">
+							Join the awesome cat community
+						</p>
+						<p className="my-2 text-lg font-bold tracking-wide text-gray-800 sm:text-xl md:text-2xl">Fill in your details to begin</p>
+					</div>
+					<div className="w-full max-w-md mt-2">
+						<form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+							<TextInput
+								id="email"
+								type="email"
+								label="Email"
+								register={register("email", { required: true })}
+								errors={[{ isError: !!errors.email, msg: "Email is required" }]}
+							/>
+							<TextInput
+								id="username"
+								type="text"
+								label="Username"
+								register={register("username", { required: true, minLength: 4 })}
+								errors={[
+									{ isError: errors.username?.type === "required", msg: "Username is required" },
+									{ isError: errors.username?.type === "minLength", msg: "Username must be at least 4 characters long" },
+								]}
+							/>
+							<TextInput
+								id="password"
+								type="password"
+								label="Password"
+								register={register("password", { required: true, minLength: 8 })}
+								errors={[
+									{ isError: errors.password?.type === "required", msg: "Password is required" },
+									{ isError: errors.password?.type === "minLength", msg: "Password must be at least 8 characters long" },
+								]}
+							/>
+							<TextInput
+								id="cfmPassword"
+								type="password"
+								label="Confirm password"
+								register={register("confirmPassword", {
+									required: true,
+									minLength: 8,
+									validate: val => val === watch("password")
+								})}
+								errors={[
+									{ isError: errors.confirmPassword?.type === "required", msg: "Please confirm your password" },
+									{ isError: errors.confirmPassword?.type === "validate", msg: "Passwords do not match" }
+								]}
+							/>
+							<input
+								id="submit"
+								className="mx-5 text-lg font-medium text-white h-14 rounded-xl bg-primary-400"
+								type="submit"
+								value="Sign up"
+							/>
+						</form>
+						<p className="my-2 text-lg font-semibold text-center">
+							or
+						</p>
+						<IonButton
+							className="mx-5 mb-3 text-lg cursor-pointer h-14"
+							color="facebook"
+							expand="block"
+							routerLink={ROOT_ROUTE}
+							routerDirection="forward"
+						>
+							Connect with Facebook
+						</IonButton>
+						<IonButton
+							className="mx-5 mb-3 text-lg text-black border border-gray-400 cursor-pointer rounded-xl h-14"
+							expand="block"
+							color="white"
+							routerLink={ROOT_ROUTE}
+							routerDirection="forward"
+						>
+							Connect with Google
+						</IonButton>
+					</div>
 				</div>
-				<form className="flex flex-col mt-5">
-					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="email">
-							Email
-						</label>
-						<input
-							id="email"
-							type="email"
-							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-						/>
-					</div>
-					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="username">
-							Username
-						</label>
-						<input
-							id="username"
-							type="text"
-							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-						/>
-					</div>
-					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="password">
-							Password
-						</label>
-						<input
-							id="password"
-							type="password"
-							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-						/>
-					</div>
-					<div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-						<label className="block pt-1 pl-3 text-xs text-gray-700" htmlFor="cfmPassword">
-							Confirm password
-						</label>
-						<input
-							id="cfmPassword"
-							type="password"
-							className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-						/>
-					</div>
-				</form>
-				<IonButton
-					className="mx-5 text-lg text-white cursor-pointer h-14"
-					color="primary"
-					expand="block"
-					routerLink={ROOT_ROUTE}
-					routerDirection="forward"
-				>
-					Sign up
-				</IonButton>
-				<p className="my-2 text-lg font-semibold text-center">
-					or
-				</p>
-				<IonButton
-					className="mx-5 mb-3 text-lg cursor-pointer h-14"
-					color="facebook"
-					expand="block"
-					routerLink={ROOT_ROUTE}
-					routerDirection="forward"
-				>
-					Connect with Facebook
-				</IonButton>
-				<IonButton
-					className="mx-5 mb-3 text-lg text-black cursor-pointer h-14"
-					expand="block"
-					color="white"
-					routerLink={ROOT_ROUTE}
-					routerDirection="forward"
-				>
-					Connect with Google
-				</IonButton>
 			</IonContent>
 		</IonPage>
 	);

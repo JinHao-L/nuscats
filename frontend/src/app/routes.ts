@@ -2,6 +2,7 @@
 export const LANDING_ROUTE = '/';
 export const SIGNUP_ROUTE = '/signup';
 export const SIGNIN_ROUTE = '/signin';
+export const SETUP_PROFILE_ROUTE = '/setup-profile'
 
 export const FORGET_PASSWORD_ROUTE = '/forget-password';
 export const RESEND_EMAIL_ROUTE = '/resend';

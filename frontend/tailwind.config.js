@@ -1,5 +1,4 @@
 const defaults = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
 
 module.exports = {
   purge: ["src/**/*.jsx", "src/**/*.tsx", "src/**/*.html"],

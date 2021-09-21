@@ -37,11 +37,17 @@ import {
   FORGET_PASSWORD_ROUTE,
   LANDING_ROUTE,
   PASSWORD_RESET_ROUTE,
+  PROFILE_ROUTE,
+  PROFILE_SETTINGS_ROUTE,
   RESEND_EMAIL_ROUTE,
   ROOT_ROUTE,
+  SETUP_PROFILE_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
 } from 'app/routes';
+import Profile from 'pages/Profile';
+import Settings from 'pages/Settings';
+import SetupProfile from 'pages/SetupProfile';
 import ForgetPasswordPage from 'pages/ForgetPassword';
 import EmailConfirmationPage from 'pages/EmailConfirmation';
 import ResetPasswordPage from 'pages/ResetPassword';
@@ -55,6 +61,9 @@ const App: React.FC = () => {
           <Route exact path={SIGNUP_ROUTE} component={Signup} />
           <Route exact path={SIGNIN_ROUTE} component={Signin} />
           <Route exact path={LANDING_ROUTE} component={Landing} />
+          <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
+          <Route exact path={PROFILE_ROUTE} component={Profile} />
+          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <Route
             exact
             path={RESEND_EMAIL_ROUTE}
@@ -77,9 +86,9 @@ const App: React.FC = () => {
           />
           <Route path={ROOT_ROUTE} render={() => <Tabs />} />
           <Route render={() => <Redirect to={LANDING_ROUTE} />} />
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
+        </IonRouterOutlet >
+      </IonReactRouter >
+    </IonApp >
   );
 };
 

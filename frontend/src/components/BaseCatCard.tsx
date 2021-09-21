@@ -11,14 +11,14 @@ const BaseCatCard: React.FC<BaseCatCardProps> = ({ cat, onClick }) => {
   return (
     <div
       onClick={() => onClick && onClick(cat.id)}
-      className="flex justify-between px-3 mb-4 shadow-xl bg-secondary-100 rounded-2xl bg-opacity-90"
+      className="flex justify-between px-3 mb-1 shadow-xl bg-secondary-100 rounded-2xl bg-opacity-90"
     >
       <div className="flex-shrink-0 mt-5 mb-4">
         <img
-          className="object-cover w-24 h-24 rounded-full"
+          className="object-cover w-24 h-24 rounded-full lg:w-28 lg:h-28"
           src={cat.image}
           alt={`cat ${cat.name}`}
-        ></img>
+        />
       </div>
       <div className="flex flex-col justify-start flex-auto mt-3 mb-4 ml-4">
         <p className="text-lg font-semibold text-gray-700">{cat.name}</p>
@@ -28,7 +28,7 @@ const BaseCatCard: React.FC<BaseCatCardProps> = ({ cat, onClick }) => {
             {cat.zone}
           </p>
         </div>
-        <p className="mt-1 text-xs text-gray-900 line-clamp-3">
+        <p className="mt-1 text-xs text-gray-900 line-clamp-3 sm:line-clamp-4 sm:text-sm">
           {cat.description}
         </p>
       </div>

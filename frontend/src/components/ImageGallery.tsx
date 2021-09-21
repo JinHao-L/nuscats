@@ -13,7 +13,9 @@ interface ImageGalleryProps {
 }
 
 export const ImageGallery: React.FC<ImageGalleryProps> = ({ details, imageClickHandler: handler }) => {
-    return <div className="w-full h-full grid grid-cols-3 gap-0.5 px-0.5 py-0.5 border-t border-gray-400 overflow-y-auto">
+
+
+    return <div className="w-full h-full grid grid-cols-3 gap-0.5 px-0.5 py-0.5 border-t border-gray-400 overflow-y-auto md:grid-cols-4 lg:grid-cols-5">
         {details.map((detail, idx) => {
             return <div key={idx} className="aspect-w-1 aspect-h-1">
                 <img
