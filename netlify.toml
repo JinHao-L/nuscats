@@ -1,0 +1,10 @@
+[build]
+  base = "."
+  publish = "frontend/build"
+  command = "yarn workspace frontend build"
+  ignore = "git diff --quiet $COMMIT_REF $CACHED_COMMIT_REF -- frontend/"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
