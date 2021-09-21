@@ -7,13 +7,13 @@ import {
   IsUrl,
 } from 'class-validator';
 
-import { SightingType } from '@api/sightings';
+import { CreateSightingRequest, SightingType } from '@api/sightings';
 
-export class CreateSightingDto {
+export class CreateSightingDto implements CreateSightingRequest {
   /**
    * The image of the sighting
    */
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   @IsNotEmpty()
   image: string;
 

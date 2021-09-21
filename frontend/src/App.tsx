@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Signup from './pages/Signup';
@@ -33,20 +33,25 @@ import './theme/tailwind.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './theme/tailwind.css';
 import {
-  CHANGE_PASSWORD_ROUTE,
-  CHANGE_USERNAME_ROUTE,
+  EMAIL_CONFIRM_ROUTE,
+  FORGET_PASSWORD_ROUTE,
   LANDING_ROUTE,
+  PASSWORD_RESET_ROUTE,
   PROFILE_ROUTE,
   PROFILE_SETTINGS_ROUTE,
+  RESEND_EMAIL_ROUTE,
+  ROOT_ROUTE,
   SETUP_PROFILE_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
 } from 'app/routes';
-import ChangePassword from 'pages/ChangePassword';
-import ChangeUsername from 'pages/ChangeUsername';
 import Profile from 'pages/Profile';
 import Settings from 'pages/Settings';
 import SetupProfile from 'pages/SetupProfile';
+import ForgetPasswordPage from 'pages/ForgetPassword';
+import EmailConfirmationPage from 'pages/EmailConfirmation';
+import ResetPasswordPage from 'pages/ResetPassword';
+import ResendConfirmationPage from 'pages/ResendConfirmation';
 
 const App: React.FC = () => {
   return (
@@ -61,19 +66,29 @@ const App: React.FC = () => {
           <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <Route
             exact
-            path={CHANGE_USERNAME_ROUTE}
-            component={ChangeUsername}
+            path={RESEND_EMAIL_ROUTE}
+            component={ResendConfirmationPage}
           />
           <Route
             exact
-            path={CHANGE_PASSWORD_ROUTE}
-            component={ChangePassword}
+            path={EMAIL_CONFIRM_ROUTE}
+            component={EmailConfirmationPage}
           />
-          <Route exact path={LANDING_ROUTE} component={Landing} />
-          <Route render={() => <Tabs />} />
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
+          <Route
+            exact
+            path={PASSWORD_RESET_ROUTE}
+            component={ResetPasswordPage}
+          />
+          <Route
+            exact
+            path={FORGET_PASSWORD_ROUTE}
+            component={ForgetPasswordPage}
+          />
+          <Route path={ROOT_ROUTE} render={() => <Tabs />} />
+          <Route render={() => <Redirect to={LANDING_ROUTE} />} />
+        </IonRouterOutlet >
+      </IonReactRouter >
+    </IonApp >
   );
 };
 

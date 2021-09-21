@@ -62,7 +62,7 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
         </IonAvatar>
         <IonLabel className="inline-block align-middle ">
           <IonCardTitle className="text-base font-bold">
-            {owner?.first_name || 'Anonymous'}
+            {owner?.username || 'Anonymous'}
           </IonCardTitle>
           {/* <IonCardSubtitle className="mb-0 text-sm font-medium text-gray-500 normal-case">
             Optional Title

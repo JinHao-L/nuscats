@@ -64,7 +64,7 @@ export function useLatestSightings() {
     swrFetcher<CatSighting[]>(),
     { dedupingInterval: 10000 },
   );
-
+  console.log(data);
   const isLoading = !data && !error;
   const err =
     data && !data.success ? new Error(`status code: ${data?.status}`) : error;

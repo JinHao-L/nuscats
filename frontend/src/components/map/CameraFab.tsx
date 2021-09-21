@@ -3,9 +3,10 @@ import { camera } from 'ionicons/icons';
 
 type CameraFabProps = {
   onClick: () => void;
+  disabled: boolean;
 };
 
-const CameraFab = ({ onClick }: CameraFabProps) => {
+const CameraFab = ({ onClick, disabled }: CameraFabProps) => {
   return (
     <IonFab
       className="z-40 mb-5 mr-5"
@@ -13,7 +14,7 @@ const CameraFab = ({ onClick }: CameraFabProps) => {
       vertical="bottom"
       horizontal="end"
     >
-      <IonFabButton onClick={onClick}>
+      <IonFabButton disabled={disabled} onClick={onClick}>
         <IonIcon icon={camera} />
       </IonFabButton>
     </IonFab>

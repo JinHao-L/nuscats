@@ -11,7 +11,20 @@ import {
 import { construct, logoOctocat, map, personCircle } from 'ionicons/icons';
 import HomeTab from './HomeTab';
 import CatsTab from './CatsTab';
-import { CAT_ROUTE, TAB3_ROUTE, MAP_ROUTE, FEED_ROUTE, ADMIN_ROUTE, BROADCAST_ANNOUNCEMENT_ROUTE, REQUEST_LOCATION_ROUTE, EDIT_CATS_ROUTE } from 'app/routes';
+import {
+  CAT_ROUTE,
+  TAB3_ROUTE,
+  MAP_ROUTE,
+  FEED_ROUTE,
+  ADMIN_ROUTE,
+  BROADCAST_ANNOUNCEMENT_ROUTE,
+  REQUEST_LOCATION_ROUTE,
+  EDIT_CATS_ROUTE,
+  CHANGE_PASSWORD_ROUTE,
+  CHANGE_USERNAME_ROUTE,
+  PROFILE_ROUTE,
+  PROFILE_SETTINGS_ROUTE,
+} from 'app/routes';
 import Tab3 from './Tab3';
 import CatDetailPage from './CatDetailPage';
 import { useEffect, useRef, useState } from 'react';
@@ -20,6 +33,10 @@ import Admin from './Admin';
 import EditCatsList from './EditCatsList';
 import RequestLocation from './RequestLocation';
 import BroadcastAnnouncement from './BroadcastAnnouncement';
+import ChangePassword from './ChangePassword';
+import ChangeUsername from './ChangeUsername';
+import Profile from './Profile';
+import Settings from './Settings';
 
 interface TabInfo {
   href: string;
@@ -29,14 +46,14 @@ interface TabInfo {
 
 /**
  * List of routes that should have tabs hidden
- * 
+ *
  * Rationale: Navigating to outer navigator is laggy
  */
 const SHOULD_HIDE_TABS = [
   { path: `${CAT_ROUTE}/:id`, exact: true, strict: false },
   { path: BROADCAST_ANNOUNCEMENT_ROUTE, exact: true, strict: false },
-  { path: REQUEST_LOCATION_ROUTE, exact: true, strict: false }, 
-  { path: EDIT_CATS_ROUTE, exact: true, strict: false }, 
+  { path: REQUEST_LOCATION_ROUTE, exact: true, strict: false },
+  { path: EDIT_CATS_ROUTE, exact: true, strict: false },
 ];
 
 const Tabs: React.FC = () => {
@@ -70,7 +87,7 @@ const Tabs: React.FC = () => {
       icon: logoOctocat,
     },
     {
-      href: ADMIN_ROUTE, 
+      href: ADMIN_ROUTE,
       label: 'Admin',
       icon: construct,
     },
@@ -87,15 +104,39 @@ const Tabs: React.FC = () => {
     <IonPage>
       <IonTabs>
         <IonRouterOutlet ref={routerRef}>
-          <Route exact path={MAP_ROUTE} render={() => <HomeTab router={routerRef.current} />} />
+          <Route
+            exact
+            path={MAP_ROUTE}
+            render={() => <HomeTab router={routerRef.current} />}
+          />
           <Route exact path={CAT_ROUTE} component={CatsTab} />
           <Route exact path={TAB3_ROUTE} component={Tab3} />
           <Route exact path={FEED_ROUTE} component={FeedTab} />
           <Route exact path={ADMIN_ROUTE} component={Admin} />
-          <Route exact path={BROADCAST_ANNOUNCEMENT_ROUTE} component={BroadcastAnnouncement} />
-          <Route exact path={REQUEST_LOCATION_ROUTE} component={RequestLocation} />
+          <Route
+            exact
+            path={BROADCAST_ANNOUNCEMENT_ROUTE}
+            component={BroadcastAnnouncement}
+          />
+          <Route
+            exact
+            path={REQUEST_LOCATION_ROUTE}
+            component={RequestLocation}
+          />
           <Route exact path={EDIT_CATS_ROUTE} component={EditCatsList} />
           <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
+          <Route exact path={PROFILE_ROUTE} component={Profile} />
+          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
+          <Route
+            exact
+            path={CHANGE_USERNAME_ROUTE}
+            component={ChangeUsername}
+          />
+          <Route
+            exact
+            path={CHANGE_PASSWORD_ROUTE}
+            component={ChangePassword}
+          />
           <Route render={() => <Redirect to={MAP_ROUTE} />} />
         </IonRouterOutlet>
 

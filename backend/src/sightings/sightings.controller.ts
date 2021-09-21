@@ -12,6 +12,7 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -23,15 +24,17 @@ import {
 } from '@nestjs/swagger';
 import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
 import { Request } from 'express';
-import { CatSighting } from './catSighting.entity';
+import { CatSighting } from './sighting.entity';
 import { SightingsService } from './sightings.service';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
 import { LatestSightingQuery } from './dtos/latest-sighting.dto';
 import * as QueryString from 'query-string';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { User } from 'src/users/user.entity';
+import { Usr } from 'src/shared/decorators/user.decorator';
 
-// todo: authentication
 @ApiTags('Sightings')
 @UseInterceptors(CacheInterceptor)
 @Controller('sightings')
@@ -120,12 +123,14 @@ export class SightingsController {
     type: CatSighting,
   })
   @ApiParam({ name: 'id', description: 'The id of the sighting to update' })
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   updateSighting(
+    @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateSighintDto: UpdateSightingDto,
   ) {
-    return this.sightingsService.update(id, updateSighintDto);
+    return this.sightingsService.update(id, updateSighintDto, requester);
   }
 
   /**
@@ -136,10 +141,14 @@ export class SightingsController {
     type: CatSighting,
   })
   @ApiParam({ name: 'id', description: 'The id of the sighting to remove' })
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
-  removeSighting(@Param('id', ParseIntPipe) id: number): Observable<string> {
+  removeSighting(
+    @Usr() requester: User,
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<string> {
     return this.sightingsService
-      .remove(id)
+      .remove(id, requester)
       .pipe(map(() => 'Deleted successfully'));
   }
 }
