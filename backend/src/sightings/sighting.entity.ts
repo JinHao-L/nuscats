@@ -1,5 +1,5 @@
 import { Point } from 'geojson';
-import { Profile } from './../profiles/profile.entity';
+import { Profile } from '../profiles/profile.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

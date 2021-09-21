@@ -1,4 +1,4 @@
-import { ReverseGeocodeConfigService } from '../config/reverseGeocode.config';
+import { ReverseGeocodeConfigService } from '../config/reverse-geocode.config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -14,7 +14,7 @@ import { SeederService } from './seeder.service';
 import { Cat } from '../cats/cats.entity';
 import { Profile } from '../profiles/profile.entity';
 import { User } from '../users/user.entity';
-import { CatSighting } from '../sightings/catSighting.entity';
+import { CatSighting } from '../sightings/sighting.entity';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({

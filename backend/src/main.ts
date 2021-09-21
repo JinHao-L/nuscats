@@ -2,6 +2,8 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import * as helmet from 'helmet';
+
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -11,9 +13,11 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
     }),
   );
 
+  app.use(helmet());
   app.use(cookieParser());
 
   if (process.env['NODE_ENV'] === 'development') {
@@ -35,8 +39,8 @@ async function bootstrap() {
     .addTag('NUSCats')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  const swaggerDoc = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, swaggerDoc);
 
   await app.listen(3001);
 }

@@ -1,3 +1,4 @@
+import { MailModule } from './../mail/mail.module';
 import { JwtConfigService } from './../config/jwt.config';
 import { AppConfigModule } from 'src/config/config.module';
 import { Module } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { AppConfigService } from 'src/config/app.config';
     PassportModule,
     JwtModule.register({}),
     AppConfigModule,
+    MailModule,
   ],
   providers: [
     AuthService,

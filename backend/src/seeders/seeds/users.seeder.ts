@@ -27,6 +27,7 @@ export class UsersSeeder implements ISeeder {
         username: subject,
         password_hash,
         email: `${subject}@gmail.com`,
+        is_email_confirmed: true,
         roles,
       });
     });
