@@ -17,7 +17,11 @@ async function bootstrap() {
     }),
   );
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
   app.use(cookieParser());
 
   if (process.env['NODE_ENV'] === 'development') {
