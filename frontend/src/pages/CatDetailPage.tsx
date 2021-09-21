@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { MouseEventHandler, useContext, useRef, useState } from 'react';
 import {
   IonContent,
   IonFab,
@@ -37,7 +37,7 @@ import { Result } from 'lib/api';
 import { Position } from 'geojson';
 import usePinLocation from 'hooks/usePinLocation';
 
-interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> {}
+interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> { }
 
 const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
   SwiperCore.use([IonicSwiper, Navigation, Pagination]);
@@ -148,6 +148,9 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
             <IonSpinner />
           </div>
         )}
+        <div className="h-screen bg-red-500">
+
+        </div>
       </IonContent>
     </IonPage>
   );
@@ -230,7 +233,6 @@ const CatLocation: React.FC<CatLocationProps> = ({
   pageSize,
   setPageSize,
 }) => {
-  const ref = useRef(null);
 
   const doLoadMoreSightings = async (event: CustomEvent<void>) => {
     const originalPage = pageSize;
@@ -249,7 +251,7 @@ const CatLocation: React.FC<CatLocationProps> = ({
       {sightings && sightings.length !== 0 ? (
         <div
           className="flex flex-col items-center justify-start w-full px-4 pb-4 space-y-3 overflow-auto h-cat-profile-content"
-          ref={ref}
+
         >
           {sightings.map((sighting, idx) => (
             <CatLocationCard sighting={sighting} key={idx} />
