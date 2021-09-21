@@ -18,6 +18,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { SeederModule } from './seeders/seeder.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { join } from 'path';
       services: [S3],
     }),
     SeederModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

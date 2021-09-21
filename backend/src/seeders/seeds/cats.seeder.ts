@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TypeOrmUpsert } from '@nest-toolbox/typeorm-upsert';
 
 import { ISeeder } from '../seeder.interface';
 import { catDatas } from './cat.data';
@@ -16,9 +15,14 @@ export class CatsSeeder implements ISeeder {
 
   async seed(): Promise<any> {
     // Use cat name to write into database, overrides any cat with the same name
-    return TypeOrmUpsert(this.catRepository, catDatas, 'name').finally(() => {
-      console.log('* Seeded cat repository...');
-    });
+    const catsToInsert = catDatas.map((x) => ({ ...x, is_seed: true }));
+
+    return this.catRepository
+      .delete({ is_seed: true })
+      .then(() => this.catRepository.save(catsToInsert))
+      .finally(() => {
+        console.log('* Seeded cat repository...');
+      });
   }
 
   async drop(): Promise<any> {

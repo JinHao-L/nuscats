@@ -36,6 +36,8 @@ export class SeederService implements OnApplicationBootstrap {
   }
 
   async drop(): Promise<any> {
-    return Promise.all(this.seeders.map((s) => s.drop()));
+    for (const seeder of this.seeders) {
+      await seeder.drop();
+    }
   }
 }

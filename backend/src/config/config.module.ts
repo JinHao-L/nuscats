@@ -9,7 +9,8 @@ import validationSchema from './config.schema';
 import {
   ReverseGeocodeConfigService,
   reverseGeocodeConfig,
-} from './reverseGeocode.config';
+} from './reverse-geocode.config';
+import { mailConfig, MailConfigService } from './mail.config';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import {
         jwtConfig,
         seederConfig,
         reverseGeocodeConfig,
+        mailConfig,
       ],
       validationSchema: validationSchema,
     }),
@@ -32,15 +34,17 @@ import {
     JwtConfigService,
     ReverseGeocodeConfigService,
     SeederConfigService,
+    MailConfigService,
   ],
   exports: [
+    ConfigModule,
     AppConfigService,
     DatabaseConfigService,
     S3ConfigService,
     JwtConfigService,
-    SeederConfigService,
     ReverseGeocodeConfigService,
-    ConfigModule,
+    SeederConfigService,
+    MailConfigService,
   ],
 })
 export class AppConfigModule {}

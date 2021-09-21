@@ -19,7 +19,7 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { list, pin, refresh } from 'ionicons/icons';
+import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
@@ -27,7 +27,6 @@ import { CatSighting, makeSighting, SightingType } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
-import { Marker } from 'react-mapbox-gl';
 import PinIcon from 'components/map/PinIcon';
 import { Cat } from '@api/cats';
 

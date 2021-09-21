@@ -14,10 +14,10 @@ import {
 } from 'rxjs';
 import { ILike, Repository } from 'typeorm';
 
-import { CatSighting } from '../../sightings/catSighting.entity';
+import { CatSighting } from '../../sightings/sighting.entity';
 import { ISeeder } from '../seeder.interface';
 import { Cat } from '../../cats/cats.entity';
-import { ReverseGeocodeConfigService } from 'src/config/reverseGeocode.config';
+import { ReverseGeocodeConfigService } from 'src/config/reverse-geocode.config';
 import { ReverseGeocodingResponse } from 'src/shared/inteface/geocoding.interface';
 import { HttpService } from '@nestjs/axios';
 

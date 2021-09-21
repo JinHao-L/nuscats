@@ -5,6 +5,7 @@ const env = process.env;
 
 export const appConfig = registerAs('app', () => ({
   environment: env.NODE_ENV,
+  clientUrl: env.CLIENT_URL,
 }));
 
 @Injectable()
@@ -23,5 +24,13 @@ export class AppConfigService {
 
   public get isProd() {
     return this.config.environment !== 'development';
+  }
+
+  public get clientUrl() {
+    if (this.isProd) {
+      return env.CLIENT_URL;
+    } else {
+      return 'https://localhost:3000';
+    }
   }
 }

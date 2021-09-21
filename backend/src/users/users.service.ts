@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { map, Observable, from, catchError, of } from 'rxjs';
+import { map, Observable, catchError, of, mergeMap, from } from 'rxjs';
 import { Repository } from 'typeorm';
 
 import { RoleType } from '@api/users';
@@ -14,15 +14,21 @@ export class UsersService {
   ) {}
 
   findByUsername(username: string): Observable<User> {
-    return from(this.userRepository.findOne({ username }));
+    return from(
+      this.userRepository.findOne({ username }, { relations: ['profile'] }),
+    );
   }
 
   findByUuid(uuid: string): Observable<User> {
-    return from(this.userRepository.findOne({ uuid }));
+    return from(
+      this.userRepository.findOne({ uuid }, { relations: ['profile'] }),
+    );
   }
 
   findByEmail(email: string): Observable<User> {
-    return from(this.userRepository.findOne({ email }));
+    return from(
+      this.userRepository.findOne({ email }, { relations: ['profile'] }),
+    );
   }
 
   doesUsernameExist(username: string): Observable<boolean> {
@@ -73,6 +79,38 @@ export class UsersService {
       map(() => true),
       catchError((err) => {
         console.log('Error deleting token', err);
+        return of(false);
+      }),
+    );
+  }
+
+  activateAccount(email: string): Observable<boolean> {
+    console.log(123);
+    return this.findByEmail(email).pipe(
+      mergeMap((user) => {
+        console.log(123);
+
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        if (user.is_email_confirmed) {
+          // already verified
+          return of(false);
+        }
+        return this.userRepository
+          .update({ uuid: user.uuid }, { is_email_confirmed: true })
+          .then(() => true);
+      }),
+    );
+  }
+
+  setPassword(uuid: string, passwordHash: string): Observable<boolean> {
+    return from(
+      this.userRepository.update({ uuid }, { password_hash: passwordHash }),
+    ).pipe(
+      map(() => true),
+      catchError((err) => {
+        console.log('Error setting password', err);
         return of(false);
       }),
     );

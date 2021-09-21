@@ -3,6 +3,8 @@
   "sourceRoot": "src",
   "entryFile": "backend/src/main",
   "compilerOptions": {
+    "assets": [{ "include": "mail/templates/**/*", "outDir": "dist/backend/src" }],
+    "watchAssets": true,
     "plugins": [
       {
         "name": "@nestjs/swagger",
