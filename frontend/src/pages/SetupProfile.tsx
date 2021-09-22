@@ -82,7 +82,6 @@ const SetupProfile: React.FC = () => {
         if (err) {
             console.log(`Errored creating profile: ${err}`)
             showErrorAlert(`${err}. Please try again`)
-            // setProfilePicState(curr => ({ uploaded: false, url: curr.url }))
             return
         }
 
