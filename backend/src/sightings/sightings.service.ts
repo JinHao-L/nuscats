@@ -173,7 +173,10 @@ export class SightingsService {
         ) {
           throw new UnauthorizedException('Cannot modify sighting');
         }
-        return this.sightingsRepository.update(sighting, updateSightingDto);
+        return this.sightingsRepository.update(
+          { id: sighting.id },
+          updateSightingDto,
+        );
       }),
       mergeMap(() => this.findOne(id)),
     );
