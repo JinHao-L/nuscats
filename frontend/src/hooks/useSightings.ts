@@ -10,7 +10,7 @@ import useSWRInfinite from 'swr/infinite';
 import * as queryString from 'query-string';
 import { parseDate } from 'lib/utils';
 
-interface UseSightingsOptions extends CatSightingQuery {}
+export interface UseSightingsOptions extends CatSightingQuery {}
 
 export function useSightings(useSightingsOptions?: UseSightingsOptions) {
   // build sightings key

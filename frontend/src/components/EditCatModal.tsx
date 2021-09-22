@@ -218,7 +218,7 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 					<div className="flex flex-col items-center">
 						{
 							catData.image ? 
-							<img className="mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" /> : 
+							<img className="object-cover mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" /> : 
 							<div className="flex items-center justify-center mt-5 bg-gray-300 rounded-full w-80 h-80">
 								<IonIcon icon={logoOctocat} className="text-center text-gray-100 text-9xl" />
 							</div>
