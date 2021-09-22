@@ -24,6 +24,7 @@ import { User } from '../users/user.entity';
 import { Usr } from '../shared/decorators/user.decorator';
 import ForgetPasswordDto from 'src/auth/dtos/forget-password.dto';
 import ResendConfirmationDto from './dtos/resend-confirmation.dto';
+import ChangeUsernameDto from './dtos/change-username.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -196,5 +197,19 @@ export class AuthController {
     @Body() changePasswordDto: ChangePasswordDto,
   ): Observable<string> {
     return this.authService.changePassword(requester, changePasswordDto);
+  }
+
+  /**
+   * Request to Change password
+   */
+  @UseGuards(JwtAuthGuard)
+  @ApiCreatedResponse({ description: 'Username changed' })
+  @ApiConflictResponse({ description: 'Username already exists' })
+  @Post('/change-username')
+  changeUsername(
+    @Usr() requester: User,
+    @Body() changeUsernameDto: ChangeUsernameDto,
+  ): Observable<string> {
+    return this.authService.changeUsername(requester, changeUsernameDto);
   }
 }

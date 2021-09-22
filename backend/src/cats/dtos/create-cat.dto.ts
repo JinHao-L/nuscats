@@ -44,7 +44,7 @@ export class CreateCatDto {
    * An image of the cat
    * @example 'https://picsum.photos/200'
    */
-  @IsUrl()
+  @IsString()
   @IsNotEmpty()
   image: string;
 

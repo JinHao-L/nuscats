@@ -3,6 +3,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as helmet from 'helmet';
+import * as compression from 'compression';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -23,6 +24,7 @@ async function bootstrap() {
     }),
   );
   app.use(cookieParser());
+  app.use(compression());
 
   if (process.env['NODE_ENV'] === 'development') {
     app.enableCors({

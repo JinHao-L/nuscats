@@ -3,6 +3,7 @@ import {
   Body,
   CacheInterceptor,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -28,6 +29,7 @@ import { Cat } from './cats.entity';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dtos/create-cat.dto';
 import { RolesGuard } from './../auth/guard/roles.guard';
+import { number } from 'joi';
 
 @ApiTags('Cats')
 @UseInterceptors(CacheInterceptor)
@@ -81,26 +83,43 @@ export class CatsController {
     description: 'Forbidden. Operation allowed only for admin',
   })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(RoleType.Admin)
+  // @Roles(RoleType.Admin)
   @Post()
   createCat(@Body() createCatDto: CreateCatDto): Observable<Cat> {
     return this.catsService.createCat(createCatDto);
   }
 
   /**
-   * Delete a cat entry
+   * Update a cat entry
    */
   @ApiOkResponse({
-    type: Cat,
-    description: 'Successfully get indicated cats',
+    description: 'Successfully updated cat',
   })
   @ApiForbiddenResponse({
     description: 'Forbidden. Operation allowed only for admin',
   })
-  @ApiParam({ name: 'id', description: 'The cat id to update' })
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiParam({ name: 'id', description: 'The cat id to update' })
   @Put('/:id')
-  updateCat(@Param('id') id: string) {
+  updateCat(@Param('id', ParseIntPipe) id: number, @Body() catDto: CreateCatDto): void {
+    this.catsService.updateCat(id, catDto)
+    return;
+  }
+
+  /**
+   * Deletes a cat entry
+   */
+  @ApiOkResponse({
+    description: 'Successfully deleted cat',
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden. Operation allowed only for admin', 
+  })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiParam({ name: 'id', description: 'The cat id to delete' })
+  @Delete('/:id')
+  deleteCat(@Param('id', ParseIntPipe) id: number): void {
+    this.catsService.deleteCat(id);
     return;
   }
 }

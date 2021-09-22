@@ -1,21 +1,28 @@
 import { Cat } from "@api/cats";
 import { useIonAlert, AlertOptions, IonIcon, useIonModal } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
+import { catsKey, Result } from "lib/api";
 import { PlaceholderCatUrl } from "lib/utils";
+import { KeyedMutator, mutate } from "swr";
 import EditCatModal from "./EditCatModal";
 
 interface Props {
 	cat: Cat,
 	cardColor: string,
+	catDataMutate?: KeyedMutator<Result<Cat[]>>,
 	editCard?: boolean,
 }
 
-const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard}) => {
+const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard, catDataMutate}) => {
 	
 	const [presentAlert] = useIonAlert();
 	const [presentModal, dismissModal] = useIonModal(EditCatModal, {
-		dismiss: () => dismissModal(),
+		dismissModal: () => {
+			dismissModal();
+			mutate(catsKey);
+		},
 		cat: cat,
+		catDataMutate: catDataMutate,
 	});
 
 	const alertOptions: AlertOptions = {
@@ -33,7 +40,7 @@ const AdminCatCard: React.FC<Props> = ({cat, cardColor, editCard}) => {
 			onClick={() => editCard ? presentModal() : presentAlert(alertOptions)}
 		>
 			<div className="flex items-center flex-shrink-0 ml-5">
-				<img className="w-16 h-16 border-2 border-white rounded-full" src={PlaceholderCatUrl(200, 210)} alt="cat" />
+				<img className="object-cover w-16 h-16 border-2 border-white rounded-full" src={cat.image} alt="cat" />
 			</div>
 			<div className="flex flex-col justify-start flex-auto mt-5 mb-4 ml-4">
 				<p className="text-xl font-semibold text-black">{cat.name}</p>

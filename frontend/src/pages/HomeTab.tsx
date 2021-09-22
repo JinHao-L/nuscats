@@ -21,11 +21,11 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { bookmark, camera, list, refresh } from 'ionicons/icons';
+import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
-import { CatSighting, } from '@api/sightings';
+import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router'
@@ -229,18 +229,16 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
             />
           </IonModal>
         )}
-        {catDetails?.cat && (
-          <IonModal
-            isOpen={showModal}
-            swipeToClose={true}
-            onDidDismiss={() => setShowModal(false)}
-          >
-            <FeedModal
-              cat={catDetails.cat}
-              dismiss={() => setShowModal(false)}
-            />
-          </IonModal>
-        )}
+        <IonModal
+          isOpen={showModal}
+          swipeToClose={true}
+          onDidDismiss={() => setShowModal(false)}
+        >
+          <FeedModal
+            cat={catDetails?.cat}
+            dismiss={() => setShowModal(false)}
+          />
+        </IonModal>
       </IonContent>
     </IonPage>
   );

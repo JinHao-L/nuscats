@@ -24,6 +24,8 @@ import {
   CHANGE_USERNAME_ROUTE,
   PROFILE_ROUTE,
   PROFILE_SETTINGS_ROUTE,
+  CHANGE_NAME_DP_ROUTE,
+  ROOT_ROUTE,
 } from 'app/routes';
 import Tab3 from './Tab3';
 import CatDetailPage from './CatDetailPage';
@@ -37,6 +39,7 @@ import ChangePassword from './ChangePassword';
 import ChangeUsername from './ChangeUsername';
 import Profile from './Profile';
 import Settings from './Settings';
+import ChangeNameAndDp from './ChangeNameAndDp';
 
 interface TabInfo {
   href: string;
@@ -54,6 +57,7 @@ const SHOULD_HIDE_TABS = [
   { path: BROADCAST_ANNOUNCEMENT_ROUTE, exact: true, strict: false },
   { path: REQUEST_LOCATION_ROUTE, exact: true, strict: false },
   { path: EDIT_CATS_ROUTE, exact: true, strict: false },
+  { path: CHANGE_NAME_DP_ROUTE, exact: true, strict: false },
 ];
 
 const Tabs: React.FC = () => {
@@ -92,7 +96,7 @@ const Tabs: React.FC = () => {
       icon: construct,
     },
     {
-      href: TAB3_ROUTE,
+      href: PROFILE_ROUTE,
       label: 'Profile',
       icon: personCircle,
     },
@@ -103,7 +107,7 @@ const Tabs: React.FC = () => {
   return (
     <IonPage>
       <IonTabs>
-        <IonRouterOutlet ref={routerRef}>
+        <IonRouterOutlet ref={routerRef} basePath={ROOT_ROUTE}>
           <Route exact path={MAP_ROUTE} component={HomeTab} />
           <Route exact path={CAT_ROUTE} component={CatsTab} />
           <Route exact path={TAB3_ROUTE} component={Tab3} />
@@ -132,6 +136,11 @@ const Tabs: React.FC = () => {
             exact
             path={CHANGE_PASSWORD_ROUTE}
             component={ChangePassword}
+          />
+          <Route
+            exact
+            path={CHANGE_NAME_DP_ROUTE}
+            component={ChangeNameAndDp}
           />
           <Route render={() => <Redirect to={MAP_ROUTE} />} />
         </IonRouterOutlet>

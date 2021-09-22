@@ -1,3 +1,4 @@
+import { ChangeUsernameDto } from './dtos/change-username.dto';
 import { MailService } from './../mail/mail.service';
 import { PasswordResetPayload } from './interface/reset-payload.interface';
 import { EmailConfirmPayload } from './interface/confirm-payload.interface';
@@ -343,6 +344,34 @@ export class AuthService {
           );
         } else {
           return 'Password successfully changed';
+        }
+      }),
+    );
+  }
+
+  changeUsername(
+    requester: User,
+    changeUsernameDto: ChangeUsernameDto,
+  ): Observable<string> {
+    const { username } = changeUsernameDto;
+    if (username === requester.username) {
+      return of('Username successfully changed');
+    }
+
+    return this.usersService.doesUsernameExist(username).pipe(
+      map((userExists) => {
+        if (userExists) {
+          throw new ConflictException('Username already exists');
+        }
+      }),
+      mergeMap(() => this.usersService.setUsername(requester.uuid, username)),
+      map((success) => {
+        if (success) {
+          return 'Username successfully changed';
+        } else {
+          throw new BadRequestException(
+            'Failed to change username. Please try again.',
+          );
         }
       }),
     );

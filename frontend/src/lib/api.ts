@@ -9,12 +9,14 @@ export const signupKey = "/auth/signup"
 export const loginKey = '/auth/login';
 export const logoutKey = '/auth/logout';
 export const refreshLoginKey = '/auth/refresh';
+export const catPicUploadKey= '/uploads/cats';
 
 export const resendConfirmKey = '/auth/resend-confirm';
 export const confirmEmailKey = '/auth/confirm';
 export const forgetPasswordKey = '/auth/forget-password';
 export const passwordResetKey = '/auth/password-reset';
 export const changePasswordKey = '/auth/change-password';
+export const changeUsernameKey = '/auth/change-username';
 
 export const apiFetch = async (
     path: string,
