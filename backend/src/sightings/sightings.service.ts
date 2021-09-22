@@ -118,12 +118,6 @@ export class SightingsService {
         .createQueryBuilder('sighting')
         .leftJoinAndSelect('sighting.cat', 'cat')
         .distinctOn(['sighting.cat_id'])
-        .where(
-          catIds
-            ? 'sighting.cat_id = ANY(:catIds)'
-            : 'sighting.cat_id is not null',
-          { catIds },
-        )
         .orderBy('sighting.cat_id')
         .addOrderBy('sighting.created_at');
     return from(queryBuilder.getMany());
@@ -134,7 +128,7 @@ export class SightingsService {
   }
 
   create(createSightingDto: CreateSightingDto): Observable<CatSighting> {
-    const { latlng, catId, ...sightings } = createSightingDto;
+    const { latlng, catId, ownerId, ...sightings } = createSightingDto;
 
     const [lat, lng] = latlng.split(',');
     const location: Point = createGeoJsonPoint(lat, lng);
@@ -151,6 +145,7 @@ export class SightingsService {
             cat_id: catId,
             location,
             location_name: locName,
+            owner_id: ownerId,
           }),
         ),
         mergeMap((sighting) => this.sightingsRepository.save(sighting)),

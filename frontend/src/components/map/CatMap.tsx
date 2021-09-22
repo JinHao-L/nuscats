@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+    IonButton,
+    IonContent,
+    IonHeader,
+    IonIcon,
     IonModal,
+    IonToolbar,
     useIonAlert,
 } from '@ionic/react';
 import CameraFab from 'components/map/CameraFab';
@@ -16,6 +21,10 @@ import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import PinIcon from 'components/map/PinIcon';
+import { close } from 'ionicons/icons';
+import FeedCard from 'components/FeedCard';
+import { deleteSighting } from 'lib/sightings';
+import { Result } from 'lib/api';
 
 export type PinDetails = {
     coords: [number, number],
@@ -43,7 +52,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
      */
     const { sightings, error, isLoading, mutate } = useLatestSightings();
     const [showModal, setShowModal] = useState(false);
-    console.log({ sightings });
+
     /**
      * Creating a new sighting
      */
@@ -114,6 +123,20 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
         }
     };
 
+    const onDeleteSighting = async () => {
+        if (catDetails) {
+            await deleteSighting(catDetails.id);
+            mutate(
+                (data) => ({
+                    ...(data as Result<CatSighting[]>),
+                    value: sightings?.filter((s) => s.id !== catDetails.id) || [],
+                }),
+                false,
+            );
+            setShowModal(false);
+        }
+    };
+
     return (
         <>
             <Map
@@ -130,6 +153,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
                             point={sighting.location}
                             catName={sighting.cat?.name}
                             time={sighting.created_at}
+                            type={sighting.type}
                             onClick={() => {
                                 setCatDetails(sighting);
                                 setShowModal(true);
@@ -161,16 +185,47 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
                     />
                 </IonModal>
             )}
-            <IonModal
-                isOpen={showModal}
-                swipeToClose={true}
-                onDidDismiss={() => setShowModal(false)}
-            >
-                <FeedModal
-                    cat={catDetails?.cat}
-                    dismiss={() => setShowModal(false)}
-                />
-            </IonModal>
+            {catDetails?.cat && (
+                <IonModal
+                    isOpen={showModal}
+                    swipeToClose={true}
+                    onDidDismiss={() => setShowModal(false)}
+                >
+                    <FeedModal
+                        cat={catDetails.cat}
+                        dismiss={() => setShowModal(false)}
+                    />
+                </IonModal>
+            )}
+            {catDetails && !catDetails.cat && (
+                <IonModal
+                    isOpen={showModal}
+                    swipeToClose={true}
+                    onDidDismiss={() => setShowModal(false)}
+                >
+                    <div>
+                        <IonHeader>
+                            <IonToolbar>
+                                <IonButton
+                                    fill="clear"
+                                    slot="end"
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    <IonIcon icon={close} />
+                                </IonButton>
+                            </IonToolbar>
+                        </IonHeader>
+                        <IonContent fullscreen>
+                            <FeedCard
+                                cat={catDetails.cat}
+                                sighting={catDetails}
+                                owner={catDetails.owner}
+                                onDelete={onDeleteSighting}
+                            />
+                        </IonContent>
+                    </div>
+                </IonModal>
+            )}
         </>
     )
 }

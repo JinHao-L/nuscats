@@ -14,6 +14,7 @@ import { uploadSighting } from 'lib/sightings';
 import { getSightingImageUpload, uploadImage } from 'lib/uploads';
 import { UserPhoto } from 'utils/takePhoto';
 import SelectCatModal from './SelectCatModal';
+import useAuth from 'hooks/useAuth';
 
 type InputInformationProps = {
   cats: Cat[];
@@ -39,6 +40,8 @@ const InputInformation = ({
   const [error, setError] = useState('');
 
   const [uploading, setUploading] = useState(false);
+  
+  const { userId } = useAuth();
 
   const onSubmit = async () => {
     try {
@@ -51,6 +54,7 @@ const InputInformation = ({
         latlng: `${coords.latitude},${coords.longitude}`,
         type: sightingType,
         description,
+        ownerId: userId as string,
       };
       if (!request.catId) delete request.catId;
       await uploadSighting(request);

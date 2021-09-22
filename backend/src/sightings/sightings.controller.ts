@@ -1,7 +1,6 @@
 import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import {
   Body,
-  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -13,7 +12,6 @@ import {
   Query,
   Req,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -22,7 +20,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
+import { catchError, EMPTY, mergeMap, Observable } from 'rxjs';
 import { Request } from 'express';
 import { CatSighting } from './sighting.entity';
 import { SightingsService } from './sightings.service';
@@ -36,7 +34,6 @@ import { User } from 'src/users/user.entity';
 import { Usr } from 'src/shared/decorators/user.decorator';
 
 @ApiTags('Sightings')
-@UseInterceptors(CacheInterceptor)
 @Controller('sightings')
 export class SightingsController {
   constructor(private sightingsService: SightingsService) {}
@@ -128,9 +125,9 @@ export class SightingsController {
   updateSighting(
     @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSighintDto: UpdateSightingDto,
+    @Body() updateSightingDto: UpdateSightingDto,
   ) {
-    return this.sightingsService.update(id, updateSighintDto, requester);
+    return this.sightingsService.update(id, updateSightingDto, requester);
   }
 
   /**
@@ -146,9 +143,7 @@ export class SightingsController {
   removeSighting(
     @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
-  ): Observable<string> {
-    return this.sightingsService
-      .remove(id, requester)
-      .pipe(map(() => 'Deleted successfully'));
+  ): Observable<CatSighting> {
+    return this.sightingsService.remove(id, requester);
   }
 }

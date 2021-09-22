@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   IonButton,
   IonButtons,
@@ -30,6 +30,7 @@ const HomeTab: React.FC<HomePageProps> = () => {
   const mapPage = "Map"
   const feedPage = "Feed"
   const [currPage, setCurrPage] = useState<string>(mapPage)
+  const contentRef = useRef<HTMLIonContentElement | null>(null)
 
   const mapShown = currPage === mapPage
   const feedShown = currPage === feedPage
@@ -62,13 +63,12 @@ const HomeTab: React.FC<HomePageProps> = () => {
     }
   }, [location?.search]);
 
-
   return (
     <IonPage>
       <NavBar title={currPage} >
         <IonButtons slot="start">
           <IonButton
-            className={"w-12 " + (mapShown ? "opacity-100" : "opacity-0")}
+            className={"w-12 transition-opacity " + (mapShown ? "opacity-100" : "opacity-0")}
             fill="clear"
             color="secondary"
             slot="start"
@@ -95,17 +95,23 @@ const HomeTab: React.FC<HomePageProps> = () => {
             <IonIcon slot="end" icon={list} />
           </IonButton>
         </IonButtons>
-
       </NavBar>
-      <IonContent scrollY={false} className="relative">
+      <IonContent className="relative" ref={contentRef} scrollY={feedShown}>
         <IonToolbar color="light" className="absolute">
           <IonSegment
             color="dark"
             value={currPage}
             onIonChange={e => {
-              setCurrPage(e.detail.value || mapPage)
+              if (e.detail.value !== currPage) {
+                setCurrPage(e.detail.value || mapPage)
+              }
+
               if (e.detail.value === feedPage) {
                 history.replace(MAP_ROUTE)
+              }
+
+              if (e.detail.value === mapPage && contentRef) {
+                contentRef.current?.scrollToTop()
               }
             }}
           >

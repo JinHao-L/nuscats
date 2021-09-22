@@ -127,4 +127,9 @@ export interface CreateSightingRequest {
    * The description of the sighting
    */
   description: string;
+
+  /**
+   * The uuid of the user who is uploading the sighting
+   */
+  ownerId: string;
 }

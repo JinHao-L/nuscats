@@ -1,9 +1,11 @@
 import {
   IonAvatar,
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardTitle,
   IonChip,
+  IonCol,
   IonIcon,
   IonImg,
   IonItem,
@@ -13,27 +15,41 @@ import {
   IonRow,
   IonText,
 } from '@ionic/react';
-import { locationOutline, logoOctocat, timeOutline } from 'ionicons/icons';
+import {
+  checkmark,
+  locationOutline,
+  logoOctocat,
+  timeOutline,
+  trash,
+} from 'ionicons/icons';
 import TimeAgo from 'timeago-react';
 import React, { useMemo } from 'react';
-import { Profile, Cat, CatSighting, SightingType } from '@api';
+import { Profile, Cat, CatSighting, SightingType, RoleType } from '@api';
 import defaultAvatar from 'assets/default_avatar.png';
 import { CAT_ROUTE } from 'app/routes';
 import usePinLocation from 'hooks/usePinLocation';
+import useAuth from 'hooks/useAuth';
 
 interface FeedCardProps {
   sighting: CatSighting;
   owner: Profile | undefined;
   cat: Cat | undefined;
+  onDelete?: () => void;
 }
 
-const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
+const FeedCard: React.FC<FeedCardProps> = ({
+  sighting,
+  cat,
+  owner,
+  onDelete,
+}) => {
   const [lat, lng] = sighting.location.coordinates;
   const { ionRouterLinkProps: locationRouterProps } = usePinLocation(
     lat,
     lng,
     cat?.name,
   );
+  const { userProfile } = useAuth();
 
   const catRouterProps: {
     routerLink?: string;
@@ -46,6 +62,23 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
       routerDirection: 'root',
     };
   }, [cat]);
+
+  const canDeleteSighting = () => {
+    return (
+      onDelete &&
+      sighting.type === SightingType.CatSighted &&
+      (userProfile?.user?.uuid === sighting.owner_id ||
+        userProfile?.user?.roles.includes(RoleType.Admin))
+    );
+  };
+
+  const canResolveEmergency = () => {
+    return (
+      onDelete &&
+      sighting.type === SightingType.Emergency &&
+      userProfile?.user?.roles.includes(RoleType.Admin)
+    );
+  };
 
   return (
     <IonCard className="mb-5 bg-secondary-50 bg-opacity-95 rounded-xl">
@@ -96,21 +129,25 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
           src={sighting.image}
           className="object-cover w-full h-full mt-2"
         />
-        <IonRow className="flex justify-between m-3">
-          <IonRouterLink {...locationRouterProps}>
+        <IonRow className="flex justify-between mt-4 ion-align-items-center">
+          <IonCol>
+            <IonRouterLink {...locationRouterProps}>
+              <div className="flex items-center space-x-2">
+                <IonIcon color="secondary" icon={locationOutline} />
+                <IonLabel className="text-sm text-gray-800">
+                  {sighting.location_name}
+                </IonLabel>
+              </div>
+            </IonRouterLink>
             <div className="flex items-center space-x-2">
-              <IonIcon color="secondary" icon={locationOutline} />
+              <IonIcon color="secondary" icon={timeOutline} />
               <IonLabel className="text-sm text-gray-800">
-                {sighting.location_name}
+                <TimeAgo datetime={sighting.created_at} />
               </IonLabel>
             </div>
-          </IonRouterLink>
-          <div className="flex items-center space-x-2">
-            <IonIcon color="secondary" icon={timeOutline} />
-            <IonLabel className="text-sm text-gray-800">
-              <TimeAgo datetime={sighting.created_at} />
-            </IonLabel>
-          </div>
+          </IonCol>
+          {canDeleteSighting() && <DeleteButton onClick={onDelete!} />}
+          {canResolveEmergency() && <ResolveButton onClick={onDelete!} />}
         </IonRow>
         <IonText className="flex flex-row-reverse items-center justify-center gap-1"></IonText>
       </IonCardContent>
@@ -119,3 +156,29 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
 };
 
 export default FeedCard;
+
+type DeleteButtonProps = {
+  onClick: () => void;
+};
+
+const DeleteButton = ({ onClick }: DeleteButtonProps) => {
+  return (
+    <IonButton onClick={onClick} color="danger" fill="outline" size="small">
+      <IonIcon slot="end" icon={trash} />
+      Delete
+    </IonButton>
+  );
+};
+
+type ResolveButtonProps = {
+  onClick: () => void;
+};
+
+const ResolveButton = ({ onClick }: ResolveButtonProps) => {
+  return (
+    <IonButton onClick={onClick} color="success" fill="outline" size="small">
+      <IonIcon slot="end" icon={checkmark} />
+      Resolve
+    </IonButton>
+  );
+};

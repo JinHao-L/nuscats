@@ -1,0 +1,13 @@
+/*
+*   Fix for Mapbox not opening at full screen until resized.
+*   From: https://forum.ionicframework.com/t/mapbox-doesnt-display-full-until-i-put-full-screen-or-open-developer-tools/183296
+*/
+.map {
+  height: 100%;
+  width: 100%;
+}
+
+.map-container {
+  height: 100vh;
+  width: auto;
+}
