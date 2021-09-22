@@ -1,4 +1,4 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonModal } from "@ionic/react";
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonSpinner, IonTitle, IonToolbar, useIonModal } from "@ionic/react";
 import { Cat, makeCat, UniversityZone } from '@api/cats';
 import AdminCatCard from "components/AdminCatCard";
 import EditCatModal from "components/EditCatModal";
@@ -10,7 +10,9 @@ const EditCatsList: React.FC =() => {
 	if (isLoading) {
 		pageContent = (
 			<IonContent>
-				Loading...
+				<div className="flex flex-col items-center h-full mx-5 my-5">
+					<IonSpinner />
+				</div>
 			</IonContent>
 		);
 	} else {
