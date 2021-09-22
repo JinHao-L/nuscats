@@ -10,6 +10,7 @@ export interface User {
   uuid: string;
   email: string;
   username: string;
+  is_email_confirmed: boolean;
   roles: RoleType[];
   profile?: Profile;
   // created_at: Date;

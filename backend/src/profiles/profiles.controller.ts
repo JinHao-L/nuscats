@@ -1,20 +1,16 @@
 import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
 import {
   Controller,
-  Post,
   Body,
   Get,
   Param,
   Delete,
   ParseUUIDPipe,
   UseGuards,
-  UnauthorizedException,
   NotFoundException,
   Put,
 } from '@nestjs/common';
 import {
-  ApiConflictResponse,
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -22,7 +18,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { RoleType } from '@api/users';
-import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
@@ -38,23 +33,6 @@ import { User } from '../users/user.entity';
 @Controller('users')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
-
-  /**
-   * Create a new user profile
-   */
-  @ApiCreatedResponse({
-    description: 'Profile successfully created',
-    type: Profile,
-  })
-  @ApiConflictResponse({ description: 'Profile already exists' })
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  create(
-    @Usr() requester: User,
-    @Body() createProfileDto: CreateProfileDto,
-  ): Observable<Profile> {
-    return this.profilesService.create(createProfileDto, requester);
-  }
 
   /**
    * Gets a list of profile

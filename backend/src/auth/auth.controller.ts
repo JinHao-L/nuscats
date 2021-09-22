@@ -2,7 +2,7 @@ import { ChangePasswordDto } from './dtos/change-password.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { ConfirmEmailDto } from './dtos/confirm-email.dto';
 import { Response } from 'express';
-import { map, Observable } from 'rxjs';
+import { map, Observable, mergeMap } from 'rxjs';
 import { Body, Controller, Post, UseGuards, Get, Res } from '@nestjs/common';
 import {
   ApiTags,
@@ -79,7 +79,16 @@ export class AuthController {
   @ApiConflictResponse({ description: 'Username or email already exists' })
   @Post('/signup')
   signup(@Body() createUserDto: CreateUserDto): Observable<User> {
-    return this.authService.signup(createUserDto);
+    return this.authService.signup(createUserDto).pipe(
+      mergeMap((user) =>
+        this.authService.sendEmailConfirmation(user.email).pipe(
+          map(() => {
+            console.log('Verification email sent');
+            return user;
+          }),
+        ),
+      ),
+    );
   }
 
   /**

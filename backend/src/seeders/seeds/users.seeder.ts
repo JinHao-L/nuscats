@@ -58,6 +58,7 @@ export class UsersSeeder implements ISeeder {
             user: user,
             first_name: user.username,
             last_name: user.username,
+            is_profile_setup: true,
             profile_pic:
               Math.random() < 0.5 ? 'https://i.pravatar.cc/300' : null,
           }),

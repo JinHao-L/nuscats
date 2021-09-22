@@ -3,6 +3,7 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonLoading,
   IonPage,
   IonRouterLink,
   IonToolbar,
@@ -11,13 +12,13 @@ import {
 import {
   FORGET_PASSWORD_ROUTE,
   MAP_ROUTE,
-  PROFILE_ROUTE,
   RESEND_EMAIL_ROUTE,
   SETUP_PROFILE_ROUTE,
 } from 'app/routes';
 import TextInput from 'components/map/form/TextInput';
 import useAuth from 'hooks/useAuth';
 import { login } from 'lib/auth';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 
@@ -29,6 +30,7 @@ type SigninInputs = {
 const Signin: React.FC = () => {
   const [showErrorAlert] = useIonAlert();
   const { setLogin } = useAuth();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -37,7 +39,9 @@ const Signin: React.FC = () => {
   const history = useHistory();
 
   const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
+    setLoading(true);
     const { user, err, unauthorized } = await login(data.email, data.password);
+    setLoading(false);
     if (err || unauthorized) {
       console.log({ err, unauthorized });
       showErrorAlert(`${err}`);
@@ -46,7 +50,7 @@ const Signin: React.FC = () => {
 
     if (user) {
       setLogin(user.uuid);
-      if (user.profile === null) {
+      if (!user.profile?.is_profile_setup) {
         history.push(SETUP_PROFILE_ROUTE);
       } else {
         history.push(MAP_ROUTE);
@@ -74,6 +78,7 @@ const Signin: React.FC = () => {
             </p>
           </div>
           <div className="w-full max-w-md">
+            <IonLoading isOpen={loading} message={'Please wait...'} />
             <form
               className="flex flex-col mt-5"
               onSubmit={handleSubmit(onSubmit)}

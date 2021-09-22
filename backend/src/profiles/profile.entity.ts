@@ -10,6 +10,7 @@ import {
   PrimaryColumn,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { CatSighting } from '../sightings/sighting.entity';
@@ -32,17 +33,22 @@ export class Profile implements IProfile {
   @Exclude()
   id: number;
 
-  @Column('uuid', { unique: true })
+  @Column('uuid')
+  @Unique('unique_profile_uuid', ['uuid'])
   uuid: string;
 
-  @Column('varchar', { unique: true })
+  @Column('varchar')
+  @Unique('unique_profile_username', ['username'])
   username: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   first_name: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   last_name: string;
+
+  @Column({ default: false })
+  is_profile_setup: boolean;
 
   @IsUrl()
   @IsOptional()

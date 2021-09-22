@@ -4,7 +4,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,18 +18,18 @@ export class ProfilesService {
     private profileRepository: Repository<Profile>,
   ) {}
 
-  create(
-    createProfileDto: CreateProfileDto,
-    requester: User,
-  ): Observable<Profile> {
-    return from(this.profileRepository.findOne({ user: requester })).pipe(
+  create(user: User): Observable<Profile> {
+    const dicebearType = 'gridy';
+
+    return from(this.profileRepository.findOne({ user: user })).pipe(
       map((existingProfile) => {
         if (existingProfile) {
           throw new ConflictException('Profile already exists');
         } else {
           return this.profileRepository.create({
-            ...createProfileDto,
-            user: requester,
+            profile_pic: `https://avatars.dicebear.com/${dicebearType}/${user.uuid}.svg`,
+            user: user,
+            is_profile_setup: false,
           });
         }
       }),
@@ -59,13 +58,18 @@ export class ProfilesService {
     if (requester.uuid !== uuid && !requester.roles.includes(RoleType.Admin)) {
       throw new UnauthorizedException('Cannot modify user');
     }
-
-    return from(this.profileRepository.findOne({ user: { uuid } })).pipe(
+    console.log(uuid, updateProfileDto, requester);
+    return from(
+      this.profileRepository.findOne({ uuid }, { relations: ['user'] }),
+    ).pipe(
       mergeMap((profile) => {
         if (!profile) {
           throw new NotFoundException('User does not exist');
         }
-        return this.profileRepository.update(profile, updateProfileDto);
+        return this.profileRepository.update(profile, {
+          ...updateProfileDto,
+          is_profile_setup: true,
+        });
       }),
       mergeMap(() => this.findOne(uuid)),
     );

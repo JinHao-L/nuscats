@@ -4,16 +4,15 @@ import {
 	IonButtons,
 	IonContent,
 	IonHeader,
+	IonLoading,
 	IonPage,
 	IonToolbar,
 	useIonAlert,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
-import { ROOT_ROUTE } from "app/routes";
-import useAuth from "hooks/useAuth";
 import { signup } from "lib/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextInput from "components/map/form/TextInput";
+import { useState } from "react";
 
 type SignupInputs = {
 	email: string
@@ -26,16 +25,20 @@ const Signup: React.FC = () => {
 
 	const [showAlert] = useIonAlert()
 	const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupInputs>()
+  const [loading, setLoading] = useState(false);
 
 	const onSubmit: SubmitHandler<SignupInputs> = async data => {
+		setLoading(true);
 		const signupErr = await signup(data.email, data.username, data.password)
+		setLoading(false);
+
 		if (signupErr) {
 			showAlert(`${signupErr}. Please try signing up again`, [{ text: 'Ok' }])
 			console.log({ signupErr })
 			return
 		}
 
-		showAlert('Sign up successful! Please check your email for the confirmation email')
+		showAlert('Sign up successful! Please check your email to verify your account')
 		// const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
 		// if (loginErr || unauthorized) {
 		// 	console.log({ loginErr, unauthorized })
@@ -66,6 +69,7 @@ const Signup: React.FC = () => {
 						<p className="my-2 text-lg font-bold tracking-wide text-gray-800 sm:text-xl md:text-2xl">Fill in your details to begin</p>
 					</div>
 					<div className="w-full max-w-md mt-2">
+        		<IonLoading isOpen={loading} message={'Please wait...'} />
 						<form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
 							<TextInput
 								id="email"

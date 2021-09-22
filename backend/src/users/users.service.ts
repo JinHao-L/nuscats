@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 
 import { RoleType } from '@api/users';
 import { User } from './user.entity';
+import { ProfilesService } from 'src/profiles/profiles.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private profilesService: ProfilesService,
   ) {}
 
   findByUsername(username: string): Observable<User> {
@@ -48,7 +50,11 @@ export class UsersService {
       ...user,
       roles: [RoleType.User],
     });
-    return from(this.userRepository.save(newUser));
+    return from(this.userRepository.save(newUser)).pipe(
+      mergeMap((user) =>
+        this.profilesService.create(user).pipe(map(() => user)),
+      ),
+    );
   }
 
   setRefreshToken(

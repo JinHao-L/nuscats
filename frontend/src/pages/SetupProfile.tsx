@@ -78,11 +78,11 @@ const SetupProfile: React.FC = () => {
         }
 
         console.log({ data, url })
-        const { err, profile } = await createProfile(data.firstName, data.lastName, url)
+        const { err, profile } = await createProfile(userId, data.firstName, data.lastName, url)
         if (err) {
             console.log(`Errored creating profile: ${err}`)
             showErrorAlert(`${err}. Please try again`)
-            setProfilePicState(curr => ({ uploaded: false, url: curr.url }))
+            // setProfilePicState(curr => ({ uploaded: false, url: curr.url }))
             return
         }
 

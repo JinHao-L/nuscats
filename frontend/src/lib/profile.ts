@@ -7,18 +7,19 @@ type CreateProfileResponse = {
 }
 
 export async function createProfile(
+    userId: string,
     firstName: string,
     lastName: string,
     profilePicUrl: string,
 ): Promise<CreateProfileResponse> {
     let res = await apiFetch(
-        "/users",
+        `/users/${userId}`,
         {
             first_name: firstName,
             last_name: lastName,
             profile_pic: profilePicUrl,
         },
-        { method: "POST" },
+        { method: "PUT" },
     )
 
     if (!res.ok) {

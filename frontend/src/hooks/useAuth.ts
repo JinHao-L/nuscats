@@ -38,7 +38,7 @@ export default function useAuth() {
         }
     );
 
-    const shouldCreateProfile = refreshData ? !refreshData.value.profile : false
+    const shouldCreateProfile = refreshData ? refreshData.value?.profile?.is_profile_setup : false
 
     useEffect(() => {
         if (refreshData) {
