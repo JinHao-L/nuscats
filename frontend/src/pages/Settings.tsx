@@ -1,22 +1,22 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from "@ionic/react"
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { CHANGE_PASSWORD_ROUTE, CHANGE_USERNAME_ROUTE } from "app/routes";
+import { CHANGE_NAME_DP_ROUTE, CHANGE_PASSWORD_ROUTE, CHANGE_USERNAME_ROUTE } from "app/routes";
 
 const Settings: React.FC = () => {
 
 	// Upload/take profile picture
-	const handleChangeProfilePic = async () => {
-		try {
-			const image  = await Camera.getPhoto({
-				quality: 90,
-				allowEditing: true,
-				resultType: CameraResultType.Uri,
-			});
-			console.log(image);
-		} catch (e) {
-			console.log(e);
-		}
-	}
+	//const handleChangeProfilePic = async () => {
+	//	try {
+	//		const image  = await Camera.getPhoto({
+	//			quality: 90,
+	//			allowEditing: true,
+	//			resultType: CameraResultType.Uri,
+	//		});
+	//		console.log(image);
+	//	} catch (e) {
+	//		console.log(e);
+	//	}
+	//}
 
 	return (
 		<IonPage>
@@ -38,8 +38,8 @@ const Settings: React.FC = () => {
 					<IonItem button routerLink={CHANGE_PASSWORD_ROUTE}>
 						<IonLabel>Change password</IonLabel>
 					</IonItem>
-					<IonItem button onClick={handleChangeProfilePic}>
-						<IonLabel>Change profile picture</IonLabel>
+					<IonItem button routerLink={CHANGE_NAME_DP_ROUTE}>
+						<IonLabel>Change full name/profile picture</IonLabel>
 					</IonItem>
 				</IonList>
 			</IonContent>

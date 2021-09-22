@@ -2,7 +2,7 @@ import { Cat, makeCat, UniversityZone } from "@api/cats";
 import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker, IonPage, IonIcon, useIonAlert } from "@ionic/react";
 import { PickerColumn, PickerOptions } from "@ionic/core";
 import { useState } from "react";
-import { logoOctocat, trashOutline } from "ionicons/icons";
+import { camera, logoOctocat, trashOutline } from "ionicons/icons";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { Filesystem } from '@capacitor/filesystem';
 import { apiFetch, catPicUploadKey, catsKey, Result } from "lib/api";
@@ -218,14 +218,27 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 					<div className="flex flex-col items-center">
 						{
 							catData.image ? 
-							<img className="object-cover mt-5 rounded-full w-80 h-80" src={catData.image} alt="cat profile pic" /> : 
-							<div className="flex items-center justify-center mt-5 bg-gray-300 rounded-full w-80 h-80">
-								<IonIcon icon={logoOctocat} className="text-center text-gray-100 text-9xl" />
+							<div className="relative mt-1">
+								<img className="object-cover mt-5 border-2 rounded-full shadow w-80 h-80 border-primary-400" src={catData.image} alt="cat profile pic" /> 
+								<div
+									className="absolute flex items-center justify-center p-1.5 rounded-full shadow-md bg-primary-400 bottom-1.5 right-1.5"
+									onClick={handleChangeProfilePic}
+								>
+									<IonIcon icon={camera} size="large" color="light" />
+								</div>
+							</div> : 
+							<div className="relative mt-1">
+								<div className="flex items-center justify-center mt-5 bg-gray-300 border-2 rounded-full shadow w-80 h-80 border-primary-400">
+									<IonIcon icon={logoOctocat} className="text-center text-gray-100 text-9xl" />
+								</div>
+								<div
+									className="absolute flex items-center justify-center p-1.5 rounded-full shadow-md bg-primary-400 bottom-1.5 right-1.5"
+									onClick={handleChangeProfilePic}
+								>
+									<IonIcon icon={camera} size="large" color="light" />
+								</div>
 							</div>
 						}
-						<IonButton fill="solid" size="default" className="mt-3" onClick={handleChangeProfilePic}>
-							Take/upload image
-						</IonButton>
 					</div>
 					<label className="block my-5 text-lg">
 						Name:

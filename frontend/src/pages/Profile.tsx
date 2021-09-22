@@ -121,7 +121,7 @@ const ProfileTab: React.FC = () => {
 				<div className="flex flex-col h-full mx-5 my-5">
 					<div className="p-5 mt-2 border shadow-xl bg-secondary-200 rounded-3xl">
 						<div className="flex">
-							<img src={userProfile.profile_pic} alt="profile pic" className="w-20 h-20 border-2 border-white rounded-3xl" />
+							<img src={userProfile.profile_pic} alt="profile pic" className="object-cover w-20 h-20 border-2 border-white rounded-3xl" />
 							<div className="w-full ml-3">
 								<p className="text-xl font-bold">{username}</p>
 								<p>{fullname}</p>
