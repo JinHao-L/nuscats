@@ -13,7 +13,6 @@ import HomeTab from './HomeTab';
 import CatsTab from './CatsTab';
 import {
   CAT_ROUTE,
-  TAB3_ROUTE,
   MAP_ROUTE,
   FEED_ROUTE,
   ADMIN_ROUTE,
@@ -28,9 +27,8 @@ import {
   ROOT_ROUTE,
   ALERT_CATS_ROUTE,
 } from 'app/routes';
-import Tab3 from './Tab3';
 import CatDetailPage from './CatDetailPage';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import FeedTab from './FeedTab';
 import Admin from './Admin';
 import EditCatsList from './EditCatsList';
@@ -42,6 +40,9 @@ import Profile from './Profile';
 import Settings from './Settings';
 import ChangeNameAndDp from './ChangeNameAndDp';
 import AdminCatAlert from './AdminCatAlert';
+import useAuth from 'hooks/useAuth';
+import { RoleType } from '@api/users';
+import PrivateRoute from 'components/PrivateRoute';
 
 interface TabInfo {
   href: string;
@@ -66,7 +67,7 @@ const Tabs: React.FC = () => {
   // const { showTabs } = useContext(UIContext);
   const [showTabs, setShowTabs] = useState(true);
   const location = useLocation();
-  const routerRef = useRef<HTMLIonRouterOutletElement | null>(null);
+  const { user, isLoggedIn } = useAuth();
 
   useEffect(() => {
     const shouldHide = SHOULD_HIDE_TABS.reduce(
@@ -80,70 +81,114 @@ const Tabs: React.FC = () => {
     }
   }, [location]);
 
-  // To restrict 'admin' tab to admin users only
-  const tabs: TabInfo[] = [
-    {
-      href: MAP_ROUTE,
-      label: 'Home',
-      icon: map,
-    },
-    {
-      href: CAT_ROUTE,
-      label: 'Cats',
-      icon: logoOctocat,
-    },
-    {
+  const isAdmin: boolean = useMemo(
+    () => user?.roles?.includes(RoleType.Admin) || false,
+    [user?.roles],
+  );
+
+  const tabs: TabInfo[] = useMemo(() => {
+    const adminTab = {
       href: ADMIN_ROUTE,
       label: 'Admin',
       icon: construct,
-    },
-    {
+    };
+    const mapTab = {
+      href: MAP_ROUTE,
+      label: 'Home',
+      icon: map,
+    };
+    const catsTab = {
+      href: CAT_ROUTE,
+      label: 'Cats',
+      icon: logoOctocat,
+    };
+    const profileTab = {
       href: PROFILE_ROUTE,
       label: 'Profile',
       icon: personCircle,
-    },
-  ];
+    };
+
+    if (isAdmin) {
+      return [mapTab, catsTab, adminTab, profileTab];
+    } else {
+      return [mapTab, catsTab, profileTab];
+    }
+  }, [isAdmin]);
 
   let tabStyle = showTabs ? undefined : { display: 'none' };
 
   return (
     <IonPage>
       <IonTabs>
-        <IonRouterOutlet ref={routerRef} basePath={ROOT_ROUTE}>
+        <IonRouterOutlet basePath={ROOT_ROUTE}>
           <Route exact path={MAP_ROUTE} component={HomeTab} />
           <Route exact path={CAT_ROUTE} component={CatsTab} />
-          <Route exact path={TAB3_ROUTE} component={Tab3} />
           <Route exact path={FEED_ROUTE} component={FeedTab} />
-          <Route exact path={ADMIN_ROUTE} component={Admin} />
-          <Route
+          <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
+          <PrivateRoute
+            exact
+            path={ADMIN_ROUTE}
+            component={Admin}
+            canRoute={isAdmin}
+            elseRedirectTo={MAP_ROUTE}
+          />
+          <PrivateRoute
             exact
             path={BROADCAST_ANNOUNCEMENT_ROUTE}
             component={BroadcastAnnouncement}
+            canRoute={isAdmin}
+            elseRedirectTo={MAP_ROUTE}
           />
-          <Route
+          <PrivateRoute
             exact
             path={REQUEST_LOCATION_ROUTE}
             component={RequestLocation}
+            canRoute={isAdmin}
+            elseRedirectTo={MAP_ROUTE}
           />
-          <Route exact path={EDIT_CATS_ROUTE} component={EditCatsList} />
-          <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
+          <PrivateRoute
+            exact
+            path={EDIT_CATS_ROUTE}
+            component={EditCatsList}
+            canRoute={isAdmin}
+            elseRedirectTo={MAP_ROUTE}
+          />
           <Route exact path={PROFILE_ROUTE} component={Profile} />
           <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
-          <Route exact path={ALERT_CATS_ROUTE} component={AdminCatAlert} />
-          <Route
+          <PrivateRoute
+            exact
+            path={ALERT_CATS_ROUTE}
+            component={AdminCatAlert}
+            canRoute={isAdmin}
+            elseRedirectTo={MAP_ROUTE}
+          />
+          <PrivateRoute
+            exact
+            path={PROFILE_SETTINGS_ROUTE}
+            component={Settings}
+            canRoute={isLoggedIn}
+            elseRedirectTo={MAP_ROUTE}
+          />
+          <PrivateRoute
             exact
             path={CHANGE_USERNAME_ROUTE}
             component={ChangeUsername}
+            canRoute={isLoggedIn}
+            elseRedirectTo={MAP_ROUTE}
           />
-          <Route
+          <PrivateRoute
             exact
             path={CHANGE_PASSWORD_ROUTE}
             component={ChangePassword}
+            canRoute={isLoggedIn}
+            elseRedirectTo={MAP_ROUTE}
           />
-          <Route
+          <PrivateRoute
             exact
             path={CHANGE_NAME_DP_ROUTE}
             component={ChangeNameAndDp}
+            canRoute={isLoggedIn}
+            elseRedirectTo={MAP_ROUTE}
           />
           <Route render={() => <Redirect to={MAP_ROUTE} />} />
         </IonRouterOutlet>

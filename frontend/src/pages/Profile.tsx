@@ -10,7 +10,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { settingsOutline } from 'ionicons/icons';
-import { PROFILE_SETTINGS_ROUTE, SIGNIN_ROUTE } from 'app/routes';
+import { LANDING_ROUTE, PROFILE_SETTINGS_ROUTE } from 'app/routes';
 import useAuth from 'hooks/useAuth';
 import { useMemo } from 'react';
 import { useSightings, UseSightingsOptions } from 'hooks/useSightings';
@@ -28,7 +28,10 @@ const ProfileTab: React.FC = () => {
     useSightings(queryOptions);
 
   const username = useMemo(() => userProfile?.username, [userProfile]);
-  const fullname = useMemo(() => (userProfile?.first_name as string + ' ' + userProfile?.last_name), [userProfile]);
+  const fullname = useMemo(
+    () => (userProfile?.first_name as string) + ' ' + userProfile?.last_name,
+    [userProfile],
+  );
 
   // Page to display if user is not signed in
   if (!isLoggedIn) {
@@ -42,8 +45,15 @@ const ProfileTab: React.FC = () => {
         <IonContent>
           <div className="flex flex-col justify-center h-full">
             <p className="text-xl font-semibold text-center text-secondary-500">
-              <IonRouterLink href={SIGNIN_ROUTE} routerOptions={{}}>Sign in</IonRouterLink>{' '}
-              to view profile
+              <IonRouterLink
+                href={LANDING_ROUTE}
+                routerDirection={'forward'}
+                routerOptions={{ unmount: true }}
+              >
+                Join our community
+              </IonRouterLink>
+              <br />
+              and setup your profile
             </p>
           </div>
         </IonContent>
@@ -104,26 +114,26 @@ const ProfileTab: React.FC = () => {
               </div>
             </div>
           </div>
-					<InfiniteImageGallery
-						details={sightings?.map(
-							(sighting, idx) => ({
-								altText: `cat pic ${idx}`,
-								src: sighting.image,
-							}),
-						)}
-						withoutBorder={true}
-						isLoading={isLoading}
-						loadingText="Loading more kitty sightings"
-						renderEmpty={() => (
-							<div className="flex items-center justify-center w-full h-full mt-40">
-								<p className="font-semibold text-primary-400">No cat sightings yet</p>
-							</div>
-						)}
-						galleryClassName="mt-5"
-						infiniteScrollThreshold="100px"
-						pageSize={pageSize}
-						setPageSize={setPageSize}
-					/>
+          <InfiniteImageGallery
+            details={sightings?.map((sighting, idx) => ({
+              altText: `cat pic ${idx}`,
+              src: sighting.image,
+            }))}
+            withoutBorder={true}
+            isLoading={isLoading}
+            loadingText="Loading more kitty sightings"
+            renderEmpty={() => (
+              <div className="flex items-center justify-center w-full h-full mt-40">
+                <p className="font-semibold text-primary-400">
+                  No cat sightings yet
+                </p>
+              </div>
+            )}
+            galleryClassName="mt-5"
+            infiniteScrollThreshold="100px"
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
         </div>
       </IonContent>
     </IonPage>
