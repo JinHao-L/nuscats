@@ -3,7 +3,7 @@ import { camera } from 'ionicons/icons';
 
 type CameraFabProps = {
   onClick: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 const CameraFab = ({ onClick, disabled }: CameraFabProps) => {

@@ -56,7 +56,7 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
       <IonRefresher slot="fixed" onIonRefresh={doRefreshSightings}>
         <IonRefresherContent></IonRefresherContent>
       </IonRefresher>
-      {sightings && (
+      {sightings ? (
         <>
           <IonList>
             {sightings.map((sighting) => (
@@ -75,17 +75,21 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
             <IonInfiniteScrollContent loadingText="Fetching more kitty images..."></IonInfiniteScrollContent>
           </IonInfiniteScroll>
         </>
-      )}
-      {error && (
+      ) : error ? (
         <div className="flex items-center justify-center w-full h-full">
           <p className="font-medium text-red-600">
             Error loading cats, please try again
           </p>
         </div>
-      )}
-      {isLoading && (
+      ) : isLoading ? (
         <div className="flex items-center justify-center w-full h-full">
           <IonSpinner />
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full h-full">
+          <p className="font-medium">
+            No one spotted {cat?.name || 'this cat'} recently
+          </p>
         </div>
       )}
     </div>

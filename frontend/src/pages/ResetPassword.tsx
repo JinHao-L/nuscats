@@ -7,22 +7,34 @@ import {
   IonTitle,
   IonLoading,
   IonText,
+  useIonAlert,
 } from '@ionic/react';
-import { LANDING_ROUTE, SIGNIN_ROUTE } from 'app/routes';
+import { FORGET_PASSWORD_ROUTE, LANDING_ROUTE, SIGNIN_ROUTE } from 'app/routes';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import * as QueryString from 'query-string';
 import { resetPassword } from 'lib/auth';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import TextInput from 'components/map/form/TextInput';
+
+type ResetPassInputs = {
+  password: string;
+  confirmPassword: string;
+};
 
 const ResetPasswordPage: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
   const [token, setToken] = useState('');
-  const [password, setPassword] = useState('');
-  const [cfmPassword, setCfmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<Boolean>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ResetPassInputs>();
+  const [showAlert] = useIonAlert();
 
   useEffect(() => {
     const query = QueryString.parse(location.search);
@@ -33,28 +45,23 @@ const ResetPasswordPage: React.FC = () => {
     }
   }, []);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-    setSuccess('');
-    if (password !== cfmPassword) {
-      setError('Password mismatch');
-      return;
-    }
+  const onSubmit: SubmitHandler<ResetPassInputs> = async (
+    data: ResetPassInputs,
+  ) => {
     setLoading(true);
-    return resetPassword(token, password).then((response) => {
-      if (response.err) {
-        setError(response.err);
-      } else if (response.message) {
-        setSuccess(response.message);
-        setLoading(false);
-        setTimeout(() => {
-          history.replace(LANDING_ROUTE);
-        }, 3000);
-        return;
-      }
-      setLoading(false);
-    });
+    const response = await resetPassword(token, data.password);
+    setLoading(false);
+
+    if (response.err) {
+      showAlert(response.err, [{ text: 'Ok' }]);
+      setSuccess(false);
+    } else if (response.message) {
+      showAlert(response.message, [{ text: 'Ok' }]);
+      setSuccess(true);
+      setTimeout(() => {
+        history.replace(LANDING_ROUTE);
+      }, 3000);
+    }
   };
 
   return (
@@ -69,66 +76,76 @@ const ResetPasswordPage: React.FC = () => {
           <p className="mb-1 text-3xl font-bold">Password Reset</p>
           <p>Enter your new password</p>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col mt-5">
-            <div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-              <label
-                className="block pt-1 pl-3 text-xs text-gray-700"
-                htmlFor="password"
-              >
-                New Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required={true}
-                className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-              />
-            </div>
-            <div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-              <label
-                className="block pt-1 pl-3 text-xs text-gray-700"
-                htmlFor="cfmPassword"
-              >
-                Confirm new password
-              </label>
-              <input
-                id="cfmPassword"
-                type="password"
-                value={cfmPassword}
-                onChange={(e) => setCfmPassword(e.target.value)}
-                required={true}
-                className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-              />
-            </div>
-          </div>
+        <form
+          className="flex flex-col"
+          onSubmit={success === undefined ? handleSubmit(onSubmit) : undefined}
+        >
+          <TextInput
+            id="password"
+            type="password"
+            label="New password"
+            register={register('password', { required: true, minLength: 8 })}
+            errors={[
+              {
+                isError: errors.password?.type === 'required',
+                msg: 'Password is required',
+              },
+              {
+                isError: errors.password?.type === 'minLength',
+                msg: 'Password must be at least 8 characters long',
+              },
+            ]}
+          />
+          <TextInput
+            id="cfmPassword"
+            type="password"
+            label="Confirm new password"
+            register={register('confirmPassword', {
+              required: true,
+              minLength: 8,
+              validate: (val: string) => val === watch('password'),
+            })}
+            errors={[
+              {
+                isError: errors.confirmPassword?.type === 'required',
+                msg: 'Please confirm your password',
+              },
+              {
+                isError: errors.confirmPassword?.type === 'validate',
+                msg: 'Passwords do not match',
+              },
+            ]}
+          />
           <IonButton
             className="mx-5 text-lg text-white cursor-pointer h-14"
             color="primary"
             expand="block"
-            type={success ? undefined : 'submit'}
-            routerLink={success ? SIGNIN_ROUTE : undefined}
-            routerDirection={'root'}
-            disabled={!!success}
+            type={success === undefined ? 'submit' : 'reset'}
+            routerLink={
+              success === true
+                ? SIGNIN_ROUTE
+                : success === false
+                ? FORGET_PASSWORD_ROUTE
+                : undefined
+            }
+            // routerDirection={'root'}
+            disabled={loading}
           >
-            {success ? 'Reset Password' : 'Sign in'}
+            {success === true
+              ? 'Sign in'
+              : success === false
+              ? 'Request new link'
+              : 'Reset Password'}
           </IonButton>
+          {/* <input
+            id="submit"
+            className="mx-5 mt-1 text-lg font-medium text-white h-14 rounded-xl bg-primary-400"
+            type={success ? undefined : 'submit'}
+            disabled={!!success}
+            value="Sign in"
+          /> */}
         </form>
         <IonLoading isOpen={loading} message={'Please wait...'} />
-        <div className="flex flex-col gap-2 mx-5 mt-5">
-          {error && (
-            <IonText color="danger" className="text-center ">
-              {error}
-            </IonText>
-          )}
-          {success && (
-            <IonText color="success" className="text-center ">
-              {success}
-            </IonText>
-          )}
-        </div>
       </IonContent>
     </IonPage>
   );

@@ -115,4 +115,14 @@ export class UsersService {
       }),
     );
   }
+
+  setUsername(uuid: string, username: string): Observable<boolean> {
+    return from(this.userRepository.update({ uuid }, { username })).pipe(
+      map(() => true),
+      catchError((err) => {
+        console.log('Error setting usrname', err);
+        return of(false);
+      }),
+    );
+  }
 }

@@ -6,7 +6,7 @@ import { Marker } from 'react-mapbox-gl';
 type PinIconProps = {
   coords: Position | undefined;
   text: string | undefined;
-  onClick?: () => void
+  onClick?: () => void;
 };
 
 const PinIcon: React.FC<PinIconProps> = ({ coords, text, onClick }) => {
@@ -14,13 +14,13 @@ const PinIcon: React.FC<PinIconProps> = ({ coords, text, onClick }) => {
 
   return (
     <Marker coordinates={coords} onClick={onClick}>
-      <div className="flex flex-col items-center">
-        <IonIcon className="text-3xl" color="secondary" icon={pin} />
+      <div className="flex flex-col items-center gap-1">
         {text && (
-          <IonLabel className="px-2 text-base font-bold text-center rounded-lg shadow-md bg-primary-100">
+          <IonLabel className="px-2 py-1 text-base font-bold text-center bg-white bg-opacity-75 border rounded-lg shadow border-primary-200">
             {text}
           </IonLabel>
         )}
+        <IonIcon className="text-3xl" color="secondary" icon={pin} />
       </div>
     </Marker>
   );

@@ -9,11 +9,13 @@ import {
   JoinColumn,
   PrimaryColumn,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { CatSighting } from '../sightings/sighting.entity';
 
 import { Profile as IProfile } from '@api/profiles';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Profile implements IProfile {
@@ -25,10 +27,15 @@ export class Profile implements IProfile {
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
 
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  @ApiHideProperty()
+  @Exclude()
+  id: number;
+
+  @Column('uuid', { unique: true })
   uuid: string;
 
-  @Column('varchar')
+  @Column('varchar', { unique: true })
   username: string;
 
   @Column('varchar')

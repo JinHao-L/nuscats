@@ -7,30 +7,40 @@ import {
   IonContent,
   IonButton,
   IonLoading,
-  IonText,
+  useIonAlert,
 } from '@ionic/react';
+import TextInput from 'components/map/form/TextInput';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { resendConfirmation } from 'lib/auth';
 import React, { useState } from 'react';
 
-const ResendConfirmationPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
+type ResendConfirmationInputs = {
+  email: string;
+};
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-    setSuccess('');
+const ResendConfirmationPage: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [showAlert] = useIonAlert();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ResendConfirmationInputs>();
+
+  const onSubmit: SubmitHandler<ResendConfirmationInputs> = async (
+    data: ResendConfirmationInputs,
+  ) => {
     setLoading(true);
-    return resendConfirmation(email).then((response) => {
-      if (response.err) {
-        setError(response.err);
-      } else if (response.message) {
-        setSuccess(response.message);
-      }
-      setLoading(false);
-    });
+    const response = await resendConfirmation(data.email);
+    setLoading(false);
+    if (response.err) {
+      showAlert(response.err, [{ text: 'Ok' }]);
+    } else if (response.message) {
+      setSuccess(true)
+      showAlert(response.message, [{ text: 'Ok' }]);
+    }
+    setLoading(false);
   };
 
   return (
@@ -44,28 +54,23 @@ const ResendConfirmationPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <div className="mx-5 mt-5 mb-5">
-          <p className="mb-1 text-2xl font-bold">Resend email confirmation</p>
-          <p>Didn't receive your confirmation mail! Get one more on us 🐱</p>
+          <p className="mb-1 text-2xl font-semibold text-transparent bg-clip-text sm:text-3xl md:text-4xl bg-gradient-to-br from-primary-600 to-secondary-600">
+            Resend email confirmation
+          </p>
+          <p className="tracking-wide text-gray-800">
+            Didn't receive your confirmation mail?
+            <br />
+            Get one more on us 🐱
+          </p>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col mt-5">
-            <div className="block mx-5 mb-6 bg-gray-200 h-14 rounded-xl">
-              <label
-                className="block pt-1 pl-3 text-xs text-gray-700"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                required={true}
-                onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-3 py-1 bg-gray-200 border rounded-xl focus:outline-none"
-              />
-            </div>
-          </div>
+        <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+          <TextInput
+            id="email"
+            type="email"
+            label="Email"
+            register={register('email', { required: true })}
+            errors={[{ isError: !!errors.email, msg: 'Email is required' }]}
+          />
           <IonButton
             className="mx-5 text-lg text-white cursor-pointer h-14"
             color="primary"
@@ -77,14 +82,6 @@ const ResendConfirmationPage: React.FC = () => {
           </IonButton>
         </form>
         <IonLoading isOpen={loading} message={'Please wait...'} />
-        <div className="flex flex-col gap-2 mx-5 mt-5">
-          {error && (
-            <IonText color="danger" className="text-center ">
-              {error}
-            </IonText>
-          )}
-          {success && <IonText color="success"  className="text-center ">{success}</IonText>}
-        </div>
       </IonContent>
     </IonPage>
   );

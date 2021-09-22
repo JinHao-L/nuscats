@@ -53,8 +53,10 @@ const EmailConfirmationPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <div className="mx-5 mt-5 mb-5">
-          <p className="mb-1 text-3xl font-bold">Email Confirmation</p>
-          <p>NUS Cats will be letting you in soon...</p>
+          <p className="mb-1 text-2xl font-semibold text-transparent bg-clip-text sm:text-3xl md:text-4xl bg-gradient-to-br from-primary-600 to-secondary-600">
+            Email Confirmation
+          </p>
+          <p className="tracking-wide text-gray-800">NUS Cats will be letting you in soon...</p>
         </div>
         <div className="flex flex-col mx-2 my-5 text-center">
           {error && <IonText color="danger">{error}</IonText>}

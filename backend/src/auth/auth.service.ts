@@ -11,7 +11,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { from, map, mergeMap, Observable } from 'rxjs';
+import { EMPTY, from, map, mergeMap, Observable, of } from 'rxjs';
 
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -32,7 +32,7 @@ export class AuthService {
   ) {}
 
   /**
-   * Check login using email and password
+   * Gets login user using email and password
    */
   validateLogin(email: string, pass: string): Observable<User> {
     return this.usersService.findByEmail(email).pipe(
@@ -40,18 +40,18 @@ export class AuthService {
       mergeMap((user) => {
         if (user && user.password_hash) {
           return from(bcrypt.compare(pass, user.password_hash)).pipe(
-            map((isMatch) => {
+            mergeMap((isMatch) => {
               if (isMatch) {
-                return user;
+                return of(user);
               } else {
                 // password does not match
-                throw new UnauthorizedException('Wrong email or password');
+                return EMPTY;
               }
             }),
           );
         }
         // username not found
-        throw new UnauthorizedException('Wrong email or password');
+        return EMPTY;
       }),
     );
   }

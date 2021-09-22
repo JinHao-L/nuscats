@@ -10,6 +10,7 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
+  useIonAlert,
 } from '@ionic/react';
 import CameraFab from 'components/map/CameraFab';
 import LocationFab from 'components/map/LocationFab';
@@ -29,6 +30,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
 import { Cat } from '@api/cats';
+import useAuth from 'hooks/useAuth';
 
 interface HomePageProps {
   router: HTMLIonRouterOutletElement | null;
@@ -47,6 +49,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   const [pinnedLocation, setPinnedLocation] = useState<[number, number]>();
   const [pinnedTag, setPinnedTag] = useState<string>('');
   const routerRef = useRef(null);
+  const [showAlert] = useIonAlert();
 
   /**
    * Getting latest sightings
@@ -125,6 +128,10 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   };
 
   const newSighting = async () => {
+    if (!coords) {
+      showAlert('Please enable location services first', [{ text: 'Ok' }]);
+      return;
+    }
     try {
       const photo = await takePhoto();
       setPhoto(photo);
@@ -195,7 +202,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
               text={pinnedTag}
               onClick={() => setPinnedLocation(undefined)}
             />
-            <CameraFab disabled={!coords} onClick={newSighting} />
+            <CameraFab onClick={newSighting} />
             <LocationFab
               disabled={isCentered || !coords}
               onClick={centerMapToUser}

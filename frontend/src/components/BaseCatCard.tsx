@@ -1,4 +1,4 @@
-import { IonIcon } from '@ionic/react';
+import { IonAvatar, IonIcon, IonImg } from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
 import { Cat } from '@api/cats';
 
@@ -14,11 +14,9 @@ const BaseCatCard: React.FC<BaseCatCardProps> = ({ cat, onClick }) => {
       className="flex justify-between px-3 mb-1 shadow-xl bg-secondary-100 rounded-2xl bg-opacity-90"
     >
       <div className="flex-shrink-0 mt-5 mb-4">
-        <img
-          className="object-cover w-24 h-24 rounded-full lg:w-28 lg:h-28"
-          src={cat.image}
-          alt={`cat ${cat.name}`}
-        />
+        <IonAvatar className="object-cover w-24 h-24 rounded-full lg:w-28 lg:h-28">
+          <IonImg src={cat.image} alt={`cat ${cat.name}`} />
+        </IonAvatar>
       </div>
       <div className="flex flex-col justify-start flex-auto mt-3 mb-4 ml-4">
         <p className="text-lg font-semibold text-gray-700">{cat.name}</p>

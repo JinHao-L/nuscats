@@ -9,9 +9,9 @@ import {
 	useIonAlert,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import { MAP_ROUTE, ROOT_ROUTE } from "app/routes";
+import { ROOT_ROUTE } from "app/routes";
 import useAuth from "hooks/useAuth";
-import { login, signup } from "lib/auth";
+import { signup } from "lib/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextInput from "components/map/form/TextInput";
 
@@ -24,29 +24,28 @@ type SignupInputs = {
 
 const Signup: React.FC = () => {
 
-	const [showErrorAlert] = useIonAlert()
-	const { setLogin } = useAuth()
+	const [showAlert] = useIonAlert()
 	const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupInputs>()
-	const history = useHistory()
 
 	const onSubmit: SubmitHandler<SignupInputs> = async data => {
 		const signupErr = await signup(data.email, data.username, data.password)
 		if (signupErr) {
-			showErrorAlert(`${signupErr}. Please try signing up again`, [{ text: 'Ok' }])
+			showAlert(`${signupErr}. Please try signing up again`, [{ text: 'Ok' }])
 			console.log({ signupErr })
 			return
 		}
 
-		const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
-		if (loginErr || unauthorized) {
-			console.log({ loginErr, unauthorized })
-			return
-		}
+		showAlert('Sign up successful! Please check your email for the confirmation email')
+		// const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
+		// if (loginErr || unauthorized) {
+		// 	console.log({ loginErr, unauthorized })
+		// 	return
+		// }
 
-		if (user) {
-			setLogin(user.uuid)
-			history.push(MAP_ROUTE)
-		}
+		// if (user) {
+		// 	setLogin(user.uuid)
+		// 	history.push(MAP_ROUTE)
+		// }
 	}
 
 	return (
@@ -116,7 +115,7 @@ const Signup: React.FC = () => {
 								value="Sign up"
 							/>
 						</form>
-						<p className="my-2 text-lg font-semibold text-center">
+						{/* <p className="my-2 text-lg font-semibold text-center">
 							or
 						</p>
 						<IonButton
@@ -136,7 +135,7 @@ const Signup: React.FC = () => {
 							routerDirection="forward"
 						>
 							Connect with Google
-						</IonButton>
+						</IonButton> */}
 					</div>
 				</div>
 			</IonContent>
