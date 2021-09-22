@@ -3,6 +3,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonHeader,
   IonIcon,
   IonLabel,
   IonModal,
@@ -21,19 +22,20 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { list, refresh } from 'ionicons/icons';
+import { close, list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router';
 import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
+import FeedCard from 'components/FeedCard';
 import NavBar from 'components/NavBar';
 
-type HomePageProps = RouteComponentProps & {}
+type HomePageProps = RouteComponentProps & {};
 
 const HomeTab: React.FC<HomePageProps> = ({ match }) => {
   /**
@@ -53,7 +55,7 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
   /**
    * Getting latest sightings
    */
-  const { sightings, error, isLoading, mutate } = useLatestSightings();
+  const { sightings, isLoading, mutate } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
   const [showModal, setShowModal] = useState(false);
   console.log({ sightings });
@@ -142,7 +144,7 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
 
   return (
     <IonPage ref={routerRef}>
-      <NavBar title="Map" >
+      <NavBar title="Map">
         <IonButtons slot="start">
           <IonButton
             fill="clear"
@@ -171,7 +173,6 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
             <IonIcon slot="end" icon={list} />
           </IonButton>
         </IonButtons>
-
       </NavBar>
       <IonContent scrollY={false} className="relative">
         <IonToolbar color="light" className="absolute">
@@ -198,6 +199,7 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
                 point={sighting.location}
                 catName={sighting.cat?.name}
                 time={sighting.created_at}
+                type={sighting.type}
                 onClick={() => {
                   setCatDetails(sighting);
                   setShowModal(true);
@@ -229,16 +231,46 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
             />
           </IonModal>
         )}
-        <IonModal
-          isOpen={showModal}
-          swipeToClose={true}
-          onDidDismiss={() => setShowModal(false)}
-        >
-          <FeedModal
-            cat={catDetails?.cat}
-            dismiss={() => setShowModal(false)}
-          />
-        </IonModal>
+        {catDetails?.cat && (
+          <IonModal
+            isOpen={showModal}
+            swipeToClose={true}
+            onDidDismiss={() => setShowModal(false)}
+          >
+            <FeedModal
+              cat={catDetails.cat}
+              dismiss={() => setShowModal(false)}
+            />
+          </IonModal>
+        )}
+        {catDetails && !catDetails.cat && (
+          <IonModal
+            isOpen={showModal}
+            swipeToClose={true}
+            onDidDismiss={() => setShowModal(false)}
+          >
+            <div>
+              <IonHeader>
+                <IonToolbar>
+                  <IonButton
+                    fill="clear"
+                    slot="end"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <IonIcon icon={close} />
+                  </IonButton>
+                </IonToolbar>
+              </IonHeader>
+              <IonContent fullscreen>
+                <FeedCard
+                  cat={catDetails.cat}
+                  sighting={catDetails}
+                  owner={catDetails.owner}
+                />
+              </IonContent>
+            </div>
+          </IonModal>
+        )}
       </IonContent>
     </IonPage>
   );

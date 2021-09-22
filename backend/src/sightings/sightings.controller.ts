@@ -128,9 +128,9 @@ export class SightingsController {
   updateSighting(
     @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSighintDto: UpdateSightingDto,
+    @Body() updateSighingDto: UpdateSightingDto,
   ) {
-    return this.sightingsService.update(id, updateSighintDto, requester);
+    return this.sightingsService.update(id, updateSighingDto, requester);
   }
 
   /**
