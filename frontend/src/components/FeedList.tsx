@@ -71,7 +71,7 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
               </p>
             </div>
           )}
-          <IonList>
+          <IonList className="flex flex-col items-center">
             {sightings.map((sighting) => (
               <FeedCard
                 key={sighting.id}

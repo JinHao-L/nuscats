@@ -12,7 +12,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { list, refresh } from 'ionicons/icons';
-import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
+import { MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import NavBar from 'components/NavBar';
 import CatMap from 'components/map/CatMap';
@@ -53,15 +53,17 @@ const HomeTab: React.FC<HomePageProps> = () => {
   const [mapPinDetails, setMapPinDetails] = useState<PinDetails | undefined>()
 
   useEffect(() => {
-    const query = queryString.parse(location.search);
-    if (query.lat && query.lng) {
-      setCurrPage(mapPage)
-      setMapPinDetails({
-        coords: [parseFloat(query.lng as string), parseFloat(query.lat as string)],
-        tag: query.tag as string,
-      })
+    if (location.pathname === MAP_ROUTE) {
+      const query = queryString.parse(location.search);
+      if (query.lat && query.lng) {
+        setCurrPage(mapPage)
+        setMapPinDetails({
+          coords: [parseFloat(query.lng as string), parseFloat(query.lat as string)],
+          tag: query.tag as string,
+        })
+      }
     }
-  }, [location?.search]);
+  }, [location]);
 
   return (
     <IonPage>
@@ -81,18 +83,6 @@ const HomeTab: React.FC<HomePageProps> = () => {
             ) : (
               <IonIcon slot="start" icon={refresh} />
             )}
-          </IonButton>
-        </IonButtons>
-        <IonButtons slot="end">
-          <IonButton
-            fill="clear"
-            color="secondary"
-            slot="start"
-            routerLink={FEED_ROUTE}
-            routerDirection="forward"
-            size={'small'}
-          >
-            <IonIcon slot="end" icon={list} />
           </IonButton>
         </IonButtons>
       </NavBar>

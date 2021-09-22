@@ -50,7 +50,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
     /**
      * Getting latest sightings
      */
-    const { sightings, error, isLoading, mutate } = useLatestSightings();
+    const { sightings, isLoading, mutate } = useLatestSightings();
     const [showModal, setShowModal] = useState(false);
 
     /**

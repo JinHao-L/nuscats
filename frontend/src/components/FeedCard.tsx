@@ -81,7 +81,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
   };
 
   return (
-    <IonCard className="mb-5 bg-secondary-50 bg-opacity-95 rounded-xl">
+    <IonCard className="max-w-3xl mb-5 bg-secondary-50 bg-opacity-95 rounded-xl">
       <IonItem
         className="pt-1 overflow-visible bg-secondary-50 bg-opacity-95"
         color={'gray'}
@@ -121,35 +121,37 @@ const FeedCard: React.FC<FeedCardProps> = ({
           )}
         </IonItemGroup>
       </IonItem>
-      <IonCardContent>
-        <IonText className="ml-1 text-gray-900 ion-text-wrap">
-          {sighting.description}
-        </IonText>
-        <IonImg
-          src={sighting.image}
-          className="object-cover w-full h-full mt-2"
-        />
-        <IonRow className="flex justify-between mt-4 ion-align-items-center">
-          <IonCol>
-            <IonRouterLink {...locationRouterProps}>
+      <IonCardContent className="flex flex-col items-center">
+        <div>
+          <IonText className="ml-1 text-gray-900 ion-text-wrap">
+            {sighting.description}
+          </IonText>
+          <IonImg
+            src={sighting.image}
+            className="object-cover w-full h-full max-w-xl mt-2"
+          />
+          <IonRow className="flex justify-between mt-4 ion-align-items-center">
+            <IonCol>
+              <IonRouterLink {...locationRouterProps}>
+                <div className="flex items-center space-x-2">
+                  <IonIcon color="secondary" icon={locationOutline} />
+                  <IonLabel className="text-sm text-gray-800">
+                    {sighting.location_name}
+                  </IonLabel>
+                </div>
+              </IonRouterLink>
               <div className="flex items-center space-x-2">
-                <IonIcon color="secondary" icon={locationOutline} />
+                <IonIcon color="secondary" icon={timeOutline} />
                 <IonLabel className="text-sm text-gray-800">
-                  {sighting.location_name}
+                  <TimeAgo datetime={sighting.created_at} />
                 </IonLabel>
               </div>
-            </IonRouterLink>
-            <div className="flex items-center space-x-2">
-              <IonIcon color="secondary" icon={timeOutline} />
-              <IonLabel className="text-sm text-gray-800">
-                <TimeAgo datetime={sighting.created_at} />
-              </IonLabel>
-            </div>
-          </IonCol>
-          {canDeleteSighting() && <DeleteButton onClick={onDelete!} />}
-          {canResolveEmergency() && <ResolveButton onClick={onDelete!} />}
-        </IonRow>
-        <IonText className="flex flex-row-reverse items-center justify-center gap-1"></IonText>
+            </IonCol>
+            {canDeleteSighting() && <DeleteButton onClick={onDelete!} />}
+            {canResolveEmergency() && <ResolveButton onClick={onDelete!} />}
+          </IonRow>
+          <IonText className="flex flex-row-reverse items-center justify-center gap-1"></IonText>
+        </div>
       </IonCardContent>
     </IonCard>
   );
