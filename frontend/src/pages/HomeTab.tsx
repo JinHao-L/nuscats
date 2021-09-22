@@ -34,6 +34,8 @@ import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
 import FeedCard from 'components/FeedCard';
 import NavBar from 'components/NavBar';
+import { deleteSighting } from 'lib/sightings';
+import { Result } from 'lib/api';
 
 type HomePageProps = RouteComponentProps & {};
 
@@ -139,6 +141,20 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
       setShowForm(true);
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const onDeleteSighting = async () => {
+    if (catDetails) {
+      await deleteSighting(catDetails.id);
+      mutate(
+        (data) => ({
+          ...(data as Result<CatSighting[]>),
+          value: sightings?.filter((s) => s.id !== catDetails.id) || [],
+        }),
+        false,
+      );
+      setShowModal(false);
     }
   };
 
@@ -266,6 +282,7 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
                   cat={catDetails.cat}
                   sighting={catDetails}
                   owner={catDetails.owner}
+                  onDelete={onDeleteSighting}
                 />
               </IonContent>
             </div>

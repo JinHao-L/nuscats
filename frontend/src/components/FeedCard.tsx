@@ -28,25 +28,27 @@ import { Profile, Cat, CatSighting, SightingType, RoleType } from '@api';
 import defaultAvatar from 'assets/default_avatar.png';
 import { CAT_ROUTE } from 'app/routes';
 import usePinLocation from 'hooks/usePinLocation';
-import { deleteSighting, updateSighting } from 'lib/sightings';
 import useAuth from 'hooks/useAuth';
-import { useSWRConfig } from 'swr';
-import { latestKey, sightingsKey } from 'lib/api';
 
 interface FeedCardProps {
   sighting: CatSighting;
   owner: Profile | undefined;
   cat: Cat | undefined;
+  onDelete?: () => void;
 }
 
-const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
+const FeedCard: React.FC<FeedCardProps> = ({
+  sighting,
+  cat,
+  owner,
+  onDelete,
+}) => {
   const [lat, lng] = sighting.location.coordinates;
   const { ionRouterLinkProps: locationRouterProps } = usePinLocation(
     lat,
     lng,
     cat?.name,
   );
-  const { mutate } = useSWRConfig();
   const { userProfile } = useAuth();
 
   const catRouterProps: {
@@ -63,19 +65,19 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
 
   const canDeleteSighting = () => {
     return (
-      userProfile?.user?.uuid === sighting.owner_id ||
-      userProfile?.user?.roles.includes(RoleType.Admin)
+      onDelete &&
+      sighting.type === SightingType.CatSighted &&
+      (userProfile?.user?.uuid === sighting.owner_id ||
+        userProfile?.user?.roles.includes(RoleType.Admin))
     );
   };
 
   const canResolveEmergency = () => {
-    return userProfile?.user?.roles.includes(RoleType.Admin);
-  };
-
-  const onDelete = async () => {
-    await deleteSighting(sighting.id);
-    mutate(sightingsKey);
-    mutate(latestKey);
+    return (
+      onDelete &&
+      sighting.type === SightingType.Emergency &&
+      userProfile?.user?.roles.includes(RoleType.Admin)
+    );
   };
 
   return (
@@ -144,11 +146,8 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
               </IonLabel>
             </div>
           </IonCol>
-          {sighting.type === SightingType.CatSighted && canDeleteSighting() && (
-            <DeleteButton onClick={onDelete} />
-          )}
-          {sighting.type === SightingType.Emergency &&
-            canResolveEmergency() && <ResolveButton onClick={onDelete} />}
+          {canDeleteSighting() && <DeleteButton onClick={onDelete!} />}
+          {canResolveEmergency() && <ResolveButton onClick={onDelete!} />}
         </IonRow>
         <IonText className="flex flex-row-reverse items-center justify-center gap-1"></IonText>
       </IonCardContent>
