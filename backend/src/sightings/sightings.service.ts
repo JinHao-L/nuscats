@@ -134,7 +134,7 @@ export class SightingsService {
   }
 
   create(createSightingDto: CreateSightingDto): Observable<CatSighting> {
-    const { latlng, catId, ...sightings } = createSightingDto;
+    const { latlng, catId, ownerId, ...sightings } = createSightingDto;
 
     const [lat, lng] = latlng.split(',');
     const location: Point = createGeoJsonPoint(lat, lng);
@@ -151,6 +151,7 @@ export class SightingsService {
             cat_id: catId,
             location,
             location_name: locName,
+            owner_id: ownerId,
           }),
         ),
         mergeMap((sighting) => this.sightingsRepository.save(sighting)),
