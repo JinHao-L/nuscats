@@ -128,9 +128,9 @@ export class SightingsController {
   updateSighting(
     @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSighingDto: UpdateSightingDto,
+    @Body() updateSightingDto: UpdateSightingDto,
   ) {
-    return this.sightingsService.update(id, updateSighingDto, requester);
+    return this.sightingsService.update(id, updateSightingDto, requester);
   }
 
   /**
@@ -146,9 +146,7 @@ export class SightingsController {
   removeSighting(
     @Usr() requester: User,
     @Param('id', ParseIntPipe) id: number,
-  ): Observable<string> {
-    return this.sightingsService
-      .remove(id, requester)
-      .pipe(map(() => 'Deleted successfully'));
+  ): Observable<CatSighting> {
+    return this.sightingsService.remove(id, requester);
   }
 }
