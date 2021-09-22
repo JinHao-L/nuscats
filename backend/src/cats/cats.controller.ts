@@ -23,16 +23,12 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 
-import { RoleType } from '@api/users';
-import { Roles } from '../shared/decorators/role.decorator';
 import { Cat } from './cats.entity';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dtos/create-cat.dto';
 import { RolesGuard } from './../auth/guard/roles.guard';
-import { number } from 'joi';
 
 @ApiTags('Cats')
-@UseInterceptors(CacheInterceptor)
 @Controller('cats')
 export class CatsController {
   constructor(private catsService: CatsService) {}
@@ -101,8 +97,11 @@ export class CatsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiParam({ name: 'id', description: 'The cat id to update' })
   @Put('/:id')
-  updateCat(@Param('id', ParseIntPipe) id: number, @Body() catDto: CreateCatDto): void {
-    this.catsService.updateCat(id, catDto)
+  updateCat(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() catDto: CreateCatDto,
+  ): void {
+    this.catsService.updateCat(id, catDto);
     return;
   }
 
@@ -113,7 +112,7 @@ export class CatsController {
     description: 'Successfully deleted cat',
   })
   @ApiForbiddenResponse({
-    description: 'Forbidden. Operation allowed only for admin', 
+    description: 'Forbidden. Operation allowed only for admin',
   })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiParam({ name: 'id', description: 'The cat id to delete' })
