@@ -122,7 +122,7 @@ const SetupProfile: React.FC = () => {
                     <div className="sticky top-0 flex items-start justify-center w-full pt-5 h-28 bg-secondary-400">
                         <p className="font-medium text-white text-md md:text-lg">Let us know more about you!</p>
                     </div>
-                    <div className="absolute left-0 right-0 flex flex-col items-center w-5/6 max-w-xl py-3 m-auto bg-white shadow-md rounded-xl top-16">
+                    <div className="absolute left-0 right-0 flex flex-col items-center w-5/6 max-w-xl py-4 m-auto bg-white shadow-md rounded-2xl top-16">
                         <div className="relative mt-1">
                             <img
                                 className="object-cover object-center w-40 h-40 border-2 rounded-full shadow border-primary-400 md:w-52 md:h-52"

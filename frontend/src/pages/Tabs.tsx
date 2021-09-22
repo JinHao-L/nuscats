@@ -104,11 +104,7 @@ const Tabs: React.FC = () => {
     <IonPage>
       <IonTabs>
         <IonRouterOutlet ref={routerRef}>
-          <Route
-            exact
-            path={MAP_ROUTE}
-            render={() => <HomeTab router={routerRef.current} />}
-          />
+          <Route exact path={MAP_ROUTE} component={HomeTab} />
           <Route exact path={CAT_ROUTE} component={CatsTab} />
           <Route exact path={TAB3_ROUTE} component={Tab3} />
           <Route exact path={FEED_ROUTE} component={FeedTab} />

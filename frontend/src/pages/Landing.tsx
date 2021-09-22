@@ -10,7 +10,7 @@ const Landing: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      history.push("/home")
+      history.push(MAP_ROUTE)
     }
 
   }, [isLoggedIn, history])
@@ -31,12 +31,12 @@ const Landing: React.FC = () => {
             </div>
 
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-90">
-              <div className="flex flex-col h-full pb-20 mx-5">
+              <div className="flex flex-col items-center h-full pb-20 mx-5">
                 <p className="mt-auto mb-6 text-3xl font-bold text-center text-white">
                   Insert tagline here
                 </p>
                 <IonButton
-                  className="mx-5 mb-6 text-base font-semibold cursor-pointer h-14 md:text-lg"
+                  className="w-full max-w-xl mb-6 text-base font-semibold cursor-pointer px-7 h-14 md:text-lg"
                   color="primary"
                   expand="block"
                   routerLink={SIGNUP_ROUTE}

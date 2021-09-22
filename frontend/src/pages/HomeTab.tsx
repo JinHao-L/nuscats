@@ -3,13 +3,16 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonHeader,
   IonIcon,
+  IonLabel,
   IonModal,
   IonPage,
+  IonRouterOutlet,
   IonSpinner,
-  IonTitle,
-  IonToolbar,
+  IonTab,
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
   useIonAlert,
 } from '@ionic/react';
 import CameraFab from 'components/map/CameraFab';
@@ -24,19 +27,17 @@ import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
-import { CatSighting, makeSighting, SightingType } from '@api/sightings';
+import { CatSighting, } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router'
 import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
-import { Cat } from '@api/cats';
-import useAuth from 'hooks/useAuth';
+import NavBar from 'components/NavBar';
 
-interface HomePageProps {
-  router: HTMLIonRouterOutletElement | null;
-}
+type HomePageProps = RouteComponentProps & {}
 
-const HomeTab: React.FC<HomePageProps> = ({ router }) => {
+const HomeTab: React.FC<HomePageProps> = ({ match }) => {
   /**
    * Map locationing
    */
@@ -57,7 +58,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   const { sightings, error, isLoading, mutate } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  console.log(sightings);
+  console.log({ sightings });
   /**
    * Creating a new sighting
    */
@@ -143,39 +144,36 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
 
   return (
     <IonPage ref={routerRef}>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="end">
-            <IonButton
-              fill="clear"
-              color="secondary"
-              slot="start"
-              routerLink={FEED_ROUTE}
-              routerDirection="forward"
-              size={'small'}
-            >
-              <IonIcon slot="end" icon={list} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>Map</IonTitle>
-          <IonButtons slot="start">
-            <IonButton
-              fill="clear"
-              color="secondary"
-              slot="start"
-              size={'small'}
-              onClick={refreshSightings}
-              disabled={isLoading}
-            >
-              {showFeedback && !isLoading ? (
-                <IonSpinner name="circular" color="secondary" />
-              ) : (
-                <IonIcon slot="start" icon={refresh} />
-              )}
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <NavBar title="Map" >
+        <IonButtons slot="start">
+          <IonButton
+            fill="clear"
+            color="secondary"
+            slot="start"
+            size={'small'}
+            onClick={refreshSightings}
+            disabled={isLoading}
+          >
+            {showFeedback && !isLoading ? (
+              <IonSpinner name="circular" color="secondary" />
+            ) : (
+              <IonIcon slot="start" icon={refresh} />
+            )}
+          </IonButton>
+        </IonButtons>
+        <IonButtons slot="end">
+          <IonButton
+            fill="clear"
+            color="secondary"
+            slot="start"
+            routerLink={FEED_ROUTE}
+            routerDirection="forward"
+            size={'small'}
+          >
+            <IonIcon slot="end" icon={list} />
+          </IonButton>
+        </IonButtons>
+      </NavBar>
       <IonContent>
         <Map
           onDragStart={() => setIsCentered(false)}

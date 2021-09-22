@@ -36,9 +36,11 @@ const Signin: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SigninInputs>();
+
   const history = useHistory();
 
   const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
+    console.log("help")
     setLoading(true);
     const { user, err, unauthorized } = await login(data.email, data.password);
     setLoading(false);
@@ -113,7 +115,7 @@ const Signin: React.FC = () => {
             </IonRouterLink>
           </div>
           <div className="w-full mt-2 text-center">
-            <IonRouterLink routerLink={RESEND_EMAIL_ROUTE}>
+            <IonRouterLink className="text-gray-600" routerLink={RESEND_EMAIL_ROUTE}>
               Resend email confirmation?
             </IonRouterLink>
           </div>

@@ -1,6 +1,7 @@
 import { RefresherEventDetail } from '@ionic/core';
 import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
 import CatCard from 'components/CatCard';
+import NavBar from 'components/NavBar';
 import { useCats } from 'hooks/useCats';
 import { useCallback, useEffect } from 'react';
 
@@ -25,17 +26,20 @@ const CatsTab: React.FC = () => {
 
     return (
         <IonPage>
-            <IonHeader translucent>
-                <IonToolbar>
-                    <IonTitle>Cats</IonTitle>
-                </IonToolbar>
-            </IonHeader>
+            <NavBar title="Cats" />
             <IonContent>
                 <IonRefresher slot="fixed" onIonRefresh={doRefreshCats}>
                     <IonRefresherContent ></IonRefresherContent>
                 </IonRefresher>
 
                 <div className="grid w-full h-full grid-flow-row grid-cols-1 gap-4 px-3 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {cats?.length === 0 &&
+                        <div className="flex items-center justify-center w-full h-full">
+                            <p className="text-xl font-medium text-gray-800">
+                                No cats found 😿
+                            </p>
+                        </div>
+                    }
                     {cats?.map(cat =>
                         <div className="w-full" key={cat.id}>
                             <CatCard cat={cat} ></CatCard>
