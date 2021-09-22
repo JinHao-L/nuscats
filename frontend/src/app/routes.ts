@@ -22,6 +22,7 @@ export const PROFILE_ROUTE = `${ROOT_ROUTE}/profile`;
 export const PROFILE_SETTINGS_ROUTE = `${PROFILE_ROUTE}/settings`;
 export const CHANGE_USERNAME_ROUTE = `${PROFILE_ROUTE}/changeusername`;
 export const CHANGE_PASSWORD_ROUTE = `${PROFILE_ROUTE}/changepassword`;
+export const CHANGE_NAME_DP_ROUTE = `${PROFILE_ROUTE}/change-name-and-dp`;
 
 export const ADMIN_ROUTE = `${ROOT_ROUTE}/admin`;
 export const BROADCAST_ANNOUNCEMENT_ROUTE = `${ADMIN_ROUTE}/announcement`;
