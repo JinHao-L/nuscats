@@ -73,7 +73,7 @@ const ProfileTab: React.FC = () => {
 				<IonSpinner />
 			</div>
 		);
-	} else {
+	} else if (sightings.length > 0) {
 		const catImgGalleryDetails: ImageDetail[] = 
 		(sightings as CatSighting[]).map((sighting, idx) => ({
 			altText: `cat pic ${idx}`,
@@ -82,6 +82,12 @@ const ProfileTab: React.FC = () => {
 		galleryDisplay = (
 			<ImageGallery details={catImgGalleryDetails} withoutBorder />	
 		);
+	} else {
+		galleryDisplay = (
+			<div className="flex items-center justify-center w-full h-full mt-40">
+				<p className="font-semibold text-primary-400">No cat sightings yet</p>
+			</div>
+		)
 	}
 
 	const doLoadMoreSightings = async (event: CustomEvent<void>) => {

@@ -47,9 +47,9 @@ const uploadProfilePic = async (userId: string, photo: UserPhoto): Promise<{ pro
 
 const ChangeNameAndDp: React.FC = () => {
     const [showErrorAlert] = useIonAlert()
-    const { userId, profileUpdated } = useAuth()
+    const { userId, profileUpdated, userProfile } = useAuth()
     const [profilePicState, setProfilePicState] = useState<ProfilePicState>(
-        { url: GetRandomAvatarUrl(userId || "1"), uploaded: true }
+        { url: userProfile ? userProfile.profile_pic : GetRandomAvatarUrl(userId || "1"), uploaded: true }
     )
     const history = useHistory()
     const { register, handleSubmit, formState: { errors } } = useForm<SetupProfileInputs>()
