@@ -1,6 +1,6 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
 import { MAP_ROUTE } from "app/routes"
-import TextInput from "components/map/form/TextInput"
+import TextInput from "components/form/TextInput"
 import useAuth from "hooks/useAuth"
 import { camera } from "ionicons/icons"
 import { GetRandomAvatarUrl } from "lib/avatar"

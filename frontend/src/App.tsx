@@ -37,16 +37,12 @@ import {
   FORGET_PASSWORD_ROUTE,
   LANDING_ROUTE,
   PASSWORD_RESET_ROUTE,
-  PROFILE_ROUTE,
-  PROFILE_SETTINGS_ROUTE,
   RESEND_EMAIL_ROUTE,
   ROOT_ROUTE,
   SETUP_PROFILE_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
 } from 'app/routes';
-import Profile from 'pages/Profile';
-import Settings from 'pages/Settings';
 import SetupProfile from 'pages/SetupProfile';
 import ForgetPasswordPage from 'pages/ForgetPassword';
 import EmailConfirmationPage from 'pages/EmailConfirmation';

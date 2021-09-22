@@ -1,156 +1,80 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   IonButton,
   IonButtons,
   IonContent,
   IonIcon,
   IonLabel,
-  IonModal,
   IonPage,
   IonSegment,
   IonSegmentButton,
   IonSpinner,
   IonToolbar,
-  useIonAlert,
 } from '@ionic/react';
-import CameraFab from 'components/map/CameraFab';
-import LocationFab from 'components/map/LocationFab';
-import Map from 'components/map/Map';
-import SightingsForm from 'components/map/form/SightingsForm';
-import UserIcon from 'components/map/UserIcon';
-import useGeolocation, { getCenter } from 'hooks/useGeolocation';
-import { State } from 'react-mapbox-gl/lib/map';
-import { takePhoto, UserPhoto } from 'utils/takePhoto';
 import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
-import CatIcon from 'components/map/CatIcon';
-import { CatSighting } from '@api/sightings';
-import FeedModal from 'components/FeedModal';
-import { useHistory, useLocation } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router'
-import * as QueryString from 'query-string';
-import PinIcon from 'components/map/PinIcon';
 import NavBar from 'components/NavBar';
+import CatMap from 'components/map/CatMap';
+import type { PinDetails } from 'components/map/CatMap';
+import FeedList from 'components/FeedList';
+import { QuerySightingOrderBy } from '@api/sightings';
+import { useLocation, useHistory } from 'react-router';
+import * as queryString from 'query-string';
 
-type HomePageProps = RouteComponentProps & {}
+type HomePageProps = {}
 
-const HomeTab: React.FC<HomePageProps> = ({ match }) => {
-  /**
-   * Map locationing
-   */
-  const coords = useGeolocation();
-  const [isCentered, setIsCentered] = useState<boolean>(false);
-  const mapRef = useRef<State>();
-  const [catDetails, setCatDetails] = useState<CatSighting | null>(null);
-  const location = useLocation();
-  const history = useHistory();
-  const [pinnedLocation, setPinnedLocation] = useState<[number, number]>();
-  const [pinnedTag, setPinnedTag] = useState<string>('');
-  const routerRef = useRef(null);
-  const [showAlert] = useIonAlert();
+const HomeTab: React.FC<HomePageProps> = () => {
 
-  /**
-   * Getting latest sightings
-   */
-  const { sightings, error, isLoading, mutate } = useLatestSightings();
+  // page setup
+  const mapPage = "Map"
+  const feedPage = "Feed"
+  const [currPage, setCurrPage] = useState<string>(mapPage)
+
+  const mapShown = currPage === mapPage
+  const feedShown = currPage === feedPage
+
+  // refresh sightings
+  const { mutate, isLoading } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  console.log({ sightings });
-  /**
-   * Creating a new sighting
-   */
-  const [showForm, setShowForm] = useState<boolean>(false);
-  const [photo, setPhoto] = useState<UserPhoto | null>();
 
-  useEffect(() => {
-    resizeMap();
-    centerMapToUser();
-  }, [mapRef.current]);
-
-  useEffect(() => {
-    const query = QueryString.parse(location.search);
-    if (query.lat && query.lng) {
-      setShowModal(false);
-      const newPinLocation: [number, number] = [
-        parseFloat(query.lng as string),
-        parseFloat(query.lat as string),
-      ];
-      setPinnedLocation(newPinLocation);
-      query.tag && setPinnedTag(query.tag as string);
-      moveTo(newPinLocation);
-      history.push(MAP_ROUTE);
-    }
-  }, [location?.search]);
-
-  useEffect(() => {
-    if (!isLoading && !sightings) {
-      console.log('Error loading sightings, please try again');
-    }
-  }, [isLoading, sightings]);
-
-  const refreshSightings = () => {
+  const refreshSightings = useCallback(() => {
     mutate();
     toggleFeedback(true);
-    setPinnedLocation(undefined);
     setTimeout(() => {
       toggleFeedback(false);
     }, 1000);
-  };
+  }, [mutate, toggleFeedback])
 
-  const resizeMap = (): void => {
-    // This fixes an issue where the map is not immediately
-    // full size on refresh
-    if (mapRef.current && mapRef.current.map) {
-      mapRef.current.map.resize();
-    }
-  };
+  // change pin location if nagivated to via query string
+  const location = useLocation()
+  const history = useHistory()
+  const [mapPinDetails, setMapPinDetails] = useState<PinDetails | undefined>()
 
-  const centerMapToUser = (): void => {
-    if (mapRef.current && mapRef.current.map && coords) {
-      mapRef.current.map.flyTo({
-        center: getCenter(coords),
-      });
-      setIsCentered(true);
+  useEffect(() => {
+    const query = queryString.parse(location.search);
+    if (query.lat && query.lng) {
+      setCurrPage(mapPage)
+      setMapPinDetails({
+        coords: [parseFloat(query.lng as string), parseFloat(query.lat as string)],
+        tag: query.tag as string,
+      })
     }
-  };
+  }, [location?.search]);
 
-  const moveTo = (point: [number, number]): void => {
-    if (mapRef.current && mapRef.current.map && point) {
-      mapRef.current.map.flyTo({
-        center: point,
-      });
-      if (coords && point !== getCenter(coords)) {
-        setIsCentered(false);
-      }
-    }
-  };
-
-  const newSighting = async () => {
-    if (!coords) {
-      showAlert('Please enable location services first', [{ text: 'Ok' }]);
-      return;
-    }
-    try {
-      const photo = await takePhoto();
-      setPhoto(photo);
-      setShowForm(true);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   return (
-    <IonPage ref={routerRef}>
-      <NavBar title="Map" >
+    <IonPage>
+      <NavBar title={currPage} >
         <IonButtons slot="start">
           <IonButton
+            className={"w-12 " + (mapShown ? "opacity-100" : "opacity-0")}
             fill="clear"
             color="secondary"
             slot="start"
             size={'small'}
             onClick={refreshSightings}
-            disabled={isLoading}
+            disabled={isLoading || feedShown}
           >
             {showFeedback && !isLoading ? (
               <IonSpinner name="circular" color="secondary" />
@@ -175,70 +99,38 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
       </NavBar>
       <IonContent scrollY={false} className="relative">
         <IonToolbar color="light" className="absolute">
-          <IonSegment color="dark" value="map">
-            <IonSegmentButton value="map">
+          <IonSegment
+            color="dark"
+            value={currPage}
+            onIonChange={e => {
+              setCurrPage(e.detail.value || mapPage)
+              if (e.detail.value === feedPage) {
+                history.replace(MAP_ROUTE)
+              }
+            }}
+          >
+            <IonSegmentButton value={mapPage}>
               <IonLabel>Map</IonLabel>
             </IonSegmentButton>
-            <IonSegmentButton value="feed">
+            <IonSegmentButton value={feedPage}>
               <IonLabel>Feed</IonLabel>
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
-        <Map
-          onDragStart={() => setIsCentered(false)}
-          getRef={(s) => (mapRef.current = s)}
-          className="absolute w-full top-11 h-map-content"
-          style="mapbox://styles/mapbox/streets-v10"
-        >
-          <>
-            <UserIcon coords={coords} />
-            {sightings?.map((sighting) => (
-              <CatIcon
-                key={sighting.id}
-                point={sighting.location}
-                catName={sighting.cat?.name}
-                time={sighting.created_at}
-                onClick={() => {
-                  setCatDetails(sighting);
-                  setShowModal(true);
-                }}
-              />
-            ))}
-            <PinIcon
-              coords={pinnedLocation}
-              text={pinnedTag}
-              onClick={() => setPinnedLocation(undefined)}
-            />
-            <CameraFab onClick={newSighting} />
-            <LocationFab
-              disabled={isCentered || !coords}
-              onClick={centerMapToUser}
-            />
-          </>
-        </Map>
-        {photo && coords && (
-          <IonModal isOpen={showForm}>
-            <SightingsForm
-              photo={photo}
-              onDismiss={() => {
-                setPhoto(null);
-                setShowForm(false);
-              }}
-              onSightingCreate={mutate}
-              coords={coords}
-            />
-          </IonModal>
-        )}
-        <IonModal
-          isOpen={showModal}
-          swipeToClose={true}
-          onDidDismiss={() => setShowModal(false)}
-        >
-          <FeedModal
-            cat={catDetails?.cat}
-            dismiss={() => setShowModal(false)}
+        <div className={"absolute w-full top-11 h-map-content transform transition-all duration-200 "
+          + (mapShown ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2/3 pointer-events-none")}>
+          <CatMap pinDetails={mapPinDetails} />
+        </div>
+        <div className={"absolute w-full top-11 h-map-content transform transition-all duration-200 "
+          + (feedShown ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2/3 pointer-events-none")}>
+          <FeedList
+            queryParams={{
+              includeCatsData: true,
+              includeOwnerData: true,
+              orderBy: QuerySightingOrderBy.TIME,
+            }}
           />
-        </IonModal>
+        </div>
       </IonContent>
     </IonPage>
   );

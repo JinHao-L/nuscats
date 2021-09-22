@@ -14,7 +14,7 @@ import { useHistory, useLocation } from 'react-router';
 import * as QueryString from 'query-string';
 import { resetPassword } from 'lib/auth';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import TextInput from 'components/map/form/TextInput';
+import TextInput from 'components/form/TextInput';
 
 type ResetPassInputs = {
   password: string;
@@ -124,8 +124,8 @@ const ResetPasswordPage: React.FC = () => {
               success === true
                 ? SIGNIN_ROUTE
                 : success === false
-                ? FORGET_PASSWORD_ROUTE
-                : undefined
+                  ? FORGET_PASSWORD_ROUTE
+                  : undefined
             }
             // routerDirection={'root'}
             disabled={loading}
@@ -133,8 +133,8 @@ const ResetPasswordPage: React.FC = () => {
             {success === true
               ? 'Sign in'
               : success === false
-              ? 'Request new link'
-              : 'Reset Password'}
+                ? 'Request new link'
+                : 'Reset Password'}
           </IonButton>
           {/* <input
             id="submit"

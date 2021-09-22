@@ -143,7 +143,7 @@ export async function changeUsername(username: string): Promise<ApiResponse> {
     { username },
     { method: 'POST' },
   );
-    console.log(res);
+  console.log(res);
   if (!res.ok) {
     let msg = ((await res.json()) as any).message;
     return {

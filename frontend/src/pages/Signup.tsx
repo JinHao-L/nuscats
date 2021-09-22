@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import { signup } from "lib/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
-import TextInput from "components/map/form/TextInput";
+import TextInput from "components/form/TextInput";
 import { useState } from "react";
 import { useHistory } from "react-router";
 import { MAP_ROUTE } from "app/routes";

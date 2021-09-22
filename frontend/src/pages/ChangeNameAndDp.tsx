@@ -1,13 +1,12 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
 import { MAP_ROUTE } from "app/routes"
-import TextInput from "components/map/form/TextInput"
+import TextInput from "components/form/TextInput"
 import useAuth from "hooks/useAuth"
 import { camera } from "ionicons/icons"
 import { GetRandomAvatarUrl } from "lib/avatar"
 import { createProfile } from "lib/profile"
 import { useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
 import { useHistory } from "react-router";
 import { takePhoto, UserPhoto } from "utils/takePhoto"
 import { getUserProfileImageUpload, uploadImage } from "lib/uploads"
@@ -166,4 +165,4 @@ const ChangeNameAndDp: React.FC = () => {
     )
 }
 
-export default ChangeNameAndDp 
+export default ChangeNameAndDp

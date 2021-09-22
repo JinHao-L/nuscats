@@ -10,6 +10,7 @@ type PinIconProps = {
 };
 
 const PinIcon: React.FC<PinIconProps> = ({ coords, text, onClick }) => {
+  console.log({ coords })
   if (!coords) return null;
 
   return (
