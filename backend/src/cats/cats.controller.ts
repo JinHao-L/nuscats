@@ -1,7 +1,6 @@
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import {
   Body,
-  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,7 +10,6 @@ import {
   Post,
   Put,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { catchError, EMPTY, mergeMap, Observable } from 'rxjs';
 import {

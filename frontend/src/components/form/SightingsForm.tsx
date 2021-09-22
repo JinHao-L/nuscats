@@ -35,7 +35,6 @@ const SightingsForm = ({
   coords,
 }: SightingsFormProps) => {
   const [state, setState] = useState<State>(State.SelectingCategory);
-  const { cats, error } = useCats();
 
   const title = (state: State) => {
     switch (state) {
@@ -47,21 +46,6 @@ const SightingsForm = ({
         return <IonTitle>Emergency!</IonTitle>;
     }
   };
-
-  if (error) {
-    return (
-      <div className="flex flex-col flex-grow">
-        <IonHeader>
-          <IonToolbar>
-            <IonButton fill="clear" slot="end" onClick={onDismiss}>
-              <IonIcon icon={close} />
-            </IonButton>
-          </IonToolbar>
-        </IonHeader>
-        <ErrorMessage />
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col flex-grow">
@@ -95,7 +79,6 @@ const SightingsForm = ({
               ? SightingType.Emergency
               : SightingType.CatSighted
           }
-          cats={cats ?? []}
           photo={photo}
           onSightingCreate={onSightingCreate}
           dismiss={onDismiss}

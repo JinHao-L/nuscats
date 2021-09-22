@@ -127,7 +127,7 @@ export default function useAuth() {
     return {
         setLogin,
         setLogout,
-        isLoggedIn,
+        isLoggedIn: isLoggedIn ?? false,
         userId,
         user,
         shouldCreateProfile,

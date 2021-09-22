@@ -131,5 +131,5 @@ export interface CreateSightingRequest {
   /**
    * The uuid of the user who is uploading the sighting
    */
-  ownerId: string;
+  ownerId?: string;
 }

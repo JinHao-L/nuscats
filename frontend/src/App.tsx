@@ -54,9 +54,9 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
+          <Route exact path={LANDING_ROUTE} component={Landing} />
           <Route exact path={SIGNUP_ROUTE} component={Signup} />
           <Route exact path={SIGNIN_ROUTE} component={Signin} />
-          <Route exact path={LANDING_ROUTE} component={Landing} />
           <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
           <Route
             exact
@@ -80,9 +80,9 @@ const App: React.FC = () => {
           />
           <Route path={ROOT_ROUTE} render={() => <Tabs />} />
           <Route render={() => <Redirect to={LANDING_ROUTE} />} />
-        </IonRouterOutlet >
-      </IonReactRouter >
-    </IonApp >
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
   );
 };
 

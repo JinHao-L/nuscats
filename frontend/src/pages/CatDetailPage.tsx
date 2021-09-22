@@ -25,8 +25,7 @@ import type { ImageDetail } from 'components/ImageGallery';
 import TimeAgo from 'timeago-react';
 
 import 'swiper/swiper-bundle.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-import 'swiper/components/pagination/pagination.min.css';
+
 import { PlaceholderCatUrl } from 'lib/utils';
 import { RouteComponentProps } from 'react-router';
 import { useCat } from 'hooks/useCats';
@@ -37,11 +36,11 @@ import { Position } from 'geojson';
 import usePinLocation from 'hooks/usePinLocation';
 import { InfiniteImageGallery } from 'components/InfiniteImageGallery';
 
-interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> {}
+interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> { }
+
+SwiperCore.use([IonicSwiper, Navigation, Pagination]);
 
 const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
-  SwiperCore.use([IonicSwiper, Navigation, Pagination]);
-
   const {
     cat,
     notFound,
@@ -82,11 +81,13 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
         </IonFab>
         {cat && (
           <>
-            <img
-              src={cat.image}
-              alt={`big pic of cat ${cat.name}`}
-              className="absolute top-0 left-0 z-0 object-cover object-center w-full h-1/2"
-            />
+            <div className="absolute top-0 left-0 right-0 z-0 w-full max-w-5xl mx-auto shadow-lg h-1/2">
+              <img
+                src={cat.image}
+                alt={`big pic of cat ${cat.name}`}
+                className="object-cover object-center w-full h-full"
+              />
+            </div>
 
             <div className="relative w-full h-full mt-20 overflow-scroll snap rounded-3xl">
               <div className="w-full h-1/3 snap-start" />
@@ -197,20 +198,20 @@ const CatAbout: React.FC<CatAboutProps> = ({
   return (
     <section className="flex flex-col space-y-4 overflow-y-auto h-cat-profile-content px-7">
       <h2 className="font-semibold text-center text-gray-900 transform -skew-x-6">
-        <span className="bg-gray-200 shadow-sm">"{one_liner}"</span>
+        <span className="bg-gray-200 shadow-sm md:text-lg lg:text-xl">"{one_liner}"</span>
       </h2>
-      <div className="flex justify-start px-4 py-2 space-x-6">
-        <div className="flex-shrink-0 text-xs font-medium text-gray-400">
+      <div className="flex justify-start px-4 py-2 space-x-6 sm:justify-center">
+        <div className="flex-shrink-0 text-xs font-medium text-gray-400 sm:text-sm">
           Hangs out around
           <IonRouterLink {...zoneRouterProps}>
-            <p className="text-sm font-semibold text-primary-500">{zone}</p>
+            <p className="text-sm font-semibold text-primary-500 sm:text-base">{zone}</p>
           </IonRouterLink>
         </div>
         {lat && lng && (
-          <div className="text-xs font-medium text-gray-400">
+          <div className="text-xs font-medium text-gray-400 sm:text-sm">
             Last spotted at
             <IonRouterLink {...mapRouterProps}>
-              <div className="text-sm font-semibold text-primary-500">
+              <div className="text-sm font-semibold text-primary-500 sm:text-base">
                 {locationName ? (
                   <p>{locationName}</p>
                 ) : (
@@ -222,8 +223,8 @@ const CatAbout: React.FC<CatAboutProps> = ({
         )}
       </div>
 
-      <div className="px-4 pt-2 rounded-md bg-warmGray-100">
-        <p className="text-sm tracking-tight text-justify text-gray-700 whitespace-pre-wrap">
+      <div className="px-4 pt-2 mx-auto rounded-md bg-warmGray-100">
+        <p className="max-w-2xl text-sm tracking-tight text-justify text-gray-700 whitespace-pre-wrap sm:text-base">
           {description.replaceAll('\n', '\n\n')}
         </p>
         <br />
@@ -266,7 +267,9 @@ const CatLocation: React.FC<CatLocationProps> = ({
       {sightings && sightings.length !== 0 ? (
         <div className="flex flex-col items-center justify-start w-full px-4 pb-4 space-y-3 overflow-auto h-cat-profile-content">
           {sightings.map((sighting, idx) => (
-            <CatLocationCard sighting={sighting} key={idx} />
+            <div className="w-full h-auto max-w-2xl" key={idx}>
+              <CatLocationCard sighting={sighting} />
+            </div>
           ))}
 
           <IonInfiniteScroll

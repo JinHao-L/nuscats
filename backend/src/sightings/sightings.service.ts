@@ -16,7 +16,7 @@ import {
 import { from, map, mergeMap, Observable } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 
-import { QuerySightingOrderBy } from '@api/sightings';
+import { QuerySightingOrderBy, SightingType } from '@api/sightings';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
 import { CatSighting } from './sighting.entity';
 import { createGeoJsonPoint } from '../shared/utils/location';
@@ -105,11 +105,10 @@ export class SightingsService {
     return from(paginate(queryBuilder, pagingOptions));
   }
 
-  listLatest(catIds?: number[]): Observable<CatSighting[]> {
+  listLatest(): Observable<CatSighting[]> {
     /**
      * select distinct on ("cat_id") *
      * from "cat_sighting"
-     * where "cat_id" is not null
      * order by "cat_id", created_at
      */
 
@@ -118,8 +117,22 @@ export class SightingsService {
         .createQueryBuilder('sighting')
         .leftJoinAndSelect('sighting.cat', 'cat')
         .distinctOn(['sighting.cat_id'])
+        .where('sighting.cat_id IS NOT NULL')
         .orderBy('sighting.cat_id')
         .addOrderBy('sighting.created_at');
+
+    return from(queryBuilder.getMany());
+  }
+
+  listAlerts(): Observable<CatSighting[]> {
+    const queryBuilder: SelectQueryBuilder<CatSighting> =
+      this.sightingsRepository
+        .createQueryBuilder('sighting')
+        .leftJoinAndSelect('sighting.cat', 'cat')
+        .where('sighting.cat_id IS NULL')
+        .orWhere('sighting.type = :type', { type: SightingType.Emergency })
+        .orderBy('sighting.created_at', 'DESC');
+
     return from(queryBuilder.getMany());
   }
 
@@ -157,6 +170,8 @@ export class SightingsService {
     updateSightingDto: UpdateSightingDto,
     requester: User,
   ): Observable<CatSighting> {
+    const { catId } = updateSightingDto;
+
     return from(this.sightingsRepository.findOne(id)).pipe(
       mergeMap((sighting) => {
         if (!sighting) {
@@ -170,7 +185,9 @@ export class SightingsService {
         }
         return this.sightingsRepository.update(
           { id: sighting.id },
-          updateSightingDto,
+          {
+            cat_id: catId,
+          },
         );
       }),
       mergeMap(() => this.findOne(id)),

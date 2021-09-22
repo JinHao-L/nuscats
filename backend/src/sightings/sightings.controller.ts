@@ -70,10 +70,19 @@ export class SightingsController {
   })
   @ApiQuery({ name: 'catIds', required: false, explode: false })
   @Get('/latest')
-  getLatest(
-    @Query() sightingQuery: LatestSightingQuery,
-  ): Observable<CatSighting[]> {
-    return this.sightingsService.listLatest(sightingQuery.catIds);
+  getLatest(): Observable<CatSighting[]> {
+    return this.sightingsService.listLatest();
+  }
+
+  /**
+   * Obtains the list of cat sightings that require admins to be alerted about.
+   * This includes new cat sightings for neutering as well as emergency reports.
+   *
+   * @returns list of cat sightings that require admins to be alerted about
+   */
+  @Get('/alert')
+  getAlerts(): Observable<CatSighting[]> {
+    return this.sightingsService.listAlerts();
   }
 
   /**

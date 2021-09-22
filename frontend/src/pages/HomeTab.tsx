@@ -42,9 +42,11 @@ const HomeTab: React.FC<HomePageProps> = () => {
   const refreshSightings = useCallback(() => {
     mutate();
     toggleFeedback(true);
-    setTimeout(() => {
+    const id = setTimeout(() => {
       toggleFeedback(false);
     }, 1000);
+
+    return () => clearTimeout(id)
   }, [mutate, toggleFeedback])
 
   // change pin location if nagivated to via query string
@@ -78,8 +80,8 @@ const HomeTab: React.FC<HomePageProps> = () => {
             onClick={refreshSightings}
             disabled={isLoading || feedShown}
           >
-            {showFeedback && !isLoading ? (
-              <IonSpinner name="circular" color="secondary" />
+            {showFeedback || isLoading ? (
+              <IonSpinner name="circular" color="secondary" className="w-5 h-5 " />
             ) : (
               <IonIcon slot="start" icon={refresh} />
             )}

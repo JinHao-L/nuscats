@@ -4,13 +4,13 @@ import { Cat } from '@api/cats';
 
 interface BaseCatCardProps {
   cat: Cat;
-  onClick?: (id: number) => void;
+  onClick?: (cat: Cat) => void;
 }
 
 const BaseCatCard: React.FC<BaseCatCardProps> = ({ cat, onClick }) => {
   return (
     <div
-      onClick={() => onClick && onClick(cat.id)}
+      onClick={() => onClick && onClick(cat)}
       className="flex justify-between px-3 mb-1 shadow-xl bg-secondary-100 rounded-2xl bg-opacity-90"
     >
       <div className="flex-shrink-0 mt-5 mb-4">
