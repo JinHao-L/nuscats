@@ -1,11 +1,15 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateProfileDto } from './dto/create-profile.dto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from './profile.entity';
 import { from, map, mergeMap, Observable } from 'rxjs';
-import { User } from '@api/users';
+import { RoleType, User } from '@api/users';
 
 @Injectable()
 export class ProfilesService {
@@ -14,15 +18,18 @@ export class ProfilesService {
     private profileRepository: Repository<Profile>,
   ) {}
 
-  create(createProfileDto: CreateProfileDto, user: User): Observable<Profile> {
+  create(user: User): Observable<Profile> {
+    const dicebearType = 'gridy';
+
     return from(this.profileRepository.findOne({ user: user })).pipe(
       map((existingProfile) => {
         if (existingProfile) {
           throw new ConflictException('Profile already exists');
         } else {
           return this.profileRepository.create({
-            ...createProfileDto,
+            profile_pic: `https://avatars.dicebear.com/${dicebearType}/${user.uuid}.svg`,
             user: user,
+            is_profile_setup: false,
           });
         }
       }),
@@ -46,13 +53,26 @@ export class ProfilesService {
   update(
     uuid: string,
     updateProfileDto: UpdateProfileDto,
+    requester: User,
   ): Observable<Profile> {
+    if (requester.uuid !== uuid && !requester.roles.includes(RoleType.Admin)) {
+      throw new UnauthorizedException('Cannot modify user');
+    }
+    console.log(uuid, updateProfileDto, requester);
     return from(
-      this.profileRepository.update(
-        { user: { uuid } },
-        { ...updateProfileDto },
-      ),
-    ).pipe(mergeMap(() => this.findOne(uuid)));
+      this.profileRepository.findOne({ uuid }, { relations: ['user'] }),
+    ).pipe(
+      mergeMap((profile) => {
+        if (!profile) {
+          throw new NotFoundException('User does not exist');
+        }
+        return this.profileRepository.update(profile, {
+          ...updateProfileDto,
+          is_profile_setup: true,
+        });
+      }),
+      mergeMap(() => this.findOne(uuid)),
+    );
   }
 
   remove(uuid: string) {

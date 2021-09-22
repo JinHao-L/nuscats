@@ -1,9 +1,7 @@
-import { CatSighting, SightingType } from '@api/sightings';
 import {
   IonAvatar,
   IonCard,
   IonCardContent,
-  IonCardSubtitle,
   IonCardTitle,
   IonChip,
   IonIcon,
@@ -11,47 +9,74 @@ import {
   IonItem,
   IonItemGroup,
   IonLabel,
+  IonRouterLink,
   IonRow,
   IonText,
 } from '@ionic/react';
 import { locationOutline, logoOctocat, timeOutline } from 'ionicons/icons';
-import { ConvenientDateTimeFormatOptions } from 'lib/datetime';
+import TimeAgo from 'timeago-react';
 import React, { useMemo } from 'react';
+import { Profile, Cat, CatSighting, SightingType } from '@api';
+import defaultAvatar from 'assets/default_avatar.png';
+import { CAT_ROUTE } from 'app/routes';
+import usePinLocation from 'hooks/usePinLocation';
 
 interface FeedCardProps {
   sighting: CatSighting;
-  className?: string;
+  owner: Profile | undefined;
+  cat: Cat | undefined;
 }
 
-const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
-  const baseColor = useMemo(
-    () => (sighting.type === SightingType.Emergency ? undefined : undefined),
-    [sighting?.type],
+const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
+  const [lat, lng] = sighting.location.coordinates;
+  const { ionRouterLinkProps: locationRouterProps } = usePinLocation(
+    lat,
+    lng,
+    cat?.name,
   );
+
+  const catRouterProps: {
+    routerLink?: string;
+    routerDirection?: 'none' | 'forward' | 'back' | 'root';
+  } = useMemo(() => {
+    if (!cat) return {};
+
+    return {
+      routerLink: `${CAT_ROUTE}/${cat.id}`,
+      routerDirection: 'root',
+    };
+  }, [cat?.id]);
+
   return (
-    <IonCard color={baseColor} className={className}>
-      <IonItem className="pt-1 overflow-visible" color={baseColor} lines="none">
+    <IonCard className="mb-5 bg-secondary-50 bg-opacity-90">
+      <IonItem
+        className="pt-1 overflow-visible bg-secondary-50 bg-opacity-90"
+        color={'gray'}
+        lines="none"
+      >
         <IonAvatar slot="start">
           <IonImg
-            src="https://i.pravatar.cc/300"
+            src={owner?.profile_pic || defaultAvatar}
             className="inline-block align-middle w-11 h-11 rounded-xl"
           />
         </IonAvatar>
         <IonLabel className="inline-block align-middle ">
           <IonCardTitle className="text-base font-bold">
-            Robert Phan
+            {owner?.username || 'Anonymous'}
           </IonCardTitle>
-          <IonCardSubtitle className="mb-0 text-sm font-medium text-gray-500 normal-case">
+          {/* <IonCardSubtitle className="mb-0 text-sm font-medium text-gray-500 normal-case">
             Optional Title
-          </IonCardSubtitle>
+          </IonCardSubtitle> */}
         </IonLabel>
         <IonItemGroup className="relative top-3">
-          <div className="flex flex-row items-center justify-center space-x-2">
-            <IonIcon color="secondary" icon={logoOctocat} />
-            <IonText className="text-sm font-medium text-gray-800">
-              {sighting.cat?.name || sighting.cat_id}
-            </IonText>
-          </div>
+          <IonRouterLink {...catRouterProps}>
+            <div className="flex flex-row items-center justify-center space-x-2">
+              <IonIcon color="secondary" icon={logoOctocat} />
+              <IonText className="text-sm font-medium text-gray-800">
+                {cat?.name || 'Unknown'}
+              </IonText>
+            </div>
+          </IonRouterLink>
           {sighting.type !== SightingType.Emergency ? (
             <IonChip className="text-xs font-medium " color="secondary">
               <IonLabel>Spotted</IonLabel>
@@ -64,25 +89,26 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, className }) => {
         </IonItemGroup>
       </IonItem>
       <IonCardContent>
-        <IonText className="ion-text-wrap">{sighting.description}</IonText>
+        <IonText className="text-gray-900 ion-text-wrap">
+          {sighting.description}
+        </IonText>
         <IonImg
           src={sighting.image}
           className="object-cover w-full h-full mt-2"
         />
         <IonRow className="flex justify-between mx-2 my-2">
+          <IonRouterLink {...locationRouterProps}>
+            <div className="flex items-center space-x-2">
+              <IonIcon color="secondary" icon={locationOutline} />
+              <IonLabel className="text-sm text-gray-800">
+                {sighting.location_name}
+              </IonLabel>
+            </div>
+          </IonRouterLink>
           <div className="flex items-center space-x-2">
-            <IonIcon color="secondary" icon={locationOutline} />
+            <IonIcon color="secondary" icon={timeOutline} />
             <IonLabel className="text-sm text-gray-800">
-              {sighting.location.coordinates}
-            </IonLabel>
-          </div>
-          <div className="flex items-center space-x-2">
-            <IonIcon color="primary" icon={timeOutline} />
-            <IonLabel className="text-sm text-gray-800">
-              {new Intl.DateTimeFormat(
-                'en-GB',
-                ConvenientDateTimeFormatOptions,
-              ).format(sighting.created_at)}
+              <TimeAgo datetime={sighting.created_at} />
             </IonLabel>
           </div>
         </IonRow>

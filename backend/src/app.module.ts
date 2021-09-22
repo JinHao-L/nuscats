@@ -16,9 +16,15 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { SeederModule } from './seeders/seeder.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'build'),
+    }),
     AppConfigModule,
     CatsModule,
     AuthModule,
@@ -42,6 +48,7 @@ import { SeederModule } from './seeders/seeder.module';
       services: [S3],
     }),
     SeederModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,6 +5,7 @@ import {
   Generated,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
@@ -14,22 +15,29 @@ import { ApiHideProperty } from '@nestjs/swagger';
 import { User as IUser, RoleType } from '@api/users';
 import { Profile } from 'src/profiles/profile.entity';
 
-@Entity()
+@Entity({ name: 'users' })
+@Unique('unique_user_uuid_uname', ['username', 'uuid'])
 export class User implements IUser {
   @PrimaryGeneratedColumn()
   @ApiHideProperty()
   @Exclude()
   id: number;
 
-  @Column({ type: 'uuid', unique: true })
+  @Column({ type: 'uuid' })
+  @Unique('unique_user_uuid', ['uuid'])
   @Generated('uuid')
   uuid: string;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar' })
+  @Unique('unique_user_email', ['email'])
   @IsEmail()
   email: string;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ default: false })
+  is_email_confirmed: boolean;
+
+  @Column({ type: 'varchar' })
+  @Unique('unique_user_username', ['username'])
   username: string;
 
   @Exclude()
@@ -48,7 +56,7 @@ export class User implements IUser {
   })
   roles: RoleType[];
 
-  @OneToOne((type) => Profile, (profile) => profile.user)
+  @OneToOne((type) => Profile, (profile) => profile.user, { nullable: true })
   profile?: Profile;
 
   @Exclude()

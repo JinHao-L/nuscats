@@ -1,6 +1,11 @@
+import { RoleType, User } from '@api/users';
 import { UpdateSightingDto } from './dtos/update-sighting.dto';
 import { Point } from 'geojson';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository, SelectQueryBuilder } from 'typeorm';
 import {
@@ -8,30 +13,51 @@ import {
   IPaginationOptions,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { from, mergeMap, Observable } from 'rxjs';
+import { from, map, mergeMap, Observable } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 import { QuerySightingOrderBy } from '@api/sightings';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
-import { CatSighting } from './catSighting.entity';
+import { CatSighting } from './sighting.entity';
 import { createGeoJsonPoint } from '../shared/utils/location';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
+import { ReverseGeocodeConfigService } from 'src/config/reverse-geocode.config';
+import { ReverseGeocodingResponse } from '../shared/inteface/geocoding.interface';
 
 @Injectable()
 export class SightingsService {
   constructor(
     @InjectRepository(CatSighting)
     private sightingsRepository: Repository<CatSighting>,
+    private configService: ReverseGeocodeConfigService,
+    private httpService: HttpService,
   ) {}
 
   listBy(
     queryOptions: Omit<MultipleSightingQuery, 'page' | 'limit'>,
     pagingOptions: IPaginationOptions,
   ): Observable<Pagination<CatSighting>> {
-    const { catIds, includeUnknownCats, type, ownerIds, orderBy, location } =
-      queryOptions;
+    const {
+      catIds,
+      includeUnknownCats,
+      type,
+      ownerIds,
+      orderBy,
+      location,
+      includeCatsData,
+      includeOwnerData,
+    } = queryOptions;
 
     let queryBuilder: SelectQueryBuilder<CatSighting> =
       this.sightingsRepository.createQueryBuilder('sighting');
+
+    queryBuilder = includeCatsData
+      ? queryBuilder.leftJoinAndSelect('sighting.cat', 'cat')
+      : queryBuilder;
+
+    queryBuilder = includeOwnerData
+      ? queryBuilder.leftJoinAndSelect('sighting.owner', 'owner')
+      : queryBuilder;
 
     queryBuilder = type
       ? queryBuilder.andWhere('sighting.type = :type', { type })
@@ -113,26 +139,60 @@ export class SightingsService {
     const [lat, lng] = latlng.split(',');
     const location: Point = createGeoJsonPoint(lat, lng);
 
-    const sighting = this.sightingsRepository.create({
-      ...sightings,
-      cat_id: catId,
-      location,
-    });
-    return from(this.sightingsRepository.save(sighting));
+    return this.httpService
+      .get<ReverseGeocodingResponse>(
+        this.configService.getReverseGeocodeUrl({ lat, lng }),
+      )
+      .pipe(
+        map((res) => res.data.data[0].name),
+        map((locName) =>
+          this.sightingsRepository.create({
+            ...sightings,
+            cat_id: catId,
+            location,
+            location_name: locName,
+          }),
+        ),
+        mergeMap((sighting) => this.sightingsRepository.save(sighting)),
+      );
   }
 
   update(
     id: number,
     updateSightingDto: UpdateSightingDto,
+    requester: User,
   ): Observable<CatSighting> {
-    return from(
-      this.sightingsRepository.update({ id }, { ...updateSightingDto }),
-    ).pipe(mergeMap(() => this.findOne(id)));
+    return from(this.sightingsRepository.findOne(id)).pipe(
+      mergeMap((sighting) => {
+        if (!sighting) {
+          throw new NotFoundException('Sighting does not exist');
+        }
+        if (
+          requester.uuid !== sighting.owner_id &&
+          !requester.roles.includes(RoleType.Admin)
+        ) {
+          throw new UnauthorizedException('Cannot modify sighting');
+        }
+        return this.sightingsRepository.update(sighting, updateSightingDto);
+      }),
+      mergeMap(() => this.findOne(id)),
+    );
   }
 
-  remove(id: number): Observable<CatSighting> {
+  remove(id: number, requester: User): Observable<CatSighting> {
     return this.findOne(id).pipe(
-      mergeMap((post) => this.sightingsRepository.remove(post)),
+      mergeMap((sighting) => {
+        if (!sighting) {
+          throw new NotFoundException('Sighting does not exist');
+        }
+        if (
+          requester.uuid !== sighting.owner_id &&
+          !requester.roles.includes(RoleType.Admin)
+        ) {
+          throw new UnauthorizedException('Cannot delete sighting');
+        }
+        return this.sightingsRepository.remove(sighting);
+      }),
     );
   }
 }

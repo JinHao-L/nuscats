@@ -22,16 +22,13 @@ export function useSightings(useSightingsOptions?: UseSightingsOptions) {
     _pageIndex: number,
     previousPageData: Result<CatSightingsResponse> | null,
   ) => {
-    console.log('1', previousPageData?.value.links);
     if (!previousPageData) {
       return sightingsKey + '?' + query;
     }
-    console.log('2', previousPageData?.value.links);
     if (previousPageData && previousPageData.value?.links?.next === '') {
       // reached the end
       return null;
     }
-    console.log('3', previousPageData?.value.links);
     return previousPageData?.value.links.next;
   };
 
@@ -67,7 +64,7 @@ export function useLatestSightings() {
     swrFetcher<CatSighting[]>(),
     { dedupingInterval: 10000 },
   );
-
+  console.log(data);
   const isLoading = !data && !error;
   const err =
     data && !data.success ? new Error(`status code: ${data?.status}`) : error;

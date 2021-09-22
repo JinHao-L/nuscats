@@ -1,20 +1,16 @@
 import { catchError, EMPTY, map, mergeMap, Observable } from 'rxjs';
 import {
   Controller,
-  Post,
   Body,
   Get,
   Param,
   Delete,
   ParseUUIDPipe,
   UseGuards,
-  UnauthorizedException,
   NotFoundException,
   Put,
 } from '@nestjs/common';
 import {
-  ApiConflictResponse,
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
@@ -22,7 +18,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { RoleType } from '@api/users';
-import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
@@ -38,22 +33,6 @@ import { User } from '../users/user.entity';
 @Controller('users')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
-
-  /**
-   * Create a new user profile
-   */
-  @ApiCreatedResponse({
-    description: 'Profile successfully created',
-    type: Profile,
-  })
-  @ApiConflictResponse({ description: 'Profile already exists' })
-  @Post()
-  create(
-    @Usr() user: User,
-    @Body() createProfileDto: CreateProfileDto,
-  ): Observable<Profile> {
-    return this.profilesService.create(createProfileDto, user);
-  }
 
   /**
    * Gets a list of profile
@@ -97,16 +76,14 @@ export class ProfilesController {
     type: Profile,
   })
   @ApiParam({ name: 'uuid', description: 'The id of the profile to update' })
+  @UseGuards(JwtAuthGuard)
   @Put(':uuid')
   update(
-    @Usr() user: User,
+    @Usr() requester: User,
     @Param('uuid', ParseUUIDPipe) uuid: string,
     @Body() updateProfileDto: UpdateProfileDto,
   ): Observable<Profile> {
-    if (user.uuid !== uuid && !user.roles.includes(RoleType.Admin)) {
-      throw new UnauthorizedException('Cannot modify user');
-    }
-    return this.profilesService.update(uuid, updateProfileDto);
+    return this.profilesService.update(uuid, updateProfileDto, requester);
   }
 
   /**

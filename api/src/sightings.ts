@@ -1,4 +1,5 @@
 import { Point } from "geojson";
+import { Profile } from "./profiles";
 import { Cat } from "./cats";
 
 export enum SightingType {
@@ -12,9 +13,11 @@ export interface CatSighting {
   cat_id?: number; // id reference to cat
   cat?: Cat; // when viewing a particular sighting information
   location: Point;
+  location_name: string;
   type: SightingType;
   description: string;
   owner_id?: string;
+  owner?: Profile;
   created_at: Date;
   updated_at: Date;
 }
@@ -25,6 +28,7 @@ export function makeSighting({
   cat_id = 0,
   cat = undefined,
   location,
+  location_name,
   type,
   description = "",
 }: {
@@ -33,6 +37,7 @@ export function makeSighting({
   cat_id?: number;
   cat?: Cat | undefined;
   location: Point;
+  location_name: string;
   type: SightingType;
   description?: string;
 }): CatSighting {
@@ -42,6 +47,7 @@ export function makeSighting({
     cat_id: cat_id,
     cat: cat,
     location: location,
+    location_name: location_name,
     type: type,
     description: description,
     created_at: new Date(),
@@ -55,6 +61,10 @@ export enum QuerySightingOrderBy {
 }
 
 export interface CatSightingQuery {
+  //================ DATA TYPE ===================
+  includeCatsData?: boolean;
+  includeOwnerData?: boolean;
+
   //================ FILTERS ===================
   catIds?: number[];
   includeUnknownCats?: boolean;
@@ -89,4 +99,32 @@ export interface PaginationMetadata {
   itemsPerPage: number;
   totalPages: number;
   currentPage: number;
+}
+
+export interface CreateSightingRequest {
+  /**
+   * The image of the sighting
+   */
+  image: string;
+
+  /**
+   * The cat id
+   */
+  catId?: number;
+
+  /**
+   * The (lat, lng) location of the sighting
+   * @example '85.3446311,85.2100893'
+   */
+  latlng: string;
+
+  /**
+   * The type of sighting
+   */
+  type: SightingType;
+
+  /**
+   * The description of the sighting
+   */
+  description: string;
 }

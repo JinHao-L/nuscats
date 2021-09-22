@@ -50,6 +50,8 @@ services:
       - 3000:3000
     env_file:
       - frontend/.env
+    environment:
+      - REACT_APP_BASE_URL=http://localhost:3001
   backend:
     build:
       context: .
@@ -60,13 +62,13 @@ services:
       - setup-s3
     environment: 
       # Database Configuration
-      - DB_HOST=postgres
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - DB_SYNCHRONIZE=true
       # JWT Configuration
       - JWT_ACCESS_TOKEN_SECRET=accSecret
       - JWT_REFRESH_TOKEN_SECRET=refSecret
+      - JWT_MAIL_VERIFY_SECRET=mailSecret
+      - JWT_PASSWORD_RESET_SECRET=pwSecret
       # Object Storage Configuration
       - AWS_REGION=ap-southeast-1
       - AWS_S3_ENDPOINT=http://localhost:9000
@@ -75,8 +77,10 @@ services:
       - AWS_S3_SIGNATURE_VERSION=v4
       - AWS_S3_BUCKET_NAME=nuscats
       # Should seed
-      - SEEDER_SHOULD_SEED=true
+      - SEEDER_SHOULD_SEED=false
       - SEEDER_SHOULD_REFRESH=false
+      # App variables
+      - CLIENT_URL=http://localhost:3000
     ports: 
       - 3001:3001
     volumes: 

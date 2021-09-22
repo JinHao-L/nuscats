@@ -27,6 +27,7 @@ export class UsersSeeder implements ISeeder {
         username: subject,
         password_hash,
         email: `${subject}@gmail.com`,
+        is_email_confirmed: true,
         roles,
       });
     });
@@ -57,6 +58,9 @@ export class UsersSeeder implements ISeeder {
             user: user,
             first_name: user.username,
             last_name: user.username,
+            is_profile_setup: true,
+            profile_pic:
+              Math.random() < 0.5 ? 'https://i.pravatar.cc/300' : null,
           }),
         );
 

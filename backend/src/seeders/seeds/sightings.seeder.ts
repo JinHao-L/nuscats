@@ -3,12 +3,23 @@ import { createGeoJsonPoint } from 'src/shared/utils/location';
 import { SightingType } from '@api/sightings';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { range, toArray, mergeMap, firstValueFrom } from 'rxjs';
+import {
+  range,
+  toArray,
+  mergeMap,
+  firstValueFrom,
+  map,
+  catchError,
+  EMPTY,
+} from 'rxjs';
 import { ILike, Repository } from 'typeorm';
 
-import { CatSighting } from '../../sightings/catSighting.entity';
+import { CatSighting } from '../../sightings/sighting.entity';
 import { ISeeder } from '../seeder.interface';
 import { Cat } from '../../cats/cats.entity';
+import { ReverseGeocodeConfigService } from 'src/config/reverse-geocode.config';
+import { ReverseGeocodingResponse } from 'src/shared/inteface/geocoding.interface';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class SightingsSeeder implements ISeeder {
@@ -19,6 +30,8 @@ export class SightingsSeeder implements ISeeder {
     private readonly catsRepostiory: Repository<Cat>,
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
+    private configService: ReverseGeocodeConfigService,
+    private httpService: HttpService,
   ) {}
 
   /**
@@ -39,36 +52,51 @@ export class SightingsSeeder implements ISeeder {
         const randIdx = Math.floor(Math.random() * cats.length);
         const randUser = Math.floor(Math.random() * users.length);
 
-        return this.sightingsRepository.save({
-          id: i,
-          // randomise cat
-          image: cats[randIdx].image,
-          cat: cats[randIdx],
-          // randomise location around NUS
-          location: createGeoJsonPoint(
-            (
-              1.2966 +
-              ((Math.random() > 0.5 ? 0.001 : -0.009) + Math.random() * 0.008)
-            ).toString(),
-            (
-              103.7764 +
-              (Math.random() > 0.5 ? 0.001 : -0.009) +
-              Math.random() * 0.008
-            ).toString(),
-          ),
-          owner_id: users[randUser].uuid,
-          is_seed: true,
-          // randomise the sighting type
-          ...(Math.random() < 0.7
-            ? {
-                type: SightingType.CatSighted,
-                description: 'Saw this cat today',
-              }
-            : {
-                type: SightingType.Emergency,
-                description: 'This cat looks sick',
-              }),
-        });
+        const lat = (
+          1.2966 +
+          ((Math.random() > 0.5 ? 0.001 : -0.009) + Math.random() * 0.008)
+        ).toString();
+        const lng = (
+          103.7764 +
+          (Math.random() > 0.5 ? 0.001 : -0.009) +
+          Math.random() * 0.008
+        ).toString();
+
+        return this.httpService
+          .get<ReverseGeocodingResponse>(
+            this.configService.getReverseGeocodeUrl({ lat, lng }),
+          )
+          .pipe(
+            map((res) => {
+              return res.data.data[0].name;
+            }),
+            catchError((_err) => {
+              return EMPTY;
+            }),
+            mergeMap((locName) => {
+              return this.sightingsRepository.save({
+                id: i,
+                // randomise cat
+                image: cats[randIdx].image,
+                cat: cats[randIdx],
+                // randomise location around NUS
+                location: createGeoJsonPoint(lat, lng),
+                location_name: locName || null,
+                owner_id: users[randUser].uuid,
+                is_seed: true,
+                // randomise the sighting type
+                ...(Math.random() < 0.7
+                  ? {
+                      type: SightingType.CatSighted,
+                      description: 'Saw this cat today',
+                    }
+                  : {
+                      type: SightingType.Emergency,
+                      description: 'This cat looks sick',
+                    }),
+              });
+            }),
+          );
       }),
       toArray(),
     );

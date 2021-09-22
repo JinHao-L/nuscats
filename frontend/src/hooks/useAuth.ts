@@ -30,13 +30,15 @@ export default function useAuth() {
     // Refresh token for persisting session
     const { data: refreshData, error: refreshError } = useSWR(
         isLoggedIn ? refreshLoginKey : null,
-        swrFetcher<User>(),
+        swrFetcher<User>(null, { method: "POST" }),
         {
             // Silently refresh token every 15 minutes
             refreshInterval: 1000 * 60 * 15,
             revalidateOnFocus: false
         }
     );
+
+    const shouldCreateProfile = refreshData ? refreshData.value?.profile?.is_profile_setup : false
 
     useEffect(() => {
         if (refreshData) {
@@ -70,18 +72,22 @@ export default function useAuth() {
         }
     }, []);
 
-    const { data: profileData, error: profileError, isValidating } = useSWR(
-        [userId, isLoggedIn],
-        (id, loggedIn) => {
-            return loggedIn && id !== null
+    const { data: profileData, error: profileError, isValidating, mutate } = useSWR(
+        [userId, isLoggedIn, !shouldCreateProfile],
+        (id, loggedIn, profileExists) => {
+            return loggedIn && profileExists && id !== null
                 ? apiFetch(`/users/${id}`).then(async res => {
-                    return { status: res.status, profile: (await res.json()) as Profile }
+                    return { success: res.ok, status: res.status, profile: (await res.json()) as Profile }
                 })
                 : undefined
         },
     )
 
     useEffect(() => {
+        if (profileData && !profileData.success) {
+            console.log({ profileError, profileData })
+        }
+
         if (profileData && profileData.status === 403) {
             console.log('forbidden, logging out')
             console.log({ data: profileData, err: profileError })
@@ -95,8 +101,12 @@ export default function useAuth() {
         setLogout,
         isLoggedIn,
         userId,
+        shouldCreateProfile,
         userProfile: profileData?.profile,
         profileError,
-        profileLoading: isValidating
+        profileLoading: isValidating,
+        profileUpdated(profile: Profile) {
+            mutate({ success: true, status: 200, profile })
+        }
     };
 }

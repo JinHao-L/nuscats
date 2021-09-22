@@ -35,7 +35,7 @@ const CatsTab: React.FC = () => {
                     <IonRefresherContent ></IonRefresherContent>
                 </IonRefresher>
 
-                <div className="flex flex-col justify-start w-full h-full px-3 mt-4 space-y-5">
+                <div className="grid w-full h-full grid-flow-row grid-cols-1 gap-4 px-3 mt-4 sm:grid-cols-2 lg:grid-cols-3">
                     {cats?.map(cat =>
                         <div className="w-full" key={cat.id}>
                             <CatCard cat={cat} ></CatCard>

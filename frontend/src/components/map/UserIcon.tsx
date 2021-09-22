@@ -7,8 +7,6 @@ type UserIconProps = {
   coords: Coords | undefined;
 };
 
-// todo: cat icon
-
 const UserIcon: React.FC<UserIconProps> = ({ coords }) => {
   if (!coords) return null;
   console.log(getCenter(coords))

@@ -22,7 +22,7 @@ export class CreateCatDto {
    */
   @IsOptional()
   @IsBoolean()
-  neutered?: boolean = false;
+  neutered?: boolean;
 
   /**
    * The one-liner description of the cat

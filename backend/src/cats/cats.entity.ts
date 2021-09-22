@@ -7,8 +7,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UniversityZone, Cat as ICat } from '@api/cats';
-import { CatSighting } from 'src/sightings/catSighting.entity';
+import { CatSighting } from '../sightings/sighting.entity';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Cat implements ICat {
@@ -21,7 +22,7 @@ export class Cat implements ICat {
   @Column('varchar')
   image: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', nullable: true })
   neutered: boolean;
 
   @Column('text')
@@ -32,6 +33,14 @@ export class Cat implements ICat {
 
   @Column({ type: 'enum', enum: UniversityZone })
   zone: UniversityZone;
+
+  /**
+   * Used to identify seeded cats
+   */
+  @Exclude()
+  @ApiHideProperty()
+  @Column({ type: 'boolean', default: false })
+  is_seed?: boolean;
 
   /**
    * Referential mapping of cats -> sightings
