@@ -1,4 +1,4 @@
-import { Cat, CatSighting, CatSightingsResponse, Profile } from '@api';
+import { Cat, Profile } from '@api';
 import { RefresherEventDetail } from '@ionic/core';
 import {
   IonInfiniteScroll,
@@ -10,8 +10,6 @@ import {
 } from '@ionic/react';
 import FeedCard from 'components/FeedCard';
 import { useSightings, UseSightingsOptions } from 'hooks/useSightings';
-import { Result } from 'lib/api';
-import { deleteSighting } from 'lib/sightings';
 import { useEffect, useCallback } from 'react';
 
 interface FeedListProps {
@@ -53,11 +51,6 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
     }, 1000);
   };
 
-  const onDeleteSighting = async (sighting: CatSighting) => {
-    await deleteSighting(sighting.id);
-    mutate();
-  };
-
   return (
     <div className="h-full">
       <IonRefresher slot="fixed" onIonRefresh={doRefreshSightings}>
@@ -79,7 +72,7 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
                 sighting={sighting}
                 cat={cat || sighting.cat}
                 owner={user || sighting.owner}
-                onDelete={() => onDeleteSighting(sighting)}
+                onDelete={mutate}
               />
             ))}
           </IonList>

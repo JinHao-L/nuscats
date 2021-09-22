@@ -10,7 +10,7 @@ import {
   resendConfirmKey,
   changeUsernameKey,
 } from './api';
-import { User } from '@api/users';
+import { RoleType, User } from '@api/users';
 
 class LoginResponse {
   user?: User;
@@ -143,7 +143,7 @@ export async function changeUsername(username: string): Promise<ApiResponse> {
     { username },
     { method: 'POST' },
   );
-    console.log(res);
+  console.log(res);
   if (!res.ok) {
     let msg = ((await res.json()) as any).message;
     return {
@@ -190,4 +190,8 @@ export async function forgetPassword(email: string): Promise<ApiResponse> {
     message: await res.text(),
     statusCode: res.status,
   };
+}
+
+export function isAdmin(user?: User): boolean {
+  return Boolean(user?.roles.includes(RoleType.Admin));
 }

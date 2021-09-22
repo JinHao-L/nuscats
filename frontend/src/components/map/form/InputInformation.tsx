@@ -17,7 +17,6 @@ import SelectCatModal from './SelectCatModal';
 import useAuth from 'hooks/useAuth';
 
 type InputInformationProps = {
-  cats: Cat[];
   photo: UserPhoto;
   sightingType: SightingType;
   dismiss: () => void;
@@ -27,20 +26,19 @@ type InputInformationProps = {
 
 const InputInformation = ({
   photo,
-  cats,
   sightingType,
   coords,
   dismiss,
   onSightingCreate,
 }: InputInformationProps) => {
-  const [catId, setCatId] = useState<number | undefined>(undefined);
+  const [cat, setCat] = useState<Cat | undefined>(undefined);
   const [showSelectCat, setShowSelectCat] = useState(false);
   const [description, setDescription] = useState('');
 
   const [error, setError] = useState('');
 
   const [uploading, setUploading] = useState(false);
-  
+
   const { userId } = useAuth();
 
   const onSubmit = async () => {
@@ -50,13 +48,14 @@ const InputInformation = ({
       await uploadImage(uploadResponse.signedUrl, photo);
       const request: CreateSightingRequest = {
         image: uploadResponse.imageUrl,
-        catId,
+        catId: cat?.id,
         latlng: `${coords.latitude},${coords.longitude}`,
         type: sightingType,
         description,
         ownerId: userId as string,
       };
       if (!request.catId) delete request.catId;
+      if (!request.ownerId) delete request.ownerId;
       await uploadSighting(request);
       onSightingCreate();
       setUploading(false);
@@ -81,11 +80,11 @@ const InputInformation = ({
         <label className="block my-5 text-lg">
           Cat:
           <CatDisplay
-            cat={cats.find((cat) => cat.id === catId)}
+            cat={cat}
             onClick={() => {
               setShowSelectCat(true);
             }}
-            resetCat={() => setCatId(undefined)}
+            resetCat={() => setCat(undefined)}
           />
         </label>
 
@@ -105,11 +104,10 @@ const InputInformation = ({
       </div>
       <IonModal isOpen={showSelectCat}>
         <SelectCatModal
-          cats={cats}
           onDismiss={() => setShowSelectCat(false)}
-          onSelect={(id: number) => {
+          onSelect={(c) => {
             setShowSelectCat(false);
-            setCatId(id);
+            setCat(c);
           }}
         />
       </IonModal>

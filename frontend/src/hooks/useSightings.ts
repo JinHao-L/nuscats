@@ -1,4 +1,4 @@
-import { sightingsKey } from './../lib/api';
+import { alertSightingsKey, sightingsKey } from './../lib/api';
 import {
   CatSightingQuery,
   CatSightingsResponse,
@@ -61,6 +61,28 @@ export function useSightings(useSightingsOptions?: UseSightingsOptions) {
 export function useLatestSightings() {
   const { data, error, mutate } = useSWR(
     latestKey,
+    swrFetcher<CatSighting[]>(),
+    { dedupingInterval: 10000 },
+  );
+
+  const isLoading = !data && !error;
+  const err =
+    data && !data.success ? new Error(`status code: ${data?.status}`) : error;
+
+  const sightings = err
+    ? undefined
+    : data?.value.map((item) => {
+        item.created_at = parseDate(item.created_at);
+        item.updated_at = parseDate(item.updated_at);
+        return item;
+      });
+
+  return { sightings, error: err, isLoading, mutate };
+}
+
+export function useAlertSightings() {
+  const { data, error, mutate } = useSWR(
+    alertSightingsKey,
     swrFetcher<CatSighting[]>(),
     { dedupingInterval: 10000 },
   );
