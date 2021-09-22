@@ -25,6 +25,7 @@ import {
   PROFILE_ROUTE,
   PROFILE_SETTINGS_ROUTE,
   CHANGE_NAME_DP_ROUTE,
+  ROOT_ROUTE,
 } from 'app/routes';
 import Tab3 from './Tab3';
 import CatDetailPage from './CatDetailPage';
@@ -106,7 +107,7 @@ const Tabs: React.FC = () => {
   return (
     <IonPage>
       <IonTabs>
-        <IonRouterOutlet ref={routerRef}>
+        <IonRouterOutlet ref={routerRef} basePath={ROOT_ROUTE}>
           <Route
             exact
             path={MAP_ROUTE}
