@@ -167,7 +167,6 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
             <IonSpinner />
           </div>
         )}
-        <div className="h-screen bg-red-500"></div>
       </IonContent>
     </IonPage>
   );
