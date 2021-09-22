@@ -16,7 +16,6 @@ export const ROOT_ROUTE = '/app';
 export const MAP_ROUTE = `${ROOT_ROUTE}/home`;
 export const FEED_ROUTE = `${ROOT_ROUTE}/home/feeds`;
 export const CAT_ROUTE = `${ROOT_ROUTE}/cats`;
-export const TAB3_ROUTE = `${ROOT_ROUTE}/tab3`;
 
 export const PROFILE_ROUTE = `${ROOT_ROUTE}/profile`;
 export const PROFILE_SETTINGS_ROUTE = `${PROFILE_ROUTE}/settings`;
