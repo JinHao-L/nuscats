@@ -1,63 +1,126 @@
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  useIonAlert,
+  IonLoading,
+} from '@ionic/react';
+import TextInput from 'components/map/form/TextInput';
+import { changePassword } from 'lib/auth';
+import { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from "@ionic/react";
-
+type ChangePasswordInputs = {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 
 const ChangePassword: React.FC = () => {
-	return (
-		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonButtons slot="start">
-						<IonBackButton />
-					</IonButtons>
-					<IonTitle>
-						Change password 
-					</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent>
-				<div className="h-full mt-10">
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="current">
-							Current password	
-						</label>
-						<input 
-							id="current" 
-							type="password" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
-						/>
-					</div>
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="newPw">
-							New password	
-						</label>
-						<input 
-							id="newPw" 
-							type="password" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
-						/>
-					</div>
-					<div className="block mx-5 mb-6 h-14 bg-gray-200 rounded-xl">
-						<label className="block text-gray-700 pl-3 pt-1 text-xs" htmlFor="confirm">
-							Confirm password	
-						</label>
-						<input 
-							id="confirm" 
-							type="password" 
-							className="block w-full border rounded-xl py-1 px-3 bg-gray-200 focus:outline-none" 
-						/>
-					</div>
-					<IonButton 
-						className="mx-5 h-14 cursor-pointer text-lg text-white"
-						color="primary"
-						expand="block"
-					>
-						Update password 
-					</IonButton>
-				</div>
-			</IonContent>
-		</IonPage>
-	);
+  const [showAlert] = useIonAlert();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ChangePasswordInputs>();
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<Boolean>();
+
+  const onSubmit: SubmitHandler<ChangePasswordInputs> = async (data) => {
+    setLoading(true);
+    const response = await changePassword(data.oldPassword, data.newPassword);
+    setLoading(false);
+
+    if (response.err) {
+      showAlert(response.err, [{ text: 'Ok' }]);
+      setSuccess(false);
+    } else if (response.message) {
+      showAlert(response.message, [{ text: 'Ok' }]);
+      setSuccess(true);
+    }
+  };
+
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton />
+          </IonButtons>
+          <IonTitle>Change password</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <form className="h-full mt-10" onSubmit={handleSubmit(onSubmit)}>
+          <TextInput
+            id="oldPassword"
+            type="password"
+            label="Current password"
+            register={register('oldPassword', { required: true })}
+            errors={[
+              {
+                isError: errors.oldPassword?.type === 'required',
+                msg: 'Password is required',
+              },
+            ]}
+          />
+          <TextInput
+            id="password"
+            type="password"
+            label="New password"
+            register={register('newPassword', { required: true, minLength: 8 })}
+            errors={[
+              {
+                isError: errors.newPassword?.type === 'required',
+                msg: 'Password is required',
+              },
+              {
+                isError: errors.newPassword?.type === 'minLength',
+                msg: 'Password must be at least 8 characters long',
+              },
+            ]}
+          />
+          <TextInput
+            id="cfmPassword"
+            type="password"
+            label="Confirm password"
+            register={register('confirmPassword', {
+              required: true,
+              minLength: 8,
+              validate: (val: string) => val === watch('newPassword'),
+            })}
+            errors={[
+              {
+                isError: errors.confirmPassword?.type === 'required',
+                msg: 'Please confirm your password',
+              },
+              {
+                isError: errors.confirmPassword?.type === 'validate',
+                msg: 'Passwords do not match',
+              },
+            ]}
+          />
+          <IonButton
+            className="mx-5 text-lg text-white cursor-pointer h-14"
+            color="primary"
+            expand="block"
+            type={'submit'}
+            disabled={loading || success === true}
+          >
+            Update password
+          </IonButton>
+        </form>
+        <IonLoading isOpen={loading} message={'Please wait...'} />
+      </IonContent>
+    </IonPage>
+  );
 };
 
 export default ChangePassword;

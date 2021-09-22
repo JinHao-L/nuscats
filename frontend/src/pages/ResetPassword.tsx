@@ -6,7 +6,6 @@ import {
   IonButton,
   IonTitle,
   IonLoading,
-  IonText,
   useIonAlert,
 } from '@ionic/react';
 import { FORGET_PASSWORD_ROUTE, LANDING_ROUTE, SIGNIN_ROUTE } from 'app/routes';

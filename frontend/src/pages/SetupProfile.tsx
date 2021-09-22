@@ -1,4 +1,4 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
 import { MAP_ROUTE } from "app/routes"
 import TextInput from "components/map/form/TextInput"
 import useAuth from "hooks/useAuth"
@@ -47,6 +47,7 @@ const uploadProfilePic = async (userId: string, photo: UserPhoto): Promise<{ pro
 
 const SetupProfile: React.FC = () => {
     const [showErrorAlert] = useIonAlert()
+    const [loading, setLoading] = useState(false)
     const { userId, profileUpdated } = useAuth()
     const [profilePicState, setProfilePicState] = useState<ProfilePicState>(
         { url: GetRandomAvatarUrl(userId || "1"), uploaded: true }
@@ -63,11 +64,12 @@ const SetupProfile: React.FC = () => {
             })
             return
         }
-
+        setLoading(true)
         let url: string
         if (!profilePicState.uploaded) {
             const { profileUrl, err } = await uploadProfilePic(userId, { dataUrl: profilePicState.url })
             if (err) {
+                setLoading(false)
                 showErrorAlert("Error uploading profile pic. Please try again!")
                 return
             }
@@ -81,11 +83,13 @@ const SetupProfile: React.FC = () => {
         const { err, profile } = await createProfile(userId, data.firstName, data.lastName, url)
         if (err) {
             console.log(`Errored creating profile: ${err}`)
+            setLoading(false)
             showErrorAlert(`${err}. Please try again`)
             return
         }
 
         if (profile) {
+            setLoading(false)
             profileUpdated(profile)
             history.push(MAP_ROUTE)
         }
@@ -158,6 +162,7 @@ const SetupProfile: React.FC = () => {
                                 value="Create profile"
                             />
                         </form>
+                        <IonLoading isOpen={loading} message={'Please wait...'} />
                         <Link className="mt-4 text-sm font-medium text-primary-500" to={MAP_ROUTE}> Maybe another time!</Link>
                     </div>
                 </div>
