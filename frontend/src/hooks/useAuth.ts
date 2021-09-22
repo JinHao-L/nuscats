@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { apiFetch, refreshLoginKey, swrFetcher } from 'lib/api';
 import { User } from '@api/users';
@@ -8,28 +8,37 @@ const loggedInKey = 'isLoggedIn';
 const userIdKey = 'userId';
 
 export default function useAuth() {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-        !!JSON.parse(localStorage.getItem(loggedInKey) || 'false'),
-    );
-    const [userId, setUserId] = useState<string | null>(
-        localStorage.getItem(userIdKey),
-    );
+    const { data: isLoggedIn, mutate: setIsLoggedIn } = useSWR(
+        "get-is-logged-in",
+        () => !!JSON.parse(localStorage.getItem(loggedInKey) || 'false'),
+        { refreshInterval: 30000 }
+    )
 
-    const setLogin = (userId: string) => {
+    const { data: userId, mutate: setUserId } = useSWR(
+        "get-user-id",
+        () => localStorage.getItem(userIdKey),
+        { refreshInterval: 30000 }
+    )
+
+    // const [userId, setUserId] = useState<string | null>(
+    //     localStorage.getItem(userIdKey),
+    // );
+
+    const setLogin = useCallback((userId: string) => {
         localStorage.setItem(loggedInKey, 'true');
         setIsLoggedIn(true);
 
         localStorage.setItem(userIdKey, userId);
         setUserId(userId);
-    };
+    }, [setIsLoggedIn, setUserId]);
 
-    const setLogout = () => {
+    const setLogout = useCallback(() => {
         localStorage.removeItem(loggedInKey);
         setIsLoggedIn(false);
 
         localStorage.removeItem(userIdKey);
         setUserId(null);
-    };
+    }, [setIsLoggedIn, setUserId]);
 
     // Refresh token for persisting session
     const { data: refreshData, error: refreshError } = useSWR(
@@ -63,7 +72,7 @@ export default function useAuth() {
                 setLogout();
             }
         }
-    }, [refreshData, refreshError]);
+    }, [refreshData, refreshError, setLogin, setLogout]);
 
     useEffect(() => {
         function toggleLoggedIn(e: StorageEvent) {
@@ -113,12 +122,12 @@ export default function useAuth() {
             console.log({ data: profileData, err: profileError });
             setLogout();
         }
-    }, [profileData, profileError]);
+    }, [profileData, profileError, setLogout]);
 
     return {
         setLogin,
         setLogout,
-        isLoggedIn,
+        isLoggedIn: isLoggedIn ?? false,
         userId,
         user,
         shouldCreateProfile,
@@ -126,7 +135,7 @@ export default function useAuth() {
         profileError,
         profileLoading: isValidating,
         profileUpdated(profile: Profile) {
-            mutate({ success: true, status: 200, profile });
+            mutate({ success: true, status: 200, profile }, true);
         },
     };
 }

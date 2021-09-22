@@ -1,4 +1,5 @@
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -10,7 +11,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { settingsOutline } from 'ionicons/icons';
-import { LANDING_ROUTE, PROFILE_SETTINGS_ROUTE } from 'app/routes';
+import { LANDING_ROUTE, MAP_ROUTE, PROFILE_SETTINGS_ROUTE, SIGNIN_ROUTE } from 'app/routes';
 import useAuth from 'hooks/useAuth';
 import { useMemo } from 'react';
 import { useSightings, UseSightingsOptions } from 'hooks/useSightings';
@@ -18,13 +19,13 @@ import { InfiniteImageGallery } from 'components/InfiniteImageGallery';
 
 const ProfileTab: React.FC = () => {
   // Fetch profile data
-  const { isLoggedIn, userId, userProfile, setLogin, setLogout } = useAuth();
+  const { isLoggedIn, userProfile } = useAuth();
   // Fetch sightings data
   var queryOptions: UseSightingsOptions = { limit: 18, page: 1 };
   if (userProfile) {
     queryOptions.ownerIds = [userProfile.uuid];
   }
-  const { sightings, error, mutate, isLoading, pageSize, setPageSize } =
+  const { sightings, isLoading, pageSize, setPageSize } =
     useSightings(queryOptions);
 
   const username = useMemo(() => userProfile?.username, [userProfile]);
@@ -82,6 +83,9 @@ const ProfileTab: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref={MAP_ROUTE} />
+          </IonButtons>
           <IonButtons slot="end">
             <IonButton
               fill="clear"
@@ -94,13 +98,13 @@ const ProfileTab: React.FC = () => {
               <IonIcon icon={settingsOutline} />
             </IonButton>
           </IonButtons>
-          <IonTitle slot="start" size="large" className="leading-snug">
+          <IonTitle slot="start" className="leading-snug">
             Profile
           </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="flex flex-col h-full mx-5 my-5">
+        <div className="flex flex-col h-full max-w-lg mx-5 my-5 sm:mx-auto">
           <div className="p-5 mt-2 border shadow-xl bg-secondary-200 rounded-3xl">
             <div className="flex">
               <img
@@ -127,16 +131,16 @@ const ProfileTab: React.FC = () => {
                 <p className="font-semibold text-primary-400">
                   No cat sightings yet
                 </p>
-              </div>
+              </div >
             )}
             galleryClassName="mt-5"
             infiniteScrollThreshold="100px"
             pageSize={pageSize}
             setPageSize={setPageSize}
           />
-        </div>
-      </IonContent>
-    </IonPage>
+        </div >
+      </IonContent >
+    </IonPage >
   );
 };
 

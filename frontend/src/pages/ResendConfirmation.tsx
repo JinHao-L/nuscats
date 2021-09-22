@@ -9,7 +9,7 @@ import {
   IonLoading,
   useIonAlert,
 } from '@ionic/react';
-import TextInput from 'components/map/form/TextInput';
+import TextInput from 'components/form/TextInput';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { resendConfirmation } from 'lib/auth';
 import React, { useState } from 'react';

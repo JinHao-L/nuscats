@@ -10,7 +10,7 @@ import useSWRInfinite from 'swr/infinite';
 import * as queryString from 'query-string';
 import { parseDate } from 'lib/utils';
 
-export interface UseSightingsOptions extends CatSightingQuery {}
+export interface UseSightingsOptions extends CatSightingQuery { }
 
 export function useSightings(useSightingsOptions?: UseSightingsOptions) {
   // build sightings key
@@ -29,7 +29,7 @@ export function useSightings(useSightingsOptions?: UseSightingsOptions) {
       // reached the end
       return null;
     }
-    return previousPageData?.value.links.next;
+    return previousPageData?.value.links?.next;
   };
 
   const { data, error, isValidating, mutate, size, setSize } = useSWRInfinite(
@@ -72,10 +72,10 @@ export function useLatestSightings() {
   const sightings = err
     ? undefined
     : data?.value.map((item) => {
-        item.created_at = parseDate(item.created_at);
-        item.updated_at = parseDate(item.updated_at);
-        return item;
-      });
+      item.created_at = parseDate(item.created_at);
+      item.updated_at = parseDate(item.updated_at);
+      return item;
+    });
 
   return { sightings, error: err, isLoading, mutate };
 }
@@ -94,10 +94,10 @@ export function useAlertSightings() {
   const sightings = err
     ? undefined
     : data?.value.map((item) => {
-        item.created_at = parseDate(item.created_at);
-        item.updated_at = parseDate(item.updated_at);
-        return item;
-      });
+      item.created_at = parseDate(item.created_at);
+      item.updated_at = parseDate(item.updated_at);
+      return item;
+    });
 
   return { sightings, error: err, isLoading, mutate };
 }

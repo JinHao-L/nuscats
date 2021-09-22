@@ -13,7 +13,7 @@ const PinIcon: React.FC<PinIconProps> = ({ coords, text, onClick }) => {
   if (!coords) return null;
 
   return (
-    <Marker coordinates={coords} onClick={onClick} anchor={'bottom'}>
+    <Marker coordinates={coords} onClick={onClick} anchor="bottom">
       <div className="flex flex-col items-center gap-1">
         {text && (
           <IonLabel className="px-2 py-1 text-base font-bold text-center bg-white bg-opacity-75 border rounded-lg shadow border-primary-200">

@@ -15,7 +15,7 @@ import {
   RESEND_EMAIL_ROUTE,
   SETUP_PROFILE_ROUTE,
 } from 'app/routes';
-import TextInput from 'components/map/form/TextInput';
+import TextInput from 'components/form/TextInput';
 import useAuth from 'hooks/useAuth';
 import { login } from 'lib/auth';
 import { useState } from 'react';
@@ -38,12 +38,8 @@ const Signin: React.FC = () => {
   } = useForm<SigninInputs>();
 
   const history = useHistory();
-  console.log({ history })
-
-  console.log("signin page!")
 
   const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
-    console.log("help")
     setLoading(true);
     const { user, err, unauthorized } = await login(data.email, data.password);
     setLoading(false);

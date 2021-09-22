@@ -14,7 +14,6 @@ import CatsTab from './CatsTab';
 import {
   CAT_ROUTE,
   MAP_ROUTE,
-  FEED_ROUTE,
   ADMIN_ROUTE,
   BROADCAST_ANNOUNCEMENT_ROUTE,
   REQUEST_LOCATION_ROUTE,
@@ -29,7 +28,6 @@ import {
 } from 'app/routes';
 import CatDetailPage from './CatDetailPage';
 import { useEffect, useMemo, useState } from 'react';
-import FeedTab from './FeedTab';
 import Admin from './Admin';
 import EditCatsList from './EditCatsList';
 import RequestLocation from './RequestLocation';
@@ -102,16 +100,11 @@ const Tabs: React.FC = () => {
       label: 'Cats',
       icon: logoOctocat,
     };
-    const profileTab = {
-      href: PROFILE_ROUTE,
-      label: 'Profile',
-      icon: personCircle,
-    };
 
     if (isAdmin) {
-      return [mapTab, catsTab, adminTab, profileTab];
+      return [mapTab, catsTab, adminTab];
     } else {
-      return [mapTab, catsTab, profileTab];
+      return [mapTab, catsTab];
     }
   }, [isAdmin]);
 
@@ -123,7 +116,6 @@ const Tabs: React.FC = () => {
         <IonRouterOutlet basePath={ROOT_ROUTE}>
           <Route exact path={MAP_ROUTE} component={HomeTab} />
           <Route exact path={CAT_ROUTE} component={CatsTab} />
-          <Route exact path={FEED_ROUTE} component={FeedTab} />
           <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
           <PrivateRoute
             exact
@@ -191,7 +183,7 @@ const Tabs: React.FC = () => {
             elseRedirectTo={MAP_ROUTE}
           />
           <Route render={() => <Redirect to={MAP_ROUTE} />} />
-        </IonRouterOutlet>
+        </IonRouterOutlet >
 
         <IonTabBar slot="bottom" className="py-2" style={tabStyle}>
           {tabs.map((tab, idx) => (
@@ -203,8 +195,8 @@ const Tabs: React.FC = () => {
             </IonTabButton>
           ))}
         </IonTabBar>
-      </IonTabs>
-    </IonPage>
+      </IonTabs >
+    </IonPage >
   );
 };
 
