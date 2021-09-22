@@ -1,5 +1,5 @@
 import { RefresherEventDetail } from '@ionic/core';
-import { IonContent, IonHeader, IonPage, IonRefresher, IonRefresherContent, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonPage, IonRefresher, IonRefresherContent, IonSpinner } from '@ionic/react';
 import CatCard from 'components/CatCard';
 import NavBar from 'components/NavBar';
 import { useCats } from 'hooks/useCats';

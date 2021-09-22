@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext, useRef, useState } from 'react';
+import { useContext } from 'react';
 import {
   IonContent,
   IonFab,

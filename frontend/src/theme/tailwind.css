@@ -6,4 +6,8 @@
     .h-cat-profile-content {
         height: calc(100vh - (theme('spacing.20') + theme('spacing.20') + theme('spacing.5') + 36px));
     }
+
+    .h-map-content {
+        height: calc(100% - theme('spacing.11'))
+    }
 }

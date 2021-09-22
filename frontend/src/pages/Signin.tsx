@@ -38,6 +38,9 @@ const Signin: React.FC = () => {
   } = useForm<SigninInputs>();
 
   const history = useHistory();
+  console.log({ history })
+
+  console.log("signin page!")
 
   const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
     console.log("help")

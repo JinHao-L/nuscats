@@ -7,12 +7,10 @@ import {
   IonLabel,
   IonModal,
   IonPage,
-  IonRouterOutlet,
+  IonSegment,
+  IonSegmentButton,
   IonSpinner,
-  IonTab,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
+  IonToolbar,
   useIonAlert,
 } from '@ionic/react';
 import CameraFab from 'components/map/CameraFab';
@@ -23,7 +21,7 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { list, refresh } from 'ionicons/icons';
+import { bookmark, camera, list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
@@ -173,12 +171,23 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
             <IonIcon slot="end" icon={list} />
           </IonButton>
         </IonButtons>
+
       </NavBar>
-      <IonContent>
+      <IonContent scrollY={false} className="relative">
+        <IonToolbar color="light" className="absolute">
+          <IonSegment color="dark" value="map">
+            <IonSegmentButton value="map">
+              <IonLabel>Map</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="feed">
+              <IonLabel>Feed</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
+        </IonToolbar>
         <Map
           onDragStart={() => setIsCentered(false)}
           getRef={(s) => (mapRef.current = s)}
-          className="h-full v-full"
+          className="absolute w-full top-11 h-map-content"
           style="mapbox://styles/mapbox/streets-v10"
         >
           <>
