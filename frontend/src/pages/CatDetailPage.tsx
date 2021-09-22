@@ -1,4 +1,4 @@
-import { MouseEventHandler, useContext, useRef, useState } from 'react';
+import { useContext } from 'react';
 import {
   IonContent,
   IonFab,
@@ -21,7 +21,6 @@ import {
   CatSightingsResponse,
   SightingType,
 } from '@api/sightings';
-import { ImageGallery } from 'components/ImageGallery';
 import type { ImageDetail } from 'components/ImageGallery';
 import TimeAgo from 'timeago-react';
 
@@ -36,8 +35,9 @@ import { CAT_ROUTE } from 'app/routes';
 import { Result } from 'lib/api';
 import { Position } from 'geojson';
 import usePinLocation from 'hooks/usePinLocation';
+import { InfiniteImageGallery } from 'components/InfiniteImageGallery';
 
-interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> { }
+interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> {}
 
 const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
   SwiperCore.use([IonicSwiper, Navigation, Pagination]);
@@ -63,6 +63,8 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
     altText: `cat pic ${idx}`,
     src: PlaceholderCatUrl(400 + idx, 300 + idx),
   }));
+
+  // const placeholderCatImgGallery: ImageDetail[] = useMemo(() => , [catSightings])
 
   return (
     <IonPage>
@@ -105,6 +107,7 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
                       return `<div class="w-20 h-auto py-2 bg-gray-700 rounded-lg ${className}">${subPages[index]}</div>`;
                     },
                   }}
+                  zoom
                 >
                   <div
                     slot="container-start"
@@ -127,9 +130,24 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
                     />
                   </SwiperSlide>
                   <SwiperSlide>
-                    <div className="h-cat-profile-content">
-                      <ImageGallery details={placeholderCatImgGalleryDetails} />
-                    </div>
+                    <InfiniteImageGallery
+                      details={catSightings?.map((sighting, idx) => ({
+                        altText: `cat pic ${idx}`,
+                        src: sighting.image,
+                      }))}
+                      isLoading={sightingsLoading}
+                      loadingText="Loading more kitty sightings"
+                      renderEmpty={() => (
+                        <div className="flex justify-center">
+                          <p className="mt-16 text-xl font-semibold text-gray-700">
+                            No cat images 😿
+                          </p>
+                        </div>
+                      )}
+                      infiniteScrollThreshold="100px"
+                      pageSize={sightingsPageSize}
+                      setPageSize={setSightingsPageSize}
+                    />
                   </SwiperSlide>
                 </Swiper>
               </div>
@@ -148,9 +166,7 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
             <IonSpinner />
           </div>
         )}
-        <div className="h-screen bg-red-500">
-
-        </div>
+        <div className="h-screen bg-red-500"></div>
       </IonContent>
     </IonPage>
   );
@@ -233,7 +249,6 @@ const CatLocation: React.FC<CatLocationProps> = ({
   pageSize,
   setPageSize,
 }) => {
-
   const doLoadMoreSightings = async (event: CustomEvent<void>) => {
     const originalPage = pageSize;
     const data = await setPageSize(originalPage + 1);
@@ -249,10 +264,7 @@ const CatLocation: React.FC<CatLocationProps> = ({
   return (
     <div className="w-full h-full">
       {sightings && sightings.length !== 0 ? (
-        <div
-          className="flex flex-col items-center justify-start w-full px-4 pb-4 space-y-3 overflow-auto h-cat-profile-content"
-
-        >
+        <div className="flex flex-col items-center justify-start w-full px-4 pb-4 space-y-3 overflow-auto h-cat-profile-content">
           {sightings.map((sighting, idx) => (
             <CatLocationCard sighting={sighting} key={idx} />
           ))}

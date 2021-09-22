@@ -118,7 +118,6 @@ export class SightingsService {
         .createQueryBuilder('sighting')
         .leftJoinAndSelect('sighting.cat', 'cat')
         .distinctOn(['sighting.cat_id'])
-
         .orderBy('sighting.cat_id')
         .addOrderBy('sighting.created_at');
     return from(queryBuilder.getMany());

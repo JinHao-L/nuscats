@@ -36,6 +36,7 @@ const CatIcon: React.FC<CatIconProps> = ({
 
   return (
     <Marker
+      anchor="bottom"
       onClick={onClick}
       coordinates={[point.coordinates[1], point.coordinates[0]]}
     >

@@ -1,6 +1,5 @@
 import {
 	IonBackButton,
-	IonButton,
 	IonButtons,
 	IonContent,
 	IonHeader,
@@ -13,6 +12,8 @@ import { signup } from "lib/auth";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextInput from "components/map/form/TextInput";
 import { useState } from "react";
+import { useHistory } from "react-router";
+import { MAP_ROUTE } from "app/routes";
 
 type SignupInputs = {
 	email: string
@@ -25,7 +26,8 @@ const Signup: React.FC = () => {
 
 	const [showAlert] = useIonAlert()
 	const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupInputs>()
-  const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false)
+	const history = useHistory()
 
 	const onSubmit: SubmitHandler<SignupInputs> = async data => {
 		setLoading(true);
@@ -38,7 +40,12 @@ const Signup: React.FC = () => {
 			return
 		}
 
-		showAlert('Sign up successful! Please check your email to verify your account')
+		showAlert({
+			message: 'Sign up successful! Please check your email to verify your account',
+			onDidDismiss: () => history.push(MAP_ROUTE),
+			buttons: [{ text: 'Ok' }]
+		})
+
 		// const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
 		// if (loginErr || unauthorized) {
 		// 	console.log({ loginErr, unauthorized })
@@ -69,7 +76,7 @@ const Signup: React.FC = () => {
 						<p className="my-2 text-lg font-bold tracking-wide text-gray-800 sm:text-xl md:text-2xl">Fill in your details to begin</p>
 					</div>
 					<div className="w-full max-w-md mt-2">
-        		<IonLoading isOpen={loading} message={'Please wait...'} />
+						<IonLoading isOpen={loading} message={'Please wait...'} />
 						<form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
 							<TextInput
 								id="email"

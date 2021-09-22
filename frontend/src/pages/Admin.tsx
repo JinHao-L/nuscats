@@ -1,17 +1,12 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonRouterLink, IonTitle, IonToolbar } from "@ionic/react";
+import { IonContent, IonIcon, IonPage, IonRouterLink } from "@ionic/react";
 import { BROADCAST_ANNOUNCEMENT_ROUTE, EDIT_CATS_ROUTE, REQUEST_LOCATION_ROUTE } from "app/routes";
+import NavBar from "components/NavBar";
 import { compass, create, megaphone } from "ionicons/icons";
 
 const Admin: React.FC = () => {
 	return (
 		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonTitle>
-						Admin actions
-					</IonTitle>
-				</IonToolbar>
-			</IonHeader>
+			<NavBar title="Admin Actions" />
 			<IonContent>
 				<div className="flex flex-col mx-5 mt-5">
 					<IonRouterLink routerLink={BROADCAST_ANNOUNCEMENT_ROUTE} routerDirection={'forward'}>

@@ -5,10 +5,12 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonLabel,
   IonModal,
   IonPage,
+  IonSegment,
+  IonSegmentButton,
   IonSpinner,
-  IonTitle,
   IonToolbar,
   useIonAlert,
 } from '@ionic/react';
@@ -20,22 +22,22 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { list, refresh } from 'ionicons/icons';
+import { close, list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
 import FeedCard from 'components/FeedCard';
+import NavBar from 'components/NavBar';
 
-interface HomePageProps {
-  router: HTMLIonRouterOutletElement | null;
-}
+type HomePageProps = RouteComponentProps & {};
 
-const HomeTab: React.FC<HomePageProps> = ({ router }) => {
+const HomeTab: React.FC<HomePageProps> = ({ match }) => {
   /**
    * Map locationing
    */
@@ -56,7 +58,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   const { sightings, isLoading, mutate } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  console.log(sightings);
+  console.log({ sightings });
   /**
    * Creating a new sighting
    */
@@ -142,44 +144,51 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
 
   return (
     <IonPage ref={routerRef}>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="end">
-            <IonButton
-              fill="clear"
-              color="secondary"
-              slot="start"
-              routerLink={FEED_ROUTE}
-              routerDirection="forward"
-              size={'small'}
-            >
-              <IonIcon slot="end" icon={list} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>Map</IonTitle>
-          <IonButtons slot="start">
-            <IonButton
-              fill="clear"
-              color="secondary"
-              slot="start"
-              size={'small'}
-              onClick={refreshSightings}
-              disabled={isLoading}
-            >
-              {showFeedback && !isLoading ? (
-                <IonSpinner name="circular" color="secondary" />
-              ) : (
-                <IonIcon slot="start" icon={refresh} />
-              )}
-            </IonButton>
-          </IonButtons>
+      <NavBar title="Map">
+        <IonButtons slot="start">
+          <IonButton
+            fill="clear"
+            color="secondary"
+            slot="start"
+            size={'small'}
+            onClick={refreshSightings}
+            disabled={isLoading}
+          >
+            {showFeedback && !isLoading ? (
+              <IonSpinner name="circular" color="secondary" />
+            ) : (
+              <IonIcon slot="start" icon={refresh} />
+            )}
+          </IonButton>
+        </IonButtons>
+        <IonButtons slot="end">
+          <IonButton
+            fill="clear"
+            color="secondary"
+            slot="start"
+            routerLink={FEED_ROUTE}
+            routerDirection="forward"
+            size={'small'}
+          >
+            <IonIcon slot="end" icon={list} />
+          </IonButton>
+        </IonButtons>
+      </NavBar>
+      <IonContent scrollY={false} className="relative">
+        <IonToolbar color="light" className="absolute">
+          <IonSegment color="dark" value="map">
+            <IonSegmentButton value="map">
+              <IonLabel>Map</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="feed">
+              <IonLabel>Feed</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
         </IonToolbar>
-      </IonHeader>
-      <IonContent>
         <Map
           onDragStart={() => setIsCentered(false)}
           getRef={(s) => (mapRef.current = s)}
-          className="h-full v-full"
+          className="absolute w-full top-11 h-map-content"
           style="mapbox://styles/mapbox/streets-v10"
         >
           <>
@@ -240,11 +249,26 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
             swipeToClose={true}
             onDidDismiss={() => setShowModal(false)}
           >
-            <FeedCard
-              cat={catDetails.cat}
-              sighting={catDetails}
-              owner={catDetails.owner}
-            />
+            <div>
+              <IonHeader>
+                <IonToolbar>
+                  <IonButton
+                    fill="clear"
+                    slot="end"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <IonIcon icon={close} />
+                  </IonButton>
+                </IonToolbar>
+              </IonHeader>
+              <IonContent fullscreen>
+                <FeedCard
+                  cat={catDetails.cat}
+                  sighting={catDetails}
+                  owner={catDetails.owner}
+                />
+              </IonContent>
+            </div>
           </IonModal>
         )}
       </IonContent>

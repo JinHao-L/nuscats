@@ -15,10 +15,14 @@ import FeedList from './FeedList';
 
 interface FeedModalProps {
   dismiss: () => void;
-  cat: Cat;
+  cat: Cat | undefined;
 }
 
 const FeedModal: React.FC<FeedModalProps> = ({ dismiss, cat }) => {
+  if (cat === undefined) {
+    return null;
+  }
+
   return (
     <IonPage>
       <IonHeader>

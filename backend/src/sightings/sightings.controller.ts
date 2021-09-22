@@ -141,7 +141,7 @@ export class SightingsController {
     type: CatSighting,
   })
   @ApiParam({ name: 'id', description: 'The id of the sighting to remove' })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   removeSighting(
     @Usr() requester: User,
