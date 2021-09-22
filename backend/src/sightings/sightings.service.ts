@@ -118,12 +118,7 @@ export class SightingsService {
         .createQueryBuilder('sighting')
         .leftJoinAndSelect('sighting.cat', 'cat')
         .distinctOn(['sighting.cat_id'])
-        .where(
-          catIds
-            ? 'sighting.cat_id = ANY(:catIds)'
-            : 'sighting.cat_id is not null',
-          { catIds },
-        )
+
         .orderBy('sighting.cat_id')
         .addOrderBy('sighting.created_at');
     return from(queryBuilder.getMany());

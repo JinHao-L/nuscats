@@ -24,13 +24,12 @@ import { list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
-import { CatSighting, makeSighting, SightingType } from '@api/sightings';
+import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
 import { useHistory, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
-import { Cat } from '@api/cats';
-import useAuth from 'hooks/useAuth';
+import FeedCard from 'components/FeedCard';
 
 interface HomePageProps {
   router: HTMLIonRouterOutletElement | null;
@@ -54,7 +53,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
   /**
    * Getting latest sightings
    */
-  const { sightings, error, isLoading, mutate } = useLatestSightings();
+  const { sightings, isLoading, mutate } = useLatestSightings();
   const [showFeedback, toggleFeedback] = useState(false);
   const [showModal, setShowModal] = useState(false);
   console.log(sightings);
@@ -191,6 +190,7 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
                 point={sighting.location}
                 catName={sighting.cat?.name}
                 time={sighting.created_at}
+                type={sighting.type}
                 onClick={() => {
                   setCatDetails(sighting);
                   setShowModal(true);
@@ -231,6 +231,19 @@ const HomeTab: React.FC<HomePageProps> = ({ router }) => {
             <FeedModal
               cat={catDetails.cat}
               dismiss={() => setShowModal(false)}
+            />
+          </IonModal>
+        )}
+        {catDetails && !catDetails.cat && (
+          <IonModal
+            isOpen={showModal}
+            swipeToClose={true}
+            onDidDismiss={() => setShowModal(false)}
+          >
+            <FeedCard
+              cat={catDetails.cat}
+              sighting={catDetails}
+              owner={catDetails.owner}
             />
           </IonModal>
         )}

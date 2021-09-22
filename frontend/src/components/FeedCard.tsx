@@ -1,9 +1,11 @@
 import {
   IonAvatar,
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardTitle,
   IonChip,
+  IonCol,
   IonIcon,
   IonImg,
   IonItem,
@@ -13,13 +15,20 @@ import {
   IonRow,
   IonText,
 } from '@ionic/react';
-import { locationOutline, logoOctocat, timeOutline } from 'ionicons/icons';
+import {
+  checkmark,
+  locationOutline,
+  logoOctocat,
+  timeOutline,
+  trash,
+} from 'ionicons/icons';
 import TimeAgo from 'timeago-react';
 import React, { useMemo } from 'react';
 import { Profile, Cat, CatSighting, SightingType } from '@api';
 import defaultAvatar from 'assets/default_avatar.png';
 import { CAT_ROUTE } from 'app/routes';
 import usePinLocation from 'hooks/usePinLocation';
+import { deleteSighting, updateSighting } from 'lib/sightings';
 
 interface FeedCardProps {
   sighting: CatSighting;
@@ -45,7 +54,11 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
       routerLink: `${CAT_ROUTE}/${cat.id}`,
       routerDirection: 'root',
     };
-  }, [cat?.id]);
+  }, [cat]);
+
+  const onDelete = async () => {
+    await deleteSighting(sighting.id);
+  };
 
   return (
     <IonCard className="mb-5 bg-secondary-50 bg-opacity-90">
@@ -96,21 +109,30 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
           src={sighting.image}
           className="object-cover w-full h-full mt-2"
         />
-        <IonRow className="flex justify-between mx-2 my-2">
-          <IonRouterLink {...locationRouterProps}>
+        <IonRow className="flex justify-between mt-4 ion-align-items-center">
+          <IonCol>
+            <IonRouterLink {...locationRouterProps}>
+              <div className="flex items-center space-x-2">
+                <IonIcon color="secondary" icon={locationOutline} />
+                <IonLabel className="text-sm text-gray-800">
+                  {sighting.location_name}
+                </IonLabel>
+              </div>
+            </IonRouterLink>
             <div className="flex items-center space-x-2">
-              <IonIcon color="secondary" icon={locationOutline} />
+              <IonIcon color="secondary" icon={timeOutline} />
               <IonLabel className="text-sm text-gray-800">
-                {sighting.location_name}
+                <TimeAgo datetime={sighting.created_at} />
               </IonLabel>
             </div>
-          </IonRouterLink>
-          <div className="flex items-center space-x-2">
-            <IonIcon color="secondary" icon={timeOutline} />
-            <IonLabel className="text-sm text-gray-800">
-              <TimeAgo datetime={sighting.created_at} />
-            </IonLabel>
-          </div>
+          </IonCol>
+          <>
+            {sighting.type === SightingType.CatSighted ? (
+              <DeleteButton onClick={onDelete} />
+            ) : (
+              <ResolveButton onClick={onDelete} />
+            )}
+          </>
         </IonRow>
         <IonText className="flex flex-row-reverse items-center justify-center gap-1"></IonText>
       </IonCardContent>
@@ -119,3 +141,29 @@ const FeedCard: React.FC<FeedCardProps> = ({ sighting, cat, owner }) => {
 };
 
 export default FeedCard;
+
+type DeleteButtonProps = {
+  onClick: () => void;
+};
+
+const DeleteButton = ({ onClick }: DeleteButtonProps) => {
+  return (
+    <IonButton onClick={onClick} color="danger" fill="outline" size="small">
+      <IonIcon slot="end" icon={trash} />
+      Delete
+    </IonButton>
+  );
+};
+
+type ResolveButtonProps = {
+  onClick: () => void;
+};
+
+const ResolveButton = ({ onClick }: ResolveButtonProps) => {
+  return (
+    <IonButton onClick={onClick} color="success" fill="outline" size="small">
+      <IonIcon slot="end" icon={checkmark} />
+      Resolve
+    </IonButton>
+  );
+};
