@@ -59,17 +59,19 @@ export class ProfilesService {
       throw new UnauthorizedException('Cannot modify user');
     }
     console.log(uuid, updateProfileDto, requester);
-    return from(
-      this.profileRepository.findOne({ uuid }, { relations: ['user'] }),
-    ).pipe(
+    return from(this.profileRepository.findOne({ uuid })).pipe(
       mergeMap((profile) => {
         if (!profile) {
           throw new NotFoundException('User does not exist');
         }
-        return this.profileRepository.update(profile, {
-          ...updateProfileDto,
-          is_profile_setup: true,
-        });
+        console.log(profile);
+        return this.profileRepository.update(
+          { uuid: profile.uuid },
+          {
+            ...updateProfileDto,
+            is_profile_setup: true,
+          },
+        );
       }),
       mergeMap(() => this.findOne(uuid)),
     );
