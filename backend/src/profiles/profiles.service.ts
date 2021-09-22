@@ -27,7 +27,7 @@ export class ProfilesService {
           throw new ConflictException('Profile already exists');
         } else {
           return this.profileRepository.create({
-            profile_pic: `https://avatars.dicebear.com/${dicebearType}/${user.uuid}.svg`,
+            profile_pic: `https://avatars.dicebear.com/api/${dicebearType}/${user.uuid}.svg`,
             user: user,
             is_profile_setup: false,
           });

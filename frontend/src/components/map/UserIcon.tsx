@@ -9,7 +9,6 @@ type UserIconProps = {
 
 const UserIcon: React.FC<UserIconProps> = ({ coords }) => {
   if (!coords) return null;
-  console.log(getCenter(coords))
   return (
     <Marker
       style={{ transform: `rotate(${coords.heading || 0}deg)` }}
