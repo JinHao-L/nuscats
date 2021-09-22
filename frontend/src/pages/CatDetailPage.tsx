@@ -25,8 +25,7 @@ import type { ImageDetail } from 'components/ImageGallery';
 import TimeAgo from 'timeago-react';
 
 import 'swiper/swiper-bundle.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-import 'swiper/components/pagination/pagination.min.css';
+
 import { PlaceholderCatUrl } from 'lib/utils';
 import { RouteComponentProps } from 'react-router';
 import { useCat } from 'hooks/useCats';
@@ -39,9 +38,9 @@ import { InfiniteImageGallery } from 'components/InfiniteImageGallery';
 
 interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> {}
 
-const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
-  SwiperCore.use([IonicSwiper, Navigation, Pagination]);
+SwiperCore.use([IonicSwiper, Navigation, Pagination]);
 
+const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
   const {
     cat,
     notFound,

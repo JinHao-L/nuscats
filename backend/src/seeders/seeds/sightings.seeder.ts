@@ -7,10 +7,11 @@ import {
   range,
   toArray,
   mergeMap,
-  firstValueFrom,
   map,
   catchError,
   EMPTY,
+  lastValueFrom,
+  take,
 } from 'rxjs';
 import { ILike, Repository } from 'typeorm';
 
@@ -73,8 +74,8 @@ export class SightingsSeeder implements ISeeder {
             catchError((_err) => {
               return EMPTY;
             }),
-            mergeMap((locName) => {
-              return this.sightingsRepository.save({
+            map((locName) => {
+              return this.sightingsRepository.create({
                 id: i,
                 // randomise cat
                 image: cats[randIdx].image,
@@ -98,10 +99,11 @@ export class SightingsSeeder implements ISeeder {
             }),
           );
       }),
+      take(count),
       toArray(),
     );
 
-    return firstValueFrom(observedSightingArray);
+    return lastValueFrom(observedSightingArray);
   }
 
   async seed(): Promise<any> {

@@ -167,8 +167,8 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
             onClick={refreshSightings}
             disabled={isLoading}
           >
-            {showFeedback && !isLoading ? (
-              <IonSpinner name="circular" color="secondary" />
+            {showFeedback || isLoading ? (
+              <IonSpinner name="circular" color="secondary" className="w-5 h-5 "/>
             ) : (
               <IonIcon slot="start" icon={refresh} />
             )}
