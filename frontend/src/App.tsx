@@ -84,9 +84,9 @@ const App: React.FC = () => {
           />
           <Route path={ROOT_ROUTE} render={() => <Tabs />} />
           <Route render={() => <Redirect to={LANDING_ROUTE} />} />
-        </IonRouterOutlet >
-      </IonReactRouter >
-    </IonApp >
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
   );
 };
 

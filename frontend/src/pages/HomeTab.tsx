@@ -13,6 +13,7 @@ import {
   IonSpinner,
   IonToolbar,
   useIonAlert,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import CameraFab from 'components/map/CameraFab';
 import LocationFab from 'components/map/LocationFab';
@@ -24,7 +25,7 @@ import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
 import { close, list, refresh } from 'ionicons/icons';
 import { FEED_ROUTE, MAP_ROUTE } from 'app/routes';
-import { useLatestSightings } from 'hooks/useSightings';
+import { useAlertSightings, useLatestSightings } from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
@@ -34,8 +35,6 @@ import * as QueryString from 'query-string';
 import PinIcon from 'components/map/PinIcon';
 import FeedCard from 'components/FeedCard';
 import NavBar from 'components/NavBar';
-import { deleteSighting } from 'lib/sightings';
-import { Result } from 'lib/api';
 
 type HomePageProps = RouteComponentProps & {};
 
@@ -57,20 +56,21 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
   /**
    * Getting latest sightings
    */
-  const { sightings, isLoading, mutate } = useLatestSightings();
+  const latestSightings = useLatestSightings();
+  const alertSightings = useAlertSightings();
+  const isLoading = latestSightings.isLoading || alertSightings.isLoading;
   const [showFeedback, toggleFeedback] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  console.log({ sightings });
+
   /**
    * Creating a new sighting
    */
   const [showForm, setShowForm] = useState<boolean>(false);
   const [photo, setPhoto] = useState<UserPhoto | null>();
 
-  useEffect(() => {
+  useIonViewWillEnter(() => {
     resizeMap();
-    centerMapToUser();
-  }, [mapRef.current]);
+  });
 
   useEffect(() => {
     const query = QueryString.parse(location.search);
@@ -88,18 +88,24 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
   }, [location?.search]);
 
   useEffect(() => {
-    if (!isLoading && !sightings) {
+    if (latestSightings.error || alertSightings.error) {
       console.log('Error loading sightings, please try again');
     }
-  }, [isLoading, sightings]);
+  }, [latestSightings, alertSightings]);
+
+  const mutate = () => {
+    latestSightings.mutate();
+    alertSightings.mutate();
+  };
 
   const refreshSightings = () => {
     mutate();
     toggleFeedback(true);
     setPinnedLocation(undefined);
-    setTimeout(() => {
+    const id = setTimeout(() => {
       toggleFeedback(false);
     }, 1000);
+    return () => clearTimeout(id);
   };
 
   const resizeMap = (): void => {
@@ -144,18 +150,9 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
     }
   };
 
-  const onDeleteSighting = async () => {
-    if (catDetails) {
-      await deleteSighting(catDetails.id);
-      mutate(
-        (data) => ({
-          ...(data as Result<CatSighting[]>),
-          value: sightings?.filter((s) => s.id !== catDetails.id) || [],
-        }),
-        false,
-      );
-      setShowModal(false);
-    }
+  const onDeleteSighting = () => {
+    mutate();
+    setShowModal(false);
   };
 
   return (
@@ -209,7 +206,20 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
         >
           <>
             <UserIcon coords={coords} />
-            {sightings?.map((sighting) => (
+            {latestSightings.sightings?.map((sighting) => (
+              <CatIcon
+                key={sighting.id}
+                point={sighting.location}
+                catName={sighting.cat?.name}
+                time={sighting.created_at}
+                type={sighting.type}
+                onClick={() => {
+                  setCatDetails(sighting);
+                  setShowModal(true);
+                }}
+              />
+            ))}
+            {alertSightings.sightings?.map((sighting) => (
               <CatIcon
                 key={sighting.id}
                 point={sighting.location}
@@ -283,6 +293,7 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
                   sighting={catDetails}
                   owner={catDetails.owner}
                   onDelete={onDeleteSighting}
+                  onCatUpdate={mutate}
                 />
               </IonContent>
             </div>

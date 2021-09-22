@@ -5,6 +5,7 @@ export const ApiBaseUrl = process.env.REACT_APP_BASE_URL || '';
 export const catsKey = '/cats';
 export const sightingsKey = '/sightings';
 export const latestKey = '/sightings/latest';
+export const alertSightingsKey = '/sightings/alert';
 export const signupKey = '/auth/signup';
 export const loginKey = '/auth/login';
 export const logoutKey = '/auth/logout';

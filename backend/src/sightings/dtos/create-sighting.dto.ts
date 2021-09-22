@@ -48,5 +48,6 @@ export class CreateSightingDto implements CreateSightingRequest {
    * The uuid of the user who is uploading the sighting
    */
   @IsUUID()
+  @IsOptional()
   ownerId: string;
 }

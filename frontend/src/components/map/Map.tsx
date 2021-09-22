@@ -29,7 +29,6 @@ type MapProps = React.ComponentProps<typeof Mapbox> & {
 const Map: React.FC<MapProps> = ({ getRef, ...props }) => {
   return (
     <Mapbox
-      className="map map-container"
       ref={(mapRef) => getRef && getRef(mapRef?.state)}
       {...defaultMapSettings}
       {...props}

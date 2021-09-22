@@ -13,6 +13,7 @@ const UserIcon: React.FC<UserIconProps> = ({ coords }) => {
     <Marker
       style={{ transform: `rotate(${coords.heading || 0}deg)` }}
       coordinates={getCenter(coords)}
+      anchor="bottom"
     >
       <IonIcon
         color="primary"

@@ -26,6 +26,7 @@ import {
   PROFILE_SETTINGS_ROUTE,
   CHANGE_NAME_DP_ROUTE,
   ROOT_ROUTE,
+  ALERT_CATS_ROUTE,
 } from 'app/routes';
 import Tab3 from './Tab3';
 import CatDetailPage from './CatDetailPage';
@@ -40,6 +41,7 @@ import ChangeUsername from './ChangeUsername';
 import Profile from './Profile';
 import Settings from './Settings';
 import ChangeNameAndDp from './ChangeNameAndDp';
+import AdminCatAlert from './AdminCatAlert';
 
 interface TabInfo {
   href: string;
@@ -127,6 +129,7 @@ const Tabs: React.FC = () => {
           <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
           <Route exact path={PROFILE_ROUTE} component={Profile} />
           <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
+          <Route exact path={ALERT_CATS_ROUTE} component={AdminCatAlert} />
           <Route
             exact
             path={CHANGE_USERNAME_ROUTE}
