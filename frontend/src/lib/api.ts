@@ -16,6 +16,7 @@ export const confirmEmailKey = '/auth/confirm';
 export const forgetPasswordKey = '/auth/forget-password';
 export const passwordResetKey = '/auth/password-reset';
 export const changePasswordKey = '/auth/change-password';
+export const changeUsernameKey = '/auth/change-username';
 
 export const apiFetch = async (
     path: string,

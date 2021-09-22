@@ -126,7 +126,7 @@ export class UsersService {
     return from(this.userRepository.update({ uuid }, { username })).pipe(
       map(() => true),
       catchError((err) => {
-        console.log('Error setting usrname', err);
+        console.log('Error setting username', err);
         return of(false);
       }),
     );
