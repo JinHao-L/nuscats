@@ -52,12 +52,17 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
   };
 
   return (
-    <div>
+    <div className="h-full">
       <IonRefresher slot="fixed" onIonRefresh={doRefreshSightings}>
         <IonRefresherContent></IonRefresherContent>
       </IonRefresher>
       {sightings ? (
         <>
+          {sightings.length === 0 &&
+            <div className="flex items-center justify-center h-full">
+              <p className="text-xl font-medium text-gray-800">No sightings 😿</p>
+            </div>
+          }
           <IonList>
             {sightings.map((sighting) => (
               <FeedCard

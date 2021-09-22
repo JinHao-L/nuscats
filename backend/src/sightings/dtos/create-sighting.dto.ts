@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsUrl,
+  IsUUID,
 } from 'class-validator';
 
 import { CreateSightingRequest, SightingType } from '@api/sightings';
@@ -42,4 +43,10 @@ export class CreateSightingDto implements CreateSightingRequest {
    */
   @IsNotEmpty()
   description: string;
+
+  /**
+   * The uuid of the user who is uploading the sighting
+   */
+  @IsUUID()
+  ownerId: string;
 }

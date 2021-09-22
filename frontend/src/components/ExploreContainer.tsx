@@ -8,7 +8,7 @@ interface ContainerProps {
 }
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
-  const { isLoggedIn, userId, userProfile, setLogin, setLogout, shouldCreateProfile } = useAuth();
+  const { isLoggedIn, userId, user, userProfile, setLogin, setLogout, shouldCreateProfile } = useAuth();
   const [err, setError] = useState<Error | undefined>(undefined)
 
   async function logIn() {
@@ -56,6 +56,10 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
         <div className="flex flex-col items-center">
           <p >
             User ID: {userId ?? "none"}
+
+          </p>
+          <p>
+            Username: {user?.username ?? "none"}
           </p>
 
           {userProfile
