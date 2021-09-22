@@ -62,8 +62,6 @@ const App: React.FC = () => {
           <Route exact path={SIGNIN_ROUTE} component={Signin} />
           <Route exact path={LANDING_ROUTE} component={Landing} />
           <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
-          <Route exact path={PROFILE_ROUTE} component={Profile} />
-          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <Route
             exact
             path={RESEND_EMAIL_ROUTE}
