@@ -49,7 +49,6 @@ const AdminCatCard: React.FC<Props> = ({
             header: 'Notification failed',
             message: response.err,
             duration: 3000,
-            translucent: true,
             color: 'danger',
             position: 'top',
           });
