@@ -1,8 +1,6 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, useIonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Signup from './pages/Signup';
-import Signin from './pages/Signin';
 import Landing from './pages/Landing';
 import Tabs from 'pages/Tabs';
 
@@ -40,11 +38,7 @@ import {
   PASSWORD_RESET_ROUTE,
   RESEND_EMAIL_ROUTE,
   ROOT_ROUTE,
-  SETUP_PROFILE_ROUTE,
-  SIGNIN_ROUTE,
-  SIGNUP_ROUTE,
 } from 'app/routes';
-import SetupProfile from 'pages/SetupProfile';
 import ForgetPasswordPage from 'pages/ForgetPassword';
 import EmailConfirmationPage from 'pages/EmailConfirmation';
 import ResetPasswordPage from 'pages/ResetPassword';
@@ -91,9 +85,6 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path={LANDING_ROUTE} component={Landing} />
-          <Route exact path={SIGNUP_ROUTE} component={Signup} />
-          <Route exact path={SIGNIN_ROUTE} component={Signin} />
-          <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
           <Route
             exact
             path={RESEND_EMAIL_ROUTE}

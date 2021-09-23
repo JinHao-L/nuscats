@@ -1,8 +1,6 @@
 // Auth
 export const LANDING_ROUTE = '/';
-export const SIGNUP_ROUTE = '/signup';
-export const SIGNIN_ROUTE = '/signin';
-export const SETUP_PROFILE_ROUTE = '/setup-profile';
+
 
 export const FORGET_PASSWORD_ROUTE = '/forget-password';
 export const RESEND_EMAIL_ROUTE = '/resend';
@@ -15,6 +13,10 @@ export const EMAIL_CONFIRM_ROUTE = '/confirm-email';
 export const ROOT_ROUTE = '/app';
 export const MAP_ROUTE = `${ROOT_ROUTE}/home`;
 export const CAT_ROUTE = `${ROOT_ROUTE}/cats`;
+
+export const SIGNUP_ROUTE = `${ROOT_ROUTE}/signup`;
+export const SIGNIN_ROUTE = `${ROOT_ROUTE}/signin`;
+export const SETUP_PROFILE_ROUTE = `${ROOT_ROUTE}/setup-profile`;
 
 export const PROFILE_ROUTE = `${ROOT_ROUTE}/profile`;
 export const PROFILE_SETTINGS_ROUTE = `${PROFILE_ROUTE}/settings`;

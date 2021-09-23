@@ -25,15 +25,21 @@ import {
   CHANGE_NAME_DP_ROUTE,
   ROOT_ROUTE,
   ALERT_CATS_ROUTE,
+  SETUP_PROFILE_ROUTE,
+  SIGNIN_ROUTE,
+  SIGNUP_ROUTE,
 } from 'app/routes';
 import CatDetailPage from './CatDetailPage';
 import React, { useEffect, useMemo, useState } from 'react';
 import Admin from './Admin';
+import Signup from '../pages/Signup';
+import Signin from '../pages/Signin';
 import EditCatsList from './EditCatsList';
 import RequestLocation from './RequestLocation';
 import BroadcastAnnouncement from './BroadcastAnnouncement';
 import ChangePassword from './ChangePassword';
 import ChangeUsername from './ChangeUsername';
+import SetupProfile from 'pages/SetupProfile';
 import Profile from './Profile';
 import Settings from './Settings';
 import ChangeNameAndDp from './ChangeNameAndDp';
@@ -59,6 +65,9 @@ const SHOULD_HIDE_TABS = [
   { path: REQUEST_LOCATION_ROUTE, exact: true, strict: false },
   { path: EDIT_CATS_ROUTE, exact: true, strict: false },
   { path: CHANGE_NAME_DP_ROUTE, exact: true, strict: false },
+  { path: SIGNUP_ROUTE, exact: true, strict: false },
+  { path: SIGNIN_ROUTE, exact: true, strict: false },
+  { path: SETUP_PROFILE_ROUTE, exact: true, strict: false },
 ];
 
 const Tabs: React.FC = () => {
@@ -120,6 +129,9 @@ const Tabs: React.FC = () => {
             <CatsTab />
           </Route>
           <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
+          <Route exact path={SIGNUP_ROUTE} component={Signup} />
+          <Route exact path={SIGNIN_ROUTE} component={Signin} />
+          <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
           <Route exact path={PROFILE_ROUTE} component={Profile} />
           <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <PrivateRoute
