@@ -25,6 +25,8 @@ import { Cat } from './cats.entity';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dtos/create-cat.dto';
 import { RolesGuard } from './../auth/guard/roles.guard';
+import { RoleType } from '@api';
+import { Roles } from 'src/shared/decorators/role.decorator';
 
 @ApiTags('Cats')
 @Controller('cats')
@@ -77,7 +79,7 @@ export class CatsController {
     description: 'Forbidden. Operation allowed only for admin',
   })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(RoleType.Admin)
+  @Roles(RoleType.Admin)
   @Post()
   createCat(@Body() createCatDto: CreateCatDto): Observable<Cat> {
     return this.catsService.createCat(createCatDto);

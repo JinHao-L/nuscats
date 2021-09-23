@@ -161,7 +161,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
                   onClick={() => setShowSelectCat(true)}
                   fill="outline"
                 >
-                  Set cat <IonIcon slot="end" icon={chevronForward} />
+                  {cat ? 'Change' : 'Set'} cat <IonIcon slot="end" icon={chevronForward} />
                 </IonButton>
               )}
             </div>
@@ -170,7 +170,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
         <IonCardContent>
           <IonImg
             src={sighting.image}
-            className="object-cover w-full h-full mt-2"
+            className="object-cover h-full min-w-full mt-2"
           />
           <IonRow className="ion-padding-vertical">
             {sighting.type !== SightingType.Emergency ? (
@@ -190,14 +190,12 @@ const FeedCard: React.FC<FeedCardProps> = ({
           </IonRow>
           <IonRow className="flex justify-between mt-4 ion-align-items-center">
             <IonCol>
-              <div className="items-center space-x-2">
-                <IonRouterLink {...locationRouterProps}>
-                  <IonIcon color="secondary" icon={locationOutline} />
-                  <IonLabel className="text-sm text-gray-800">
-                    {sighting.location_name}
-                  </IonLabel>
-                </IonRouterLink>
-              </div>
+              <IonRouterLink {...locationRouterProps} className="flex items-center space-x-2">
+                <IonIcon color="secondary" icon={locationOutline} />
+                <IonLabel className="text-sm text-gray-800">
+                  {sighting.location_name}
+                </IonLabel>
+              </IonRouterLink>
               <div className="flex items-center space-x-2">
                 <IonIcon color="secondary" icon={timeOutline} />
                 <IonLabel className="text-sm text-gray-800">

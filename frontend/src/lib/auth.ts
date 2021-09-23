@@ -66,7 +66,7 @@ export async function signup(
   }
 }
 
-interface ApiResponse {
+export interface ApiResponse {
   message?: string;
   err?: string;
   statusCode?: number;

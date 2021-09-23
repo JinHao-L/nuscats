@@ -24,6 +24,8 @@ import FeedModal from 'components/FeedModal';
 import PinIcon from 'components/map/PinIcon';
 import { close } from 'ionicons/icons';
 import FeedCard from 'components/FeedCard';
+import { useHistory } from 'react-router';
+import { MAP_ROUTE } from 'app/routes';
 
 export type PinDetails = {
   coords: [number, number];
@@ -46,6 +48,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
     initialPinDetails,
   );
   const [showAlert] = useIonAlert();
+  const history = useHistory()
 
   /**
    * Getting latest sightings
@@ -181,7 +184,10 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
           <PinIcon
             coords={pinDetails?.coords}
             text={pinDetails?.tag}
-            onClick={() => setPinDetails(undefined)}
+            onClick={() => {
+                setPinDetails(undefined);
+                history.push(MAP_ROUTE)
+            }}
           />
           <CameraFab onClick={newSighting} />
           <LocationFab

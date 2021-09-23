@@ -19,6 +19,10 @@ export const passwordResetKey = '/auth/password-reset';
 export const changePasswordKey = '/auth/change-password';
 export const changeUsernameKey = '/auth/change-username';
 
+export const notificationSubscribeKey = '/notify/subscribe';
+export const notificationUnsubscribeKey = '/notify/unsubscribe';
+export const notificationCreateKey = '/notify/create';
+
 export const apiFetch = async (
   path: string,
   body?: any,
