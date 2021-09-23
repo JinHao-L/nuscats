@@ -21,7 +21,7 @@ const EditCatsList: React.FC =() => {
 			<IonContent>
 				<div className="flex flex-col mx-5 my-5">
 					{catsData.map(cat =>
-						<AdminCatCard key={cat.id} cat={cat} cardColor="bg-tertiary-300" catDataMutate={mutate} editCard />
+						<AdminCatCard key={cat.id} cat={cat} cardColor="bg-tertiary-200" catDataMutate={mutate} editCard />
 					)}
 				</div>
 				<IonButton
