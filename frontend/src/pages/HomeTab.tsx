@@ -98,6 +98,18 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
     alertSightings.mutate();
   };
 
+  const uniqueSightings = (): CatSighting[] => {
+    let s: Record<string, CatSighting> = {};
+    latestSightings.sightings?.forEach(
+      (sighting) => (s[sighting.id] = sighting),
+    );
+    alertSightings.sightings?.forEach(
+      (sighting) => (s[sighting.id] = sighting),
+    );
+
+    return Object.values(s);
+  };
+
   const refreshSightings = () => {
     mutate();
     toggleFeedback(true);
@@ -168,7 +180,11 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
             disabled={isLoading}
           >
             {showFeedback || isLoading ? (
-              <IonSpinner name="circular" color="secondary" className="w-5 h-5 "/>
+              <IonSpinner
+                name="circular"
+                color="secondary"
+                className="w-5 h-5 "
+              />
             ) : (
               <IonIcon slot="start" icon={refresh} />
             )}
@@ -206,20 +222,7 @@ const HomeTab: React.FC<HomePageProps> = ({ match }) => {
         >
           <>
             <UserIcon coords={coords} />
-            {latestSightings.sightings?.map((sighting) => (
-              <CatIcon
-                key={sighting.id}
-                point={sighting.location}
-                catName={sighting.cat?.name}
-                time={sighting.created_at}
-                type={sighting.type}
-                onClick={() => {
-                  setCatDetails(sighting);
-                  setShowModal(true);
-                }}
-              />
-            ))}
-            {alertSightings.sightings?.map((sighting) => (
+            {uniqueSightings().map((sighting) => (
               <CatIcon
                 key={sighting.id}
                 point={sighting.location}
