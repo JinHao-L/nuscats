@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as helmet from 'helmet';
 import * as compression from 'compression';
+import sslRedirect from 'heroku-ssl-redirect';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -23,6 +24,7 @@ async function bootstrap() {
       contentSecurityPolicy: false,
     }),
   );
+  app.use(sslRedirect());
   app.use(cookieParser());
   app.use(compression());
 

@@ -1,6 +1,8 @@
 FROM node:16-alpine as builder
 ARG REACT_APP_MAPBOX_TOKEN
+ARG MESSAGING_VAPID_KEY
 ENV REACT_APP_MAPBOX_TOKEN ${REACT_APP_MAPBOX_TOKEN}
+ENV MESSAGING_VAPID_KEY ${MESSAGING_VAPID_KEY}
 RUN mkdir frontend backend api
 COPY package.json yarn.lock* ./
 COPY frontend/package.json frontend/yarn.lock* frontend/
