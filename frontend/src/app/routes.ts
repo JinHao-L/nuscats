@@ -14,7 +14,6 @@ export const EMAIL_CONFIRM_ROUTE = '/confirm-email';
 // TabsRoute
 export const ROOT_ROUTE = '/app';
 export const MAP_ROUTE = `${ROOT_ROUTE}/home`;
-export const FEED_ROUTE = `${ROOT_ROUTE}/home/feeds`;
 export const CAT_ROUTE = `${ROOT_ROUTE}/cats`;
 
 export const PROFILE_ROUTE = `${ROOT_ROUTE}/profile`;

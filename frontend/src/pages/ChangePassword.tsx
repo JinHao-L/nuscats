@@ -10,7 +10,7 @@ import {
   useIonAlert,
   IonLoading,
 } from '@ionic/react';
-import TextInput from 'components/map/form/TextInput';
+import TextInput from 'components/form/TextInput';
 import { changePassword } from 'lib/auth';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';

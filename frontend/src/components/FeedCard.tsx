@@ -27,15 +27,13 @@ import {
 } from 'ionicons/icons';
 import TimeAgo from 'timeago-react';
 import React, { useState } from 'react';
-import { Profile, Cat, CatSighting, SightingType, RoleType } from '@api';
+import { Profile, Cat, CatSighting, SightingType } from '@api';
 import defaultAvatar from 'assets/default_avatar.png';
 import { CAT_ROUTE } from 'app/routes';
 import usePinLocation from 'hooks/usePinLocation';
 import useAuth from 'hooks/useAuth';
-import SelectCatModal from './map/form/SelectCatModal';
+import SelectCatModal from 'components/form/SelectCatModal';
 import { deleteSighting, updateSighting } from 'lib/sightings';
-import { useSWRConfig } from 'swr';
-import { latestKey, sightingsKey } from 'lib/api';
 import {
   useAlertSightings,
   useLatestSightings,
@@ -48,8 +46,8 @@ interface FeedCardProps {
   owner: Profile | undefined;
   cat: Cat | undefined;
   // For callers to pass in any additional work they want to do
-  onDelete?: () => void;
-  onCatUpdate?: () => void;
+  onDelete?: (sighting: CatSighting) => void;
+  onCatUpdate?: (sighting: CatSighting) => void;
 }
 
 const FeedCard: React.FC<FeedCardProps> = ({
@@ -66,6 +64,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
     lng,
     cat?.name,
   );
+
   const latest = useLatestSightings();
   const sightings = useSightings();
   const alerts = useAlertSightings();
@@ -105,25 +104,28 @@ const FeedCard: React.FC<FeedCardProps> = ({
   };
 
   const onDeleteSighting = async () => {
-    await deleteSighting(sighting.id);
+    const deletedSighting = await deleteSighting(sighting.id);
     mutate();
     if (onDelete) {
-      onDelete();
+      onDelete(deletedSighting);
     }
   };
 
   const onSelectCat = async (cat: Cat) => {
-    await updateSighting(sighting.id, { catId: cat.id });
+    const updatedSighting = await updateSighting(sighting.id, {
+      catId: cat.id,
+    });
+
     setShowSelectCat(false);
     mutate();
     if (onCatUpdate) {
-      onCatUpdate();
+      onCatUpdate(updatedSighting);
     }
   };
 
   return (
     <>
-      <IonCard className="mb-5 bg-secondary-50 bg-opacity-90">
+      <IonCard className="max-w-3xl mb-5 bg-secondary-50 bg-opacity-90 rounded-xl">
         <IonItem
           className="pt-1 overflow-visible bg-secondary-50 bg-opacity-90"
           color={'gray'}
@@ -193,10 +195,9 @@ const FeedCard: React.FC<FeedCardProps> = ({
                   <IonIcon color="secondary" icon={locationOutline} />
                 </IonRouterLink>
                 <IonLabel className="text-sm text-gray-800">
-                  {sighting.location_name}
+                  <TimeAgo datetime={sighting.created_at} />
                 </IonLabel>
               </div>
-
               <div className="flex items-center space-x-2">
                 <IonIcon color="secondary" icon={timeOutline} />
                 <IonLabel className="text-sm text-gray-800">

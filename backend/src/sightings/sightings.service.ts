@@ -118,8 +118,9 @@ export class SightingsService {
         .leftJoinAndSelect('sighting.cat', 'cat')
         .distinctOn(['sighting.cat_id'])
         .where('sighting.cat_id IS NOT NULL')
+        .andWhere('sighting.type = :type', { type: SightingType.CatSighted })
         .orderBy('sighting.cat_id')
-        .addOrderBy('sighting.created_at');
+        .addOrderBy('sighting.created_at', 'DESC');
 
     return from(queryBuilder.getMany());
   }

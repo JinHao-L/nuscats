@@ -17,7 +17,7 @@ const RequestLocation: React.FC = () => {
 		pageContent = (
 			<div className="flex flex-col h-full mx-5 my-5">
 				{(cats as Cat[]).map(cat =>
-					<AdminCatCard key={cat.id} cat={cat} cardColor="bg-secondary-300" />
+					<AdminCatCard key={cat.id} cat={cat} cardColor="bg-secondary-200" />
 				)}
 			</div>
 		);

@@ -46,7 +46,7 @@ const AdminCatAlert = () => {
                 sighting={sighting}
                 cat={sighting.cat}
                 owner={sighting.owner}
-                onDelete={mutate}
+                onDelete={(_) => mutate}
               />
             ))}
           </IonList>

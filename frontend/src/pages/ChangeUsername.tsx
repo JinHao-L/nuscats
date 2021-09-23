@@ -8,29 +8,29 @@ import {
   IonToolbar,
   IonButton,
   IonLoading,
-	useIonAlert,
+  useIonAlert,
 } from '@ionic/react';
-import TextInput from 'components/map/form/TextInput';
+import TextInput from 'components/form/TextInput';
 import { changeUsername } from 'lib/auth';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type ChangeUNameInputs = {
-	username: string
+  username: string
 }
 
 const ChangeUsername: React.FC = () => {
-	const [showAlert] = useIonAlert()
-	const { register, handleSubmit, formState: { errors } } = useForm<ChangeUNameInputs>()
+  const [showAlert] = useIonAlert()
+  const { register, handleSubmit, formState: { errors } } = useForm<ChangeUNameInputs>()
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<Boolean>();
 
 
-	const onSubmit: SubmitHandler<ChangeUNameInputs> = async data => {
-		setLoading(true);
-		const response = await changeUsername(data.username)
-		setLoading(false);
+  const onSubmit: SubmitHandler<ChangeUNameInputs> = async data => {
+    setLoading(true);
+    const response = await changeUsername(data.username)
+    setLoading(false);
     console.log(response)
     if (response.err) {
       showAlert(response.err, [{ text: 'Ok' }]);
@@ -39,7 +39,7 @@ const ChangeUsername: React.FC = () => {
       showAlert(response.message, [{ text: 'Ok' }]);
       setSuccess(true);
     }
-	}
+  }
 
   return (
     <IonPage>

@@ -18,12 +18,12 @@ const Admin: React.FC = () => {
             routerLink={ALERT_CATS_ROUTE}
             routerDirection={'forward'}
           >
-            <button className="flex items-center w-full h-40 px-4 mb-5 shadow-xl active:bg-primary-400 bg-primary-300 rounded-2xl bg-opacity-90">
+            <button className="flex items-center w-full h-40 px-4 mb-5 bg-gray-200 border-2 border-solid shadow-xl border-primary-300 active:bg-gray-300 rounded-2xl">
               <IonIcon
                 icon={alertCircle}
-                className="w-32 mr-2 text-black text-7xl"
+                className="w-32 mr-2 text-gray-800 text-7xl"
               />
-              <p className="w-full text-xl font-semibold text-left text-black">
+              <p className="w-full text-xl font-semibold text-left text-gray-800">
                 Cat Alerts
               </p>
             </button>
@@ -32,12 +32,12 @@ const Admin: React.FC = () => {
             routerLink={REQUEST_LOCATION_ROUTE}
             routerDirection={'forward'}
           >
-            <button className="flex items-center w-full h-40 px-4 mb-5 shadow-xl active:bg-secondary-500 bg-secondary-400 rounded-2xl bg-opacity-90">
+            <button className="flex items-center w-full h-40 px-4 mb-5 bg-gray-200 border-2 border-solid shadow-xl active:bg-gray-300 border-secondary-300 rounded-2xl">
               <IonIcon
                 icon={compass}
-                className="w-32 mr-2 text-black text-7xl"
+                className="w-32 mr-2 text-gray-800 text-7xl"
               />
-              <p className="w-full text-xl font-semibold text-left text-black">
+              <p className="w-full text-xl font-semibold text-left text-gray-800">
                 Request cat location
               </p>
             </button>
@@ -46,12 +46,12 @@ const Admin: React.FC = () => {
             routerLink={EDIT_CATS_ROUTE}
             routerDirection={'forward'}
           >
-            <button className="flex items-center w-full h-40 px-4 mb-5 shadow-xl active:bg-tertiary-400 bg-tertiary-300 rounded-2xl bg-opacity-90">
+            <button className="flex items-center w-full h-40 px-4 mb-5 bg-gray-200 border-2 border-solid shadow-xl active:bg-gray-300 rounded-2xl border-tertiary-300">
               <IonIcon
                 icon={create}
-                className="w-32 mr-2 text-black text-7xl"
+                className="w-32 mr-2 text-gray-800 text-7xl"
               />
-              <p className="w-full text-xl font-semibold text-left text-black">
+              <p className="w-full text-xl font-semibold text-left text-gray-800">
                 Edit/Add cats
               </p>
             </button>

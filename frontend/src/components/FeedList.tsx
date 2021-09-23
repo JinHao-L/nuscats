@@ -65,14 +65,14 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
               </p>
             </div>
           )}
-          <IonList>
+          <IonList className="flex flex-col items-center">
             {sightings.map((sighting) => (
               <FeedCard
                 key={sighting.id}
                 sighting={sighting}
                 cat={cat || sighting.cat}
                 owner={user || sighting.owner}
-                onDelete={mutate}
+                onDelete={(_) => mutate()}
               />
             ))}
           </IonList>
