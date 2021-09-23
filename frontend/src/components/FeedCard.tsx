@@ -193,10 +193,10 @@ const FeedCard: React.FC<FeedCardProps> = ({
               <div className="items-center space-x-2">
                 <IonRouterLink {...locationRouterProps}>
                   <IonIcon color="secondary" icon={locationOutline} />
+                  <IonLabel className="text-sm text-gray-800">
+                    {sighting.location_name}
+                  </IonLabel>
                 </IonRouterLink>
-                <IonLabel className="text-sm text-gray-800">
-                  <TimeAgo datetime={sighting.created_at} />
-                </IonLabel>
               </div>
               <div className="flex items-center space-x-2">
                 <IonIcon color="secondary" icon={timeOutline} />
