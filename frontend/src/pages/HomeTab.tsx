@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   IonButton,
   IonButtons,
@@ -22,9 +22,8 @@ import { QuerySightingOrderBy } from '@api/sightings';
 import { useLocation, useHistory } from 'react-router';
 import * as queryString from 'query-string';
 
-type HomePageProps = {};
+const HomeTab: React.FC = () => {
 
-const HomeTab: React.FC<HomePageProps> = () => {
   // page setup
   const mapPage = 'Map';
   const feedPage = 'Feed';
@@ -155,4 +154,4 @@ const HomeTab: React.FC<HomePageProps> = () => {
   );
 };
 
-export default HomeTab;
+export default React.memo(HomeTab);

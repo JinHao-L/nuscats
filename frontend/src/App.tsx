@@ -36,6 +36,7 @@ import {
   EMAIL_CONFIRM_ROUTE,
   FORGET_PASSWORD_ROUTE,
   LANDING_ROUTE,
+  MAP_ROUTE,
   PASSWORD_RESET_ROUTE,
   RESEND_EMAIL_ROUTE,
   ROOT_ROUTE,
@@ -48,8 +49,9 @@ import ForgetPasswordPage from 'pages/ForgetPassword';
 import EmailConfirmationPage from 'pages/EmailConfirmation';
 import ResetPasswordPage from 'pages/ResetPassword';
 import ResendConfirmationPage from 'pages/ResendConfirmation';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNotification } from 'hooks/useNotification';
+import useAuth from 'hooks/useAuth';
 
 const App: React.FC = () => {
   const [present] = useIonToast();
@@ -70,7 +72,19 @@ const App: React.FC = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [present, subscribe, onNotification]);
+
+
+  const { isLoggedIn } = useAuth();
+
+  const redirect = useMemo(() => {
+    return (isLoggedIn
+      ? <Redirect to={MAP_ROUTE} />
+      : <Redirect to={LANDING_ROUTE} />
+    )
+  },
+    [isLoggedIn]
+  )
 
   return (
     <IonApp>
@@ -100,8 +114,8 @@ const App: React.FC = () => {
             path={FORGET_PASSWORD_ROUTE}
             component={ForgetPasswordPage}
           />
-          <Route path={ROOT_ROUTE} render={() => <Tabs />} />
-          <Route render={() => <Redirect to={LANDING_ROUTE} />} />
+          <Route path={ROOT_ROUTE} component={Tabs} />
+          <Route render={() => redirect} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

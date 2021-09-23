@@ -104,7 +104,7 @@ const ProfileTab: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="flex flex-col h-full max-w-lg mx-5 my-5 sm:mx-auto">
+        <div className="flex flex-col h-full max-w-xl mx-5 my-5 sm:mx-auto">
           <div className="p-5 mt-2 border shadow-xl bg-secondary-200 rounded-3xl">
             <div className="flex">
               <img

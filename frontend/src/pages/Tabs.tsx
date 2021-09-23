@@ -1,4 +1,4 @@
-import { matchPath, Redirect, Route, useLocation } from 'react-router-dom';
+import { matchPath, Redirect, Route, useLocation, RouteComponentProps } from 'react-router-dom';
 import {
   IonIcon,
   IonLabel,
@@ -8,7 +8,7 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/react';
-import { construct, logoOctocat, map, personCircle } from 'ionicons/icons';
+import { construct, logoOctocat, map } from 'ionicons/icons';
 import HomeTab from './HomeTab';
 import CatsTab from './CatsTab';
 import {
@@ -27,7 +27,7 @@ import {
   ALERT_CATS_ROUTE,
 } from 'app/routes';
 import CatDetailPage from './CatDetailPage';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Admin from './Admin';
 import EditCatsList from './EditCatsList';
 import RequestLocation from './RequestLocation';
@@ -62,7 +62,6 @@ const SHOULD_HIDE_TABS = [
 ];
 
 const Tabs: React.FC = () => {
-  // const { showTabs } = useContext(UIContext);
   const [showTabs, setShowTabs] = useState(true);
   const location = useLocation();
   const { user, isLoggedIn } = useAuth();
@@ -113,10 +112,16 @@ const Tabs: React.FC = () => {
   return (
     <IonPage>
       <IonTabs>
-        <IonRouterOutlet basePath={ROOT_ROUTE}>
-          <Route exact path={MAP_ROUTE} component={HomeTab} />
-          <Route exact path={CAT_ROUTE} component={CatsTab} />
+        <IonRouterOutlet >
+          <Route exact path={MAP_ROUTE} >
+            <HomeTab />
+          </Route>
+          <Route exact path={CAT_ROUTE}>
+            <CatsTab />
+          </Route>
           <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
+          <Route exact path={PROFILE_ROUTE} component={Profile} />
+          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <PrivateRoute
             exact
             path={ADMIN_ROUTE}
@@ -145,8 +150,6 @@ const Tabs: React.FC = () => {
             canRoute={isAdmin}
             elseRedirectTo={MAP_ROUTE}
           />
-          <Route exact path={PROFILE_ROUTE} component={Profile} />
-          <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <PrivateRoute
             exact
             path={ALERT_CATS_ROUTE}
@@ -182,7 +185,10 @@ const Tabs: React.FC = () => {
             canRoute={isLoggedIn}
             elseRedirectTo={MAP_ROUTE}
           />
-          <Route render={() => <Redirect to={MAP_ROUTE} />} />
+          <Route exact path={ROOT_ROUTE}>
+            <Redirect to={MAP_ROUTE} />
+          </Route>
+          <Route component={React.memo(RedirectHelper)} />
         </IonRouterOutlet >
 
         <IonTabBar slot="bottom" className="py-2" style={tabStyle}>
@@ -199,5 +205,17 @@ const Tabs: React.FC = () => {
     </IonPage >
   );
 };
+
+const isOuterRoute = (path: string) => !matchPath(path, {
+  path: ROOT_ROUTE,
+  exact: false
+})
+
+const RedirectHelper: React.FC<RouteComponentProps> = ({ location }) => {
+  if (isOuterRoute(location.pathname)) {
+    return <Redirect to={location.pathname} />
+  }
+  return <Redirect to={MAP_ROUTE} />
+}
 
 export default Tabs;

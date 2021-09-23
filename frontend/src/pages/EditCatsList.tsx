@@ -1,11 +1,11 @@
 import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonSpinner, IonTitle, IonToolbar, useIonModal } from "@ionic/react";
-import { Cat, makeCat, UniversityZone } from '@api/cats';
+import { Cat } from '@api/cats';
 import AdminCatCard from "components/AdminCatCard";
 import EditCatModal from "components/EditCatModal";
 import { useCats } from "hooks/useCats";
 
-const EditCatsList: React.FC =() => {
-	const { cats, error, isLoading, mutate } = useCats();
+const EditCatsList: React.FC = () => {
+	const { cats, isLoading, mutate } = useCats();
 	let pageContent;
 	if (isLoading) {
 		pageContent = (
@@ -19,18 +19,20 @@ const EditCatsList: React.FC =() => {
 		const catsData = cats as Cat[];
 		pageContent = (
 			<IonContent>
-				<div className="flex flex-col mx-5 my-5">
+				<div className="flex flex-col items-center justify-start w-full h-auto px-4 my-5 space-y-4">
 					{catsData.map(cat =>
-						<AdminCatCard key={cat.id} cat={cat} cardColor="bg-tertiary-200" catDataMutate={mutate} editCard />
+						<div className="w-full max-w-xl">
+							<AdminCatCard key={cat.id} cat={cat} cardColor="bg-tertiary-200" catDataMutate={mutate} editCard />
+						</div>
 					)}
 				</div>
 				<IonButton
-					className="mx-5 text-lg text-white cursor-pointer h-14"
+					className="w-full max-w-xl m-auto mb-3 text-lg text-white cursor-pointer h-14"
 					color="primary"
 					expand="block"
 					onClick={() => presentModal()}
 				>
-					Add cat 
+					Add cat
 				</IonButton>
 			</IonContent>
 		);

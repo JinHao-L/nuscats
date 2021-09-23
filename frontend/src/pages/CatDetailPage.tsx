@@ -56,15 +56,6 @@ const CatDetailPage: React.FC<CatDetailsPageProps> = ({ match }) => {
   const { goBack } = useContext(NavContext);
   const subPages = ['About', 'Location', 'Photos'];
 
-  const placeholderCatImgGalleryDetails: ImageDetail[] = Array.from({
-    length: 16,
-  }).map((_, idx) => ({
-    altText: `cat pic ${idx}`,
-    src: PlaceholderCatUrl(400 + idx, 300 + idx),
-  }));
-
-  // const placeholderCatImgGallery: ImageDetail[] = useMemo(() => , [catSightings])
-
   return (
     <IonPage>
       <IonContent scrollY={false}>

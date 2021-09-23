@@ -78,7 +78,7 @@ const AdminCatCard: React.FC<Props> = ({
 
   return (
     <div
-      className={`flex w-full h-24 mb-5 shadow-xl ${cardColor} rounded-2xl bg-opacity-90`}
+      className={`flex w-full h-24 shadow-xl ${cardColor} rounded-2xl bg-opacity-90`}
       onClick={() => (editCard ? presentModal() : presentAlert(alertOptions))}
     >
       <div className="flex items-center flex-shrink-0 ml-5">
