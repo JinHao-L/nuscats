@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, useIonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
@@ -49,10 +49,31 @@ import ForgetPasswordPage from 'pages/ForgetPassword';
 import EmailConfirmationPage from 'pages/EmailConfirmation';
 import ResetPasswordPage from 'pages/ResetPassword';
 import ResendConfirmationPage from 'pages/ResendConfirmation';
+import { useEffect, useMemo } from 'react';
+import { useNotification } from 'hooks/useNotification';
 import useAuth from 'hooks/useAuth';
-import { useMemo } from 'react';
 
 const App: React.FC = () => {
+  const [present] = useIonToast();
+  const { subscribe, onNotification } = useNotification();
+
+  useEffect(() => {
+    subscribe().catch((err) => console.log(err));
+
+    const unsubscribe = onNotification((payload) => {
+      const message = payload.notification;
+      present({
+        header: 'New notification',
+        message: message?.body || '',
+        duration: 3000,
+        translucent: true,
+        position: 'top',
+      });
+    });
+
+    return () => unsubscribe();
+  }, [present, subscribe, onNotification]);
+
 
   const { isLoggedIn } = useAuth();
 

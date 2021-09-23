@@ -1,6 +1,6 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "NUSCats",
+  "name": "NUS Cats",
   "icons": [
     {
       "src": "assets/icon/favicon.png",
@@ -17,5 +17,6 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#fb724c",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "gcm_sender_id": "645171323336"
 }

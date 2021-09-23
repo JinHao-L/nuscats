@@ -13,6 +13,8 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import { initializeApp } from 'firebase/app';
+import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -50,14 +52,15 @@ registerRoute(
     // Return true to signal that we want to use the handler.
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
+  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'),
 );
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.endsWith('.png'),
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
     cacheName: 'images',
@@ -66,7 +69,7 @@ registerRoute(
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
     ],
-  })
+  }),
 );
 
 // This allows the web app to trigger skipWaiting via
@@ -78,3 +81,42 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+
+const firebaseApp = initializeApp({
+  apiKey: 'AIzaSyAEveDDjIrmcCAfDTZeR2NPfkNDcXnq_cU',
+  authDomain: 'nuscats.firebaseapp.com',
+  projectId: 'nuscats',
+  storageBucket: 'nuscats.appspot.com',
+  messagingSenderId: '645171323336',
+  appId: '1:645171323336:web:774ddb245f9dab232760fd',
+  measurementId: 'G-N2513MDLHS',
+});
+
+const messaging = getMessaging(firebaseApp);
+
+onBackgroundMessage(messaging, (payload) => {
+  console.log('[service-worker.js] Received background message ', payload);
+    // Customize notification here
+    const notificationTitle = payload.notification?.title || 'NUS Cats';
+    const notificationOptions = {
+      body: payload.notification?.body,
+      icon: payload.notification?.image || 'assets/icon/icon.png',
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+self.addEventListener('notificationclick', (event) => {
+  console.log(event.notification);
+  return event;
+});
+
+// self.addEventListener('push', (event) => {
+//   const notificationText = event.data?.text();
+//   const showNotification = self.registration.showNotification('NUS Cats', {
+//     body: notificationText,
+//     icon: 'assets/icon/icon.png',
+//   });
+//   // Make sure the toast notification is displayed, before exiting the function.
+//   event.waitUntil(showNotification);
+// });

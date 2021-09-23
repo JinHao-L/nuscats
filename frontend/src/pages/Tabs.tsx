@@ -215,9 +215,12 @@ const isOuterRoute = (path: string) => !matchPath(path, {
 
 const RedirectHelper: React.FC = () => {
   const location = useLocation()
+  console.log({ path: location.pathname })
   if (isOuterRoute(location.pathname)) {
+    console.log("outer")
     return <Redirect to={location.pathname} />
   }
+  console.log("inner")
   return <Redirect to={MAP_ROUTE} />
 }
 

@@ -25,13 +25,13 @@ import * as queryString from 'query-string';
 const HomeTab: React.FC = () => {
 
   // page setup
-  const mapPage = "Map"
-  const feedPage = "Feed"
-  const [currPage, setCurrPage] = useState<string>(mapPage)
-  const contentRef = useRef<HTMLIonContentElement | null>(null)
+  const mapPage = 'Map';
+  const feedPage = 'Feed';
+  const [currPage, setCurrPage] = useState<string>(mapPage);
+  const contentRef = useRef<HTMLIonContentElement | null>(null);
 
-  const mapShown = currPage === mapPage
-  const feedShown = currPage === feedPage
+  const mapShown = currPage === mapPage;
+  const feedShown = currPage === feedPage;
 
   // refresh sightings
   const { mutate, isLoading } = useLatestSightings();
@@ -44,33 +44,39 @@ const HomeTab: React.FC = () => {
       toggleFeedback(false);
     }, 1000);
 
-    return () => clearTimeout(id)
-  }, [mutate, toggleFeedback])
+    return () => clearTimeout(id);
+  }, [mutate, toggleFeedback]);
 
   // change pin location if nagivated to via query string
-  const location = useLocation()
-  const history = useHistory()
-  const [mapPinDetails, setMapPinDetails] = useState<PinDetails | undefined>()
+  const location = useLocation();
+  const history = useHistory();
+  const [mapPinDetails, setMapPinDetails] = useState<PinDetails | undefined>();
 
   useEffect(() => {
     if (location.pathname === MAP_ROUTE) {
       const query = queryString.parse(location.search);
       if (query.lat && query.lng) {
-        setCurrPage(mapPage)
+        setCurrPage(mapPage);
         setMapPinDetails({
-          coords: [parseFloat(query.lng as string), parseFloat(query.lat as string)],
+          coords: [
+            parseFloat(query.lng as string),
+            parseFloat(query.lat as string),
+          ],
           tag: query.tag as string,
-        })
+        });
       }
     }
   }, [location]);
 
   return (
     <IonPage>
-      <NavBar title={currPage} >
+      <NavBar title={currPage}>
         <IonButtons slot="start">
           <IonButton
-            className={"w-12 transition-opacity " + (mapShown ? "opacity-100" : "opacity-0")}
+            className={
+              'w-12 transition-opacity ' +
+              (mapShown ? 'opacity-100' : 'opacity-0')
+            }
             fill="clear"
             color="secondary"
             slot="start"
@@ -79,7 +85,11 @@ const HomeTab: React.FC = () => {
             disabled={isLoading || feedShown}
           >
             {showFeedback || isLoading ? (
-              <IonSpinner name="circular" color="secondary" className="w-5 h-5 " />
+              <IonSpinner
+                name="circular"
+                color="secondary"
+                className="w-5 h-5 "
+              />
             ) : (
               <IonIcon slot="start" icon={refresh} />
             )}
@@ -91,17 +101,17 @@ const HomeTab: React.FC = () => {
           <IonSegment
             color="dark"
             value={currPage}
-            onIonChange={e => {
+            onIonChange={(e) => {
               if (e.detail.value !== currPage) {
-                setCurrPage(e.detail.value || mapPage)
+                setCurrPage(e.detail.value || mapPage);
               }
 
               if (e.detail.value === feedPage) {
-                history.replace(MAP_ROUTE)
+                history.replace(MAP_ROUTE);
               }
 
               if (e.detail.value === mapPage && contentRef) {
-                contentRef.current?.scrollToTop()
+                contentRef.current?.scrollToTop();
               }
             }}
           >
@@ -113,12 +123,24 @@ const HomeTab: React.FC = () => {
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
-        <div className={"absolute w-full top-11 h-map-content transform transition-all duration-200 "
-          + (mapShown ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2/3 pointer-events-none")}>
+        <div
+          className={
+            'absolute w-full top-11 h-map-content transform transition-all duration-200 ' +
+            (mapShown
+              ? 'opacity-100 translate-x-0'
+              : 'opacity-0 -translate-x-2/3 pointer-events-none')
+          }
+        >
           <CatMap pinDetails={mapPinDetails} />
         </div>
-        <div className={"absolute w-full top-11 h-map-content transform transition-all duration-200 "
-          + (feedShown ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2/3 pointer-events-none")}>
+        <div
+          className={
+            'absolute w-full top-11 h-map-content transform transition-all duration-200 ' +
+            (feedShown
+              ? 'opacity-100 translate-x-0'
+              : 'opacity-0 translate-x-2/3 pointer-events-none')
+          }
+        >
           <FeedList
             queryParams={{
               includeCatsData: true,

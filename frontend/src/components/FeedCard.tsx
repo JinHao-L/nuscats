@@ -46,8 +46,8 @@ interface FeedCardProps {
   owner: Profile | undefined;
   cat: Cat | undefined;
   // For callers to pass in any additional work they want to do
-  onDelete?: () => void;
-  onCatUpdate?: () => void;
+  onDelete?: (sighting: CatSighting) => void;
+  onCatUpdate?: (sighting: CatSighting) => void;
 }
 
 const FeedCard: React.FC<FeedCardProps> = ({
@@ -64,6 +64,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
     lng,
     cat?.name,
   );
+
   const latest = useLatestSightings();
   const sightings = useSightings();
   const alerts = useAlertSightings();
@@ -103,19 +104,22 @@ const FeedCard: React.FC<FeedCardProps> = ({
   };
 
   const onDeleteSighting = async () => {
-    await deleteSighting(sighting.id);
+    const deletedSighting = await deleteSighting(sighting.id);
     mutate();
     if (onDelete) {
-      onDelete();
+      onDelete(deletedSighting);
     }
   };
 
   const onSelectCat = async (cat: Cat) => {
-    await updateSighting(sighting.id, { catId: cat.id });
+    const updatedSighting = await updateSighting(sighting.id, {
+      catId: cat.id,
+    });
+
     setShowSelectCat(false);
     mutate();
     if (onCatUpdate) {
-      onCatUpdate();
+      onCatUpdate(updatedSighting);
     }
   };
 
@@ -157,7 +161,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
                   onClick={() => setShowSelectCat(true)}
                   fill="outline"
                 >
-                  Set cat <IonIcon slot="end" icon={chevronForward} />
+                  {cat ? 'Change' : 'Set'} cat <IonIcon slot="end" icon={chevronForward} />
                 </IonButton>
               )}
             </div>
@@ -166,7 +170,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
         <IonCardContent>
           <IonImg
             src={sighting.image}
-            className="object-cover w-full h-full mt-2"
+            className="object-cover h-full min-w-full mt-2"
           />
           <IonRow className="ion-padding-vertical">
             {sighting.type !== SightingType.Emergency ? (
@@ -186,14 +190,12 @@ const FeedCard: React.FC<FeedCardProps> = ({
           </IonRow>
           <IonRow className="flex justify-between mt-4 ion-align-items-center">
             <IonCol>
-              <div className="items-center space-x-2">
-                <IonRouterLink {...locationRouterProps}>
-                  <IonIcon color="secondary" icon={locationOutline} />
-                </IonRouterLink>
+              <IonRouterLink {...locationRouterProps} className="flex items-center space-x-2">
+                <IonIcon color="secondary" icon={locationOutline} />
                 <IonLabel className="text-sm text-gray-800">
-                  <TimeAgo datetime={sighting.created_at} />
+                  {sighting.location_name}
                 </IonLabel>
-              </div>
+              </IonRouterLink>
               <div className="flex items-center space-x-2">
                 <IonIcon color="secondary" icon={timeOutline} />
                 <IonLabel className="text-sm text-gray-800">
