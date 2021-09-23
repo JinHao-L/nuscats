@@ -21,12 +21,10 @@ import {
   CatSightingsResponse,
   SightingType,
 } from '@api/sightings';
-import type { ImageDetail } from 'components/ImageGallery';
 import TimeAgo from 'timeago-react';
 
 import 'swiper/swiper-bundle.min.css';
 
-import { PlaceholderCatUrl } from 'lib/utils';
 import { RouteComponentProps } from 'react-router';
 import { useCat } from 'hooks/useCats';
 
@@ -36,7 +34,7 @@ import { Position } from 'geojson';
 import usePinLocation from 'hooks/usePinLocation';
 import { InfiniteImageGallery } from 'components/InfiniteImageGallery';
 
-interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> { }
+interface CatDetailsPageProps extends RouteComponentProps<{ id: string }> {}
 
 SwiperCore.use([IonicSwiper, Navigation, Pagination]);
 
@@ -188,13 +186,17 @@ const CatAbout: React.FC<CatAboutProps> = ({
   return (
     <section className="flex flex-col space-y-4 overflow-y-auto h-cat-profile-content px-7">
       <h2 className="font-semibold text-center text-gray-900 transform -skew-x-6">
-        <span className="bg-gray-200 shadow-sm md:text-lg lg:text-xl">"{one_liner}"</span>
+        <span className="bg-gray-200 shadow-sm md:text-lg lg:text-xl">
+          "{one_liner}"
+        </span>
       </h2>
       <div className="flex justify-start px-4 py-2 space-x-6 sm:justify-center">
         <div className="flex-shrink-0 text-xs font-medium text-gray-400 sm:text-sm">
           Hangs out around
           <IonRouterLink {...zoneRouterProps}>
-            <p className="text-sm font-semibold text-primary-500 sm:text-base">{zone}</p>
+            <p className="text-sm font-semibold text-primary-500 sm:text-base">
+              {zone}
+            </p>
           </IonRouterLink>
         </div>
         {lat && lng && (

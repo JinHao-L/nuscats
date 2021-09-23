@@ -1,17 +1,62 @@
 import { RefresherEventDetail } from '@ionic/core';
-import { IonContent, IonPage, IonRefresher, IonRefresherContent, IonSpinner } from '@ionic/react';
+import { IonContent, IonPage, IonRefresher, IonRefresherContent, IonSpinner, useIonAlert, useIonToast } from '@ionic/react';
 import CatCard from 'components/CatCard';
 import NavBar from 'components/NavBar';
 import { useCats } from 'hooks/useCats';
+import { useNotification } from 'hooks/useNotification';
 import React, { useCallback, useEffect } from 'react';
 
 const CatsTab: React.FC = () => {
 
-    const { cats, error, isLoading, mutate } = useCats()
-
+    const { subscribe, canSubscribe, hasPermission } = useNotification();
+    const [showPrompt] = useIonAlert();
+    const [presentFeedback] = useIonToast();
     useEffect(() => {
-        error && console.log({ error })
-    }, [error])
+        console.log(
+            !hasPermission &&
+            canSubscribe &&
+            localStorage.getItem('prompted') === null)
+        if (
+          !hasPermission &&
+          canSubscribe &&
+          localStorage.getItem('prompted') === null
+        ) {
+          console.log('hi')
+          const timer = setTimeout(() => {
+            console.log('hi')
+            return showPrompt({
+              header: 'Push notification request',
+              message: `NUS Cat Cafe needs your help. Turn on Push Notifications to receive cat alerts and cat location requests.`,
+              buttons: [
+                {
+                  text: 'Not now',
+                  role: 'cancel',
+                  handler: () => localStorage.setItem('prompted', 'true'),
+                },
+                {
+                  text: 'Turn on',
+                  handler: () => {
+                    subscribe()
+                      .then(() => {
+                        presentFeedback({
+                          message: 'Successfully subscribed to cat alerts',
+                          duration: 3000,
+                          position: 'top',
+                        });
+                      })
+                      .catch((err) => {
+                        return null;
+                      });
+                  },
+                },
+              ],
+            });
+          }, 5000);
+    
+          return () => clearTimeout(timer);
+        }
+      }, []);
+    const { cats, error, isLoading, mutate } = useCats()
 
     const doRefreshCats = useCallback((event: CustomEvent<RefresherEventDetail>) => {
         mutate()

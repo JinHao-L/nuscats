@@ -29,7 +29,7 @@ import './theme/tailwind.css';
 
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
-import './theme/tailwind.css';
+
 import {
   EMAIL_CONFIRM_ROUTE,
   FORGET_PASSWORD_ROUTE,
@@ -49,24 +49,23 @@ import useAuth from 'hooks/useAuth';
 
 const App: React.FC = () => {
   const [present] = useIonToast();
-  const { subscribe, onNotification } = useNotification();
+  const { onNotification, hasPermission, canSubscribe } = useNotification();
 
   useEffect(() => {
-    subscribe().catch((err) => console.log(err));
-
-    const unsubscribe = onNotification((payload) => {
-      const message = payload.data;
-      present({
-        header: `New notification - ${message?.title}`,
-        message: message?.body || '',
-        duration: 3000,
-        translucent: true,
-        position: 'top',
+    if (hasPermission && canSubscribe) {
+      const unsubscribe = onNotification((payload) => {
+        const message = payload.data;
+        present({
+          header: `New notification - ${message?.title}`,
+          message: message?.body || '',
+          duration: 3000,
+          position: 'top',
+        });
       });
-    });
-
-    return () => unsubscribe();
-  }, []);
+  
+      return () => unsubscribe();
+    }
+  }, [hasPermission, canSubscribe]);
 
 
   const { isLoggedIn } = useAuth();

@@ -10,7 +10,7 @@ import {
     IonText,
     IonTitle,
     IonToolbar,
-    useIonAlert,
+    useIonToast,
     useIonViewDidEnter,
     useIonViewDidLeave,
     useIonViewWillEnter,
@@ -48,7 +48,7 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
     const dropdownRef = useRef(null);
     const location = useLocation();
     const history = useHistory();
-    const [presentAlert] = useIonAlert();
+    const [presentFeedback] = useIonToast();
 
     useEffect(() => {
         setShowDropDown(false)
@@ -83,7 +83,13 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                     lines="full"
                     detail={false}
                     button
-                    onClick={() => unsubscribeNotification().then(console.log)}
+                    onClick={() => unsubscribeNotification().then(() => {
+                        presentFeedback({
+                            message: 'Successfully unsubscribed from cat alerts',
+                            duration: 3000,
+                            position: 'top',
+                        })
+                    })}
                     className={'text-sm'}
                 >
                     Notifications
@@ -101,11 +107,13 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                     lines="full"
                     detail={false}
                     button
-                    onClick={() =>
-                        subscribeNotification().catch((err) => {
-                        presentAlert('Please enable notifications');
-                        })
-                    }
+                    onClick={(() => subscribeNotification()
+                        .then(() => presentFeedback({
+                            message: 'Successfully subscribed to cat alerts',
+                            duration: 3000,
+                            position: 'top',
+                          }))
+                        .catch((err) => {return null}))}
                     className={'text-sm border-0'}
                 >
                     Notifications
@@ -136,7 +144,7 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                 </IonButtons>
             </IonToolbar>
             <div className={"absolute z-50 h-auto top-12 w-44 right-3 transform transition-all "
-                + (showDropdown ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12 pointer-events-none")
+                + (showDropdown ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-56 pointer-events-none")
                 + (isAnimating ? " hidden" : "")
             }
                 ref={dropdownRef}
