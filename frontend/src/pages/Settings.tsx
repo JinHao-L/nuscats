@@ -23,19 +23,6 @@ import { useHistory } from 'react-router';
 
 
 const Settings: React.FC = () => {
-  // Upload/take profile picture
-  //const handleChangeProfilePic = async () => {
-  //	try {
-  //		const image  = await Camera.getPhoto({
-  //			quality: 90,
-  //			allowEditing: true,
-  //			resultType: CameraResultType.Uri,
-  //		});
-  //		console.log(image);
-  //	} catch (e) {
-  //		console.log(e);
-  //	}
-  //}
   const { setLogout } = useAuth()
   const history = useHistory()
 

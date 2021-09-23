@@ -58,13 +58,11 @@ export class ProfilesService {
     if (requester.uuid !== uuid && !requester.roles.includes(RoleType.Admin)) {
       throw new UnauthorizedException('Cannot modify user');
     }
-    console.log(uuid, updateProfileDto, requester);
     return from(this.profileRepository.findOne({ uuid })).pipe(
       mergeMap((profile) => {
         if (!profile) {
           throw new NotFoundException('User does not exist');
         }
-        console.log(profile);
         return this.profileRepository.update(
           { uuid: profile.uuid },
           {

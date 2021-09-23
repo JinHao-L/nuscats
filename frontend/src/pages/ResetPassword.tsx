@@ -127,7 +127,6 @@ const ResetPasswordPage: React.FC = () => {
                   ? FORGET_PASSWORD_ROUTE
                   : undefined
             }
-            // routerDirection={'root'}
             disabled={loading}
           >
             {success === true

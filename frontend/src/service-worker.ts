@@ -95,7 +95,7 @@ const firebaseApp = initializeApp({
 const messaging = getMessaging(firebaseApp);
 
 onBackgroundMessage(messaging, (payload) => {
-  console.log('[service-worker.js] Received background message ', payload);
+    // console.log('[service-worker.js] Received background message ', payload);
     // Customize notification here
     const notificationTitle = payload.notification?.title || 'NUS Cats';
     const notificationOptions = {
@@ -104,11 +104,6 @@ onBackgroundMessage(messaging, (payload) => {
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
-});
-
-self.addEventListener('notificationclick', (event) => {
-  console.log(event.notification);
-  return event;
 });
 
 // self.addEventListener('push', (event) => {
