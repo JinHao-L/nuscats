@@ -42,7 +42,7 @@ export const useNotification = () => {
           if (err) {
             console.log('Error updating token key in server');
           }
-        });
+        }).catch(err => console.log(err));
       }
 
       return firebaseToken;
@@ -73,8 +73,7 @@ export const useNotification = () => {
   };
 
   return {
-    canSubscribe: navigator.serviceWorker.controller !== null,
-    firebaseInitialised: !!messaging,
+    canSubscribe: navigator.serviceWorker.controller !== null && messaging !== null,
     notify: createNotification,
     subscribe,
     unsubscribe,

@@ -46,20 +46,11 @@ const AdminCatCard: React.FC<Props> = ({
       (response) => {
         if (response.err) {
           present({
-            header: 'Request Status',
+            header: 'Notification failed',
             message: response.err,
             duration: 3000,
             translucent: true,
             color: 'danger',
-            position: 'top',
-          });
-        } else {
-          present({
-            header: 'Request Status',
-            message: response.message,
-            duration: 3000,
-            translucent: true,
-            color: 'success',
             position: 'top',
           });
         }

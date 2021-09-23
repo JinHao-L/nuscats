@@ -10,6 +10,7 @@ import {
     IonText,
     IonTitle,
     IonToolbar,
+    useIonAlert,
     useIonViewDidEnter,
     useIonViewDidLeave,
     useIonViewWillEnter,
@@ -47,6 +48,7 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
     const dropdownRef = useRef(null);
     const location = useLocation();
     const history = useHistory();
+    const [presentAlert] = useIonAlert();
 
     useEffect(() => {
         setShowDropDown(false)
@@ -81,11 +83,16 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                     lines="full"
                     detail={false}
                     button
-                    onClick={subscribeNotification}
+                    onClick={() => unsubscribeNotification().then(console.log)}
                     className={'text-sm'}
                 >
                     Notifications
-                    <IonIcon icon={notificationsOff} size={'small'} slot={'end'} />
+                    <IonIcon
+                        icon={notifications}
+                        size={'small'}
+                        slot={'end'}
+                        color={'primary'}
+                    />
                 </IonItem>
             );
         } else {
@@ -94,15 +101,24 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                     lines="full"
                     detail={false}
                     button
-                    onClick={unsubscribeNotification}
+                    onClick={() =>
+                        subscribeNotification().catch((err) => {
+                        presentAlert('Please enable notifications');
+                        })
+                    }
                     className={'text-sm border-0'}
                 >
                     Notifications
-                    <IonIcon icon={notifications} size={'small'} slot={'end'} />
+                    <IonIcon
+                        icon={notificationsOff}
+                        size={'small'}
+                        slot={'end'}
+                        color={'gray'}
+                    />
                 </IonItem>
             );
-        }
-    }, [hasPermission, canSubscribe, subscribeNotification, unsubscribeNotification]);
+            }
+        }, [canSubscribe, hasPermission, presentAlert, subscribeNotification, unsubscribeNotification]);
 
     return (
         <IonHeader translucent className="relative z-40">
