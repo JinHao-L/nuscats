@@ -118,7 +118,7 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                 </IonItem>
             );
             }
-        }, [canSubscribe, hasPermission, presentAlert, subscribeNotification, unsubscribeNotification]);
+        }, [canSubscribe, hasPermission]);
 
     return (
         <IonHeader translucent className="relative z-40">

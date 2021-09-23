@@ -66,7 +66,7 @@ const App: React.FC = () => {
     });
 
     return () => unsubscribe();
-  }, [present, subscribe, onNotification]);
+  }, []);
 
 
   const { isLoggedIn } = useAuth();
