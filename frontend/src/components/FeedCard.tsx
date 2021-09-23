@@ -134,6 +134,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
           <IonAvatar slot="start">
             <IonImg
               src={owner?.profile_pic || defaultAvatar}
+              alt={'Sightings owner\'s avatar'}
               className="inline-block align-middle w-11 h-11 rounded-xl"
             />
           </IonAvatar>
@@ -170,6 +171,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
         <IonCardContent>
           <IonImg
             src={sighting.image}
+            alt={'The cat sighting image'}
             className="object-cover h-full min-w-full mt-2"
           />
           <IonRow className="ion-padding-vertical">
