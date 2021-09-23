@@ -1,5 +1,3 @@
-import { CatSighting } from "./sightings";
-
 export enum UniversityZone {
   Computing = "Computing",
   Arts = "Arts",

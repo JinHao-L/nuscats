@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'frontend',
+  appId: 'io.nuscats.cafe',
+  appName: 'NUSCats',
   webDir: 'build',
   bundledWebRuntime: false
 };

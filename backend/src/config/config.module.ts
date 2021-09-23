@@ -1,3 +1,4 @@
+import { firebaseConfig, FirebaseConfigService } from './firebase.config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig, AppConfigService } from './app.config';
@@ -23,6 +24,7 @@ import { mailConfig, MailConfigService } from './mail.config';
         seederConfig,
         reverseGeocodeConfig,
         mailConfig,
+        firebaseConfig,
       ],
       validationSchema: validationSchema,
     }),
@@ -35,6 +37,7 @@ import { mailConfig, MailConfigService } from './mail.config';
     ReverseGeocodeConfigService,
     SeederConfigService,
     MailConfigService,
+    FirebaseConfigService,
   ],
   exports: [
     ConfigModule,
@@ -45,6 +48,7 @@ import { mailConfig, MailConfigService } from './mail.config';
     ReverseGeocodeConfigService,
     SeederConfigService,
     MailConfigService,
+    FirebaseConfigService,
   ],
 })
 export class AppConfigModule {}

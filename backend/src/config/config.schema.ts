@@ -33,4 +33,8 @@ export default Joi.object({
   EMAIL_PORT: Joi.number().required(), // 587
   EMAIL_ID: Joi.string().required(), // user@outlook.com
   EMAIL_PASS: Joi.string().required(), // password
+
+  FIREBASE_PROJECT_ID: Joi.string().default('nuscats'),
+  FIREBASE_PRIVATE_KEY: Joi.string().required(),
+  FIREBASE_CLIENT_EMAIL: Joi.string().required(),
 });
