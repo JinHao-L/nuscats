@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   IonButton,
   IonButtons,
@@ -11,7 +11,7 @@ import {
   IonSpinner,
   IonToolbar,
 } from '@ionic/react';
-import { list, refresh } from 'ionicons/icons';
+import { refresh } from 'ionicons/icons';
 import { MAP_ROUTE } from 'app/routes';
 import { useLatestSightings } from 'hooks/useSightings';
 import NavBar from 'components/NavBar';
@@ -22,9 +22,7 @@ import { QuerySightingOrderBy } from '@api/sightings';
 import { useLocation, useHistory } from 'react-router';
 import * as queryString from 'query-string';
 
-type HomePageProps = {}
-
-const HomeTab: React.FC<HomePageProps> = () => {
+const HomeTab: React.FC = () => {
 
   // page setup
   const mapPage = "Map"
@@ -134,4 +132,4 @@ const HomeTab: React.FC<HomePageProps> = () => {
   );
 };
 
-export default HomeTab;
+export default React.memo(HomeTab);

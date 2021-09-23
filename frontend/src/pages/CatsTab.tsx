@@ -3,7 +3,7 @@ import { IonContent, IonPage, IonRefresher, IonRefresherContent, IonSpinner } fr
 import CatCard from 'components/CatCard';
 import NavBar from 'components/NavBar';
 import { useCats } from 'hooks/useCats';
-import { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 const CatsTab: React.FC = () => {
 
@@ -63,4 +63,4 @@ const CatsTab: React.FC = () => {
     )
 };
 
-export default CatsTab;
+export default React.memo(CatsTab);

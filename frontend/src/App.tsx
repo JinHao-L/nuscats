@@ -36,6 +36,7 @@ import {
   EMAIL_CONFIRM_ROUTE,
   FORGET_PASSWORD_ROUTE,
   LANDING_ROUTE,
+  MAP_ROUTE,
   PASSWORD_RESET_ROUTE,
   RESEND_EMAIL_ROUTE,
   ROOT_ROUTE,
@@ -48,8 +49,22 @@ import ForgetPasswordPage from 'pages/ForgetPassword';
 import EmailConfirmationPage from 'pages/EmailConfirmation';
 import ResetPasswordPage from 'pages/ResetPassword';
 import ResendConfirmationPage from 'pages/ResendConfirmation';
+import useAuth from 'hooks/useAuth';
+import { useMemo } from 'react';
 
 const App: React.FC = () => {
+
+  const { isLoggedIn } = useAuth();
+
+  const redirect = useMemo(() => {
+    return (isLoggedIn
+      ? <Redirect to={MAP_ROUTE} />
+      : <Redirect to={LANDING_ROUTE} />
+    )
+  },
+    [isLoggedIn]
+  )
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -78,8 +93,8 @@ const App: React.FC = () => {
             path={FORGET_PASSWORD_ROUTE}
             component={ForgetPasswordPage}
           />
-          <Route path={ROOT_ROUTE} render={() => <Tabs />} />
-          <Route render={() => <Redirect to={LANDING_ROUTE} />} />
+          <Route path={ROOT_ROUTE} component={Tabs} />
+          <Route render={() => redirect} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

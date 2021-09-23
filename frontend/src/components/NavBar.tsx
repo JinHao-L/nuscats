@@ -10,6 +10,10 @@ import {
     IonText,
     IonTitle,
     IonToolbar,
+    useIonViewDidEnter,
+    useIonViewDidLeave,
+    useIonViewWillEnter,
+    useIonViewWillLeave,
 } from "@ionic/react"
 import { LANDING_ROUTE, PROFILE_ROUTE, SETUP_PROFILE_ROUTE, SIGNIN_ROUTE, SIGNUP_ROUTE } from "app/routes";
 import useAuth from "hooks/useAuth";
@@ -27,15 +31,26 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
 
     const { isLoggedIn, shouldCreateProfile, setLogout } = useAuth()
     const [showDropdown, setShowDropDown] = useState<boolean>(false)
+    const [isAnimating, setIsAnimating] = useState<boolean>(false)
     const dropdownRef = useRef(null)
     const location = useLocation()
     const history = useHistory()
 
     useEffect(() => {
         setShowDropDown(false)
+
+        return () => setShowDropDown(false)
     }, [location])
 
     useOnClickOutside(dropdownRef, () => setShowDropDown(false))
+
+    useIonViewWillEnter(() => { setIsAnimating(true) });
+
+    useIonViewDidEnter(() => { setIsAnimating(false) });
+
+    useIonViewWillLeave(() => { setIsAnimating(true) })
+
+    useIonViewDidLeave(() => { setIsAnimating(false) })
 
     const handleLogout = useCallback(() => {
         logout()
@@ -51,9 +66,8 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                 {children}
                 <IonButtons slot="end">
                     <IonButton
-
                         color="dark"
-                        onClick={e => setShowDropDown(val => true)}
+                        onClick={e => setShowDropDown(true)}
                         disabled={showDropdown}
                     >
                         <IonIcon icon={list} />
@@ -61,7 +75,9 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                 </IonButtons>
             </IonToolbar>
             <div className={"absolute z-50 h-auto top-12 w-44 right-3 transform transition-all "
-                + (showDropdown ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12 pointer-events-none")}
+                + (showDropdown ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12 pointer-events-none")
+                + (isAnimating ? " hidden" : "")
+            }
                 ref={dropdownRef}
             >
                 <div className="absolute h-10 w-11 -top-11 -right-2" />
