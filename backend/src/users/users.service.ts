@@ -91,11 +91,8 @@ export class UsersService {
   }
 
   activateAccount(email: string): Observable<boolean> {
-    console.log(123);
     return this.findByEmail(email).pipe(
       mergeMap((user) => {
-        console.log(123);
-
         if (!user) {
           throw new NotFoundException('User not found');
         }

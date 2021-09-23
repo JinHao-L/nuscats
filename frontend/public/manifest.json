@@ -3,20 +3,24 @@
   "name": "NUS Cats",
   "icons": [
     {
-      "src": "assets/icon/favicon.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+        "src": "assets/icon/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
     },
     {
-      "src": "assets/icon/icon.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "maskable"
+        "src": "assets/icon/android-chrome-256x256.png",
+        "sizes": "256x256",
+        "type": "image/png"
     }
   ],
   "start_url": ".",
+  "gcm_sender_id": "645171323336",
+  "gcm_user_visible_only": true,
+  "permissions": [
+    "gcm"
+  ],
+  "orientation": "portrait",
   "display": "standalone",
   "theme_color": "#fb724c",
-  "background_color": "#ffffff",
-  "gcm_sender_id": "645171323336"
+  "background_color": "#ffffff"
 }

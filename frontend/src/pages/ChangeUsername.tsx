@@ -31,7 +31,6 @@ const ChangeUsername: React.FC = () => {
     setLoading(true);
     const response = await changeUsername(data.username)
     setLoading(false);
-    console.log(response)
     if (response.err) {
       showAlert(response.err, [{ text: 'Ok' }]);
       setSuccess(false);

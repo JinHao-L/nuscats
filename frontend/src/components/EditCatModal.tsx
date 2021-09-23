@@ -188,11 +188,10 @@ const EditCatModal: React.FC<Props> = ({ dismissModal, cat, catDataMutate }) => 
 				throw err;
 			});
 			// Send cat entry to database
-			console.log({ ...catData, image: imageUrl });
 			apiFetch(`${catsKey}`, { ...catData, image: imageUrl }, {
 				method: 'POST',
 			}).then(res => {
-				if (res.status == 201) {
+				if (res.status === 201) {
 					// Show success alert, then close modal
 					mutate(catsKey);
 					presentAlert({

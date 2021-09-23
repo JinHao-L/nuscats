@@ -7,13 +7,18 @@ import {
   BadRequestException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { NotificationCreateDto } from './dtos/notification-create.dto';
 import { NotificationSubscriptionDto } from './dtos/notification-subscription.dto';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { Roles } from 'src/shared/decorators/role.decorator';
 import { RoleType } from '@api/users';
 
+@ApiTags('Notifications')
 @Controller('notify')
 export class NotificationsController {
   constructor(private notifyService: NotificationsService) {}

@@ -76,7 +76,6 @@ const ChangeNameAndDp: React.FC = () => {
             url = profilePicState.url
         }
 
-        console.log({ data, url })
         const { err, profile } = await createProfile(userId, data.firstName, data.lastName, url)
         if (err) {
             console.log(`Errored creating profile: ${err}`)

@@ -43,6 +43,11 @@ registerRoute(
       return false;
     }
 
+    // If this is a URL that starts with /_, skip.
+    if (url.pathname.startsWith('/api')) {
+      return false;
+    }
+
     // If this looks like a URL for a resource, because it contains
     // a file extension, skip.
     if (url.pathname.match(fileExtensionRegexp)) {
@@ -95,28 +100,29 @@ const firebaseApp = initializeApp({
 const messaging = getMessaging(firebaseApp);
 
 onBackgroundMessage(messaging, (payload) => {
-  console.log('[service-worker.js] Received background message ', payload);
-    // Customize notification here
-    const notificationTitle = payload.notification?.title || 'NUS Cats';
-    const notificationOptions = {
-      body: payload.notification?.body,
-      icon: payload.notification?.image || 'assets/icon/icon.png',
-    };
+  // console.log('[service-worker.js] Received background message ', payload);
+  // Customize notification here
+  const notificationTitle = payload.data?.title || 'NUS Cats';
+  const notificationOptions = {
+    body: payload.data?.body,
+    icon: payload.data?.icon || 'assets/icon/icon.png',
+  };
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener('notificationclick', (event) => {
-  console.log(event.notification);
-  return event;
+self.addEventListener('notificationclick', function (event) {
+  const rootUrl = new URL('/', self.location.origin).href;
+  event.notification.close();
+  // Enumerate windows, and call window.focus(), or open a new one.
+  event.waitUntil(
+    self.clients.matchAll().then(matchedClients => {
+      for (let client of matchedClients) {
+        if (client.url.indexOf(rootUrl) >= 0  && 'focus' in client) {
+          return (client as any).focus();
+        }
+      }
+      return self.clients.openWindow("/").then(client => client?.focus());
+    })
+  );
 });
-
-// self.addEventListener('push', (event) => {
-//   const notificationText = event.data?.text();
-//   const showNotification = self.registration.showNotification('NUS Cats', {
-//     body: notificationText,
-//     icon: 'assets/icon/icon.png',
-//   });
-//   // Make sure the toast notification is displayed, before exiting the function.
-//   event.waitUntil(showNotification);
-// });

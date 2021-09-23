@@ -45,17 +45,6 @@ const Signup: React.FC = () => {
 			onDidDismiss: () => history.push(MAP_ROUTE),
 			buttons: [{ text: 'Ok' }]
 		})
-
-		// const { user, err: loginErr, unauthorized } = await login(data.email, data.password)
-		// if (loginErr || unauthorized) {
-		// 	console.log({ loginErr, unauthorized })
-		// 	return
-		// }
-
-		// if (user) {
-		// 	setLogin(user.uuid)
-		// 	history.push(MAP_ROUTE)
-		// }
 	}
 
 	return (

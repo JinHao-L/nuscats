@@ -18,7 +18,7 @@ export class NotificationsService {
   ) {
     return admin.messaging().sendToTopic(
       topic,
-      { notification },
+      { data: notification },
       {
         timeToLive: 86400, // 1 day
       },
