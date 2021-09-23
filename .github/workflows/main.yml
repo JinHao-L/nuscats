@@ -20,6 +20,8 @@ jobs:
           docker_build_args: |
             NODE_ENV
             REACT_APP_MAPBOX_TOKEN
+            MESSAGING_VAPID_KEY
         env:
           NODE_ENV: production
           REACT_APP_MAPBOX_TOKEN: ${{ secrets.REACT_APP_MAPBOX_TOKEN }}
+          MESSAGING_VAPID_KEY: ${{ secrets.MESSAGING_VAPID_KEY }}
