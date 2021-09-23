@@ -1,4 +1,4 @@
-import { IonPage, IonContent, IonButton, IonRouterLink } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonRouterLink, IonTitle, IonText } from '@ionic/react';
 import { MAP_ROUTE, SIGNIN_ROUTE, SIGNUP_ROUTE } from 'app/routes';
 import useAuth from 'hooks/useAuth';
 import { useEffect } from 'react';
@@ -31,10 +31,10 @@ const Landing: React.FC = () => {
             </div>
 
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-90">
-              <div className="flex flex-col items-center h-full pb-20 mx-5">
-                <p className="mt-auto mb-6 text-3xl font-bold text-center text-white">
-                  Insert tagline here
-                </p>
+              <div className="flex flex-col items-center h-full mx-5 pb-14">
+                <IonText className="mt-auto mb-6 font-serif text-3xl font-bold text-center text-white">
+                  Cute cats of NUS<br/>that everyone loves
+                </IonText>
                 <IonButton
                   className="w-full max-w-xl mb-6 text-base font-semibold cursor-pointer px-7 h-14 md:text-lg"
                   color="primary"
