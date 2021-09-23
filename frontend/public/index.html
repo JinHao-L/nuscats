@@ -15,24 +15,64 @@
   </script>
 
   <meta charset="utf-8" />
+  <meta name="description" content="Spot the cute cats of NUS!">
+  <meta name="keywords" content="cats"/>
   <title>Spot the cute cats of NUS!</title>
 
   <base href="/" />
 
   <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#ffffff">
   <meta name="viewport"
     content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
+
+  <!-- Android  -->
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="NUS Cats" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+  <!-- Pinned Sites  -->
+  <meta name="application-name" content="NUS Cats" />
+  <meta name="msapplication-tooltip" content="Spot the cute cats of NUS!" />
+  <meta name="msapplication-starturl" content="/" />
+  <meta name="msapplication-TileColor" content="#ad45fe">
+
+  <!-- Tap highlighting  -->
   <meta name="msapplication-tap-highlight" content="no" />
 
+  <!-- UC Mobile Browser  -->
+  <meta name="full-screen" content="yes" />
+  <meta name="browsermode" content="application" />
+  
+  <!-- Disable night mode for this page  -->
+  <meta name="nightmode" content="disable" />
+
+  <!-- imagemode - show image even in text only mode  -->
+  <meta name="imagemode" content="force" />
+
+  <!-- Orientation  -->
+  <meta name="screen-orientation" content="portrait" />
+
+  <!-- Main Link Tags  -->
+  <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/assets/icon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/assets/icon/favicon-32x32.png">
+
+  <!-- Pinned Tab  -->
+  <link rel="mask-icon" href="%PUBLIC_URL%/assets/icon/safari-pinned-tab.svg" color="#fd814b">
+
+  <!-- Others -->
+  <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.ico" />
+
+  <!-- UC Browser  -->
+  <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/assets/icon/apple-touch-icon.png">
+
+  <!-- Manifests  -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
-  <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/assets/icon/favicon.png" />
-
-  <!-- add to homescreen for ios -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Spot the cute cats of NUS!" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="manifest" href="%PUBLIC_URL%/site.webmanifest">
 
   <!-- fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
