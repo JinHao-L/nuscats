@@ -55,9 +55,9 @@ const App: React.FC = () => {
     subscribe().catch((err) => console.log(err));
 
     const unsubscribe = onNotification((payload) => {
-      const message = payload.notification;
+      const message = payload.data;
       present({
-        header: 'New notification',
+        header: `New notification - ${message?.title}`,
         message: message?.body || '',
         duration: 3000,
         translucent: true,
