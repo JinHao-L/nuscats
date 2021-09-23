@@ -41,13 +41,15 @@ const AdminCatAlert = () => {
         return (
           <IonList>
             {sightings.map((sighting) => (
-              <FeedCard
-                key={sighting.id}
-                sighting={sighting}
-                cat={sighting.cat}
-                owner={sighting.owner}
-                onDelete={(_) => mutate}
-              />
+              <div className="flex flex-col items-center w-full">
+                <FeedCard
+                  key={sighting.id}
+                  sighting={sighting}
+                  cat={sighting.cat}
+                  owner={sighting.owner}
+                  onDelete={(_) => mutate}
+                />
+              </div>
             ))}
           </IonList>
         );

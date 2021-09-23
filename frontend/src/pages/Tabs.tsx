@@ -1,4 +1,4 @@
-import { matchPath, Redirect, Route, useLocation } from 'react-router-dom';
+import { matchPath, Redirect, Route, useLocation, RouteComponentProps } from 'react-router-dom';
 import {
   IonIcon,
   IonLabel,
@@ -27,7 +27,7 @@ import {
   ALERT_CATS_ROUTE,
 } from 'app/routes';
 import CatDetailPage from './CatDetailPage';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Admin from './Admin';
 import EditCatsList from './EditCatsList';
 import RequestLocation from './RequestLocation';
@@ -188,9 +188,7 @@ const Tabs: React.FC = () => {
           <Route exact path={ROOT_ROUTE}>
             <Redirect to={MAP_ROUTE} />
           </Route>
-          <Route>
-            <RedirectHelper />
-          </Route>
+          <Route component={React.memo(RedirectHelper)} />
         </IonRouterOutlet >
 
         <IonTabBar slot="bottom" className="py-2" style={tabStyle}>
@@ -213,14 +211,10 @@ const isOuterRoute = (path: string) => !matchPath(path, {
   exact: false
 })
 
-const RedirectHelper: React.FC = () => {
-  const location = useLocation()
-  console.log({ path: location.pathname })
+const RedirectHelper: React.FC<RouteComponentProps> = ({ location }) => {
   if (isOuterRoute(location.pathname)) {
-    console.log("outer")
     return <Redirect to={location.pathname} />
   }
-  console.log("inner")
   return <Redirect to={MAP_ROUTE} />
 }
 
