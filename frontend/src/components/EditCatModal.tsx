@@ -31,6 +31,14 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 	const [presentZonePicker] = useIonPicker();
 	const [presentNeuteredPicker] = useIonPicker();
 
+	// Keep track of errors for form validation
+	const [formErrs, setFormErrs] = useState({
+		image: false,
+		name: false,
+		oneLiner: false,
+		description: false, 
+	});
+
 	const zonePickerOptionsArr = Object.keys(UniversityZone).map(zone => {
 				return ({
 					text: zone,
@@ -102,7 +110,12 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 				...catData,
 				image: image.webPath as string,
 			})
-			
+			if (formErrs.image) {
+				setFormErrs({
+					...formErrs,
+					image: false,
+				})
+			}
 		} catch (e) {
 			console.error(e);
 		}
@@ -148,7 +161,18 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 
 	// Handler for add cat button
 	const handleAddCatData = async () => {
-		// DO FORM VALIDATION FIRST
+		// Form validation
+		const formErr = {
+			image: !catData.image,
+			name: !catData.name,
+			oneLiner: !catData.one_liner,
+			description: !catData.description, 
+		}
+		if (formErr.image || formErr.name || formErr.oneLiner || formErr.description) {
+			setFormErrs(formErr);
+			return;
+		}
+
 		const imgBlob = await fetch(catData.image).then(res => res.blob());
 		try {
 			// Get urls for uploading/viewing s3 image 
@@ -239,15 +263,27 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 								</div>
 							</div>
 						}
+						{ formErrs.image && <span className="mt-2 ml-1 text-xs font-medium text-red-700">Please provide an image</span> }
 					</div>
 					<label className="block my-5 text-lg">
 						Name:
-						<input
-							id="name"
-							className="block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"
-							value={catData.name}
-							onChange={(e) => setCatData({...catData, name: e.target.value})}
-						/>
+						<div className={"bg-gray-200 rounded-xl border-2 border-transparent" + (formErrs.name ? " border-red-700" : "")}>
+							<input
+								id="name"
+								className={"block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"}
+								value={catData.name}
+								onChange={(e) => {
+									if (formErrs.name) {
+										setFormErrs({
+											...formErrs,
+											name: false,
+										})
+									}
+									setCatData({...catData, name: e.target.value})
+								}}
+							/>
+						</div>
+            			{formErrs.name && <span className="ml-1 text-xs font-medium text-red-700">Please provide a name</span>}
 					</label>
 					<label className="block my-5 text-lg">
 						Zone:
@@ -269,25 +305,43 @@ const EditCatModal: React.FC<Props> = ({dismissModal, cat, catDataMutate}) => {
 					</label>
 					<label className="block my-5 text-lg">
 						One-liner:
-						<textarea
-							id="description"
-							className="block w-full h-32 px-3 py-1 mt-3 bg-gray-200 border resize-none rounded-xl focus:outline-none"
-							value={catData.one_liner}
-							onChange={(e) => {
-								setCatData({...catData, one_liner: e.target.value})
-							}}
-						/>
+						<div className={"bg-gray-200 rounded-xl border-2 border-transparent" + (formErrs.oneLiner ? " border-red-700" : "")}>
+							<textarea
+								id="description"
+								className="block w-full h-32 px-3 py-1 mt-3 bg-gray-200 border resize-none rounded-xl focus:outline-none"
+								value={catData.one_liner}
+								onChange={(e) => {
+									if (formErrs.oneLiner) {
+										setFormErrs({
+											...formErrs,
+											oneLiner: false,
+										});
+									}
+									setCatData({...catData, one_liner: e.target.value})
+								}}
+							/>
+						</div>
+            			{formErrs.oneLiner && <span className="ml-1 text-xs font-medium text-red-700">Please provide a tldr of this cat</span>}
 					</label>
 					<label className="block my-5 text-lg">
 						Description:
-						<textarea
-							id="description"
-							className="block w-full px-3 py-1 mt-3 bg-gray-200 border resize-none h-60 rounded-xl focus:outline-none"
-							value={catData.description}
-							onChange={(e) => {
-								setCatData({...catData, description: e.target.value})
-							}}
-						/>
+						<div className={"bg-gray-200 rounded-xl border-2 border-transparent" + (formErrs.description ? " border-red-700" : "")}>
+							<textarea
+								id="description"
+								className="block w-full px-3 py-1 mt-3 bg-gray-200 border resize-none h-60 rounded-xl focus:outline-none"
+								value={catData.description}
+								onChange={(e) => {
+									if (formErrs.description) {
+										setFormErrs({
+											...formErrs,
+											description: false,
+										})
+									}
+									setCatData({...catData, description: e.target.value})
+								}}
+							/>
+						</div>
+            			{formErrs.description && <span className="ml-1 text-xs font-medium text-red-700">Please provide a description</span>}
 					</label>
 					<IonButton
 						className="mb-5 text-lg text-white cursor-pointer h-14"
