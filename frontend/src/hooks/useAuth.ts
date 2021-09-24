@@ -90,7 +90,7 @@ export default function useAuth() {
         return () => {
             window.removeEventListener('storage', toggleLoggedIn);
         };
-    }, []);
+    }, [setIsLoggedIn, setUserId]);
 
     const {
         data: profileData,

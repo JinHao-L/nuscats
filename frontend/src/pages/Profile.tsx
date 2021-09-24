@@ -11,22 +11,19 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { settingsOutline } from 'ionicons/icons';
-import { LANDING_ROUTE, MAP_ROUTE, PROFILE_SETTINGS_ROUTE, SIGNIN_ROUTE } from 'app/routes';
+import { LANDING_ROUTE, MAP_ROUTE, PROFILE_SETTINGS_ROUTE } from 'app/routes';
 import useAuth from 'hooks/useAuth';
 import { useMemo } from 'react';
-import { useSightings, UseSightingsOptions } from 'hooks/useSightings';
+import { useSightings } from 'hooks/useSightings';
 import { InfiniteImageGallery } from 'components/InfiniteImageGallery';
 
 const ProfileTab: React.FC = () => {
   // Fetch profile data
   const { isLoggedIn, userProfile } = useAuth();
+
   // Fetch sightings data
-  var queryOptions: UseSightingsOptions = { limit: 18, page: 1 };
-  if (userProfile) {
-    queryOptions.ownerIds = [userProfile.uuid];
-  }
   const { sightings, isLoading, pageSize, setPageSize } =
-    useSightings(queryOptions);
+    useSightings(userProfile ? { ownerIds: [userProfile.uuid] } : {}, { limit: 18, page: 1 });
 
   const username = useMemo(() => userProfile?.username, [userProfile]);
   const fullname = useMemo(

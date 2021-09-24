@@ -20,7 +20,7 @@ interface FeedListProps {
 
 const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
   const { sightings, error, mutate, isLoading, pageSize, setPageSize } =
-    useSightings({ ...queryParams, limit: 5, page: 1 });
+    useSightings({ ...queryParams }, { limit: 5, page: 1 });
 
   const doRefreshSightings = useCallback(
     (event: CustomEvent<RefresherEventDetail>) => {
