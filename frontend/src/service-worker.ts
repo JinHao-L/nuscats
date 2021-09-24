@@ -14,7 +14,7 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { staticResourceCache, googleFontsCache, imageCache } from 'workbox-recipes';
+import { staticResourceCache, googleFontsCache, imageCache, warmStrategyCache } from 'workbox-recipes';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw';
 import * as googleAnalytics from 'workbox-google-analytics';
@@ -29,17 +29,44 @@ clientsClaim();
 // even if you decide not to use precaching. See https://cra.link/PWA
 precacheAndRoute(self.__WB_MANIFEST);
 
-
 googleAnalytics.initialize();
 staticResourceCache();
 googleFontsCache();
-imageCache();
+
+
+const workboxInitUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v10?access_token=${process.env.REACT_APP_MAPBOX_TOKEN as string}`
+warmStrategyCache({
+  urls: [workboxInitUrl],
+  strategy: new StaleWhileRevalidate({
+    cacheName: 'workbox-init',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
+      })
+    ]
+  })
+})
+
+warmStrategyCache({
+  urls: ["/v1/cats"],
+  strategy: new StaleWhileRevalidate({
+    cacheName: 'cats',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 604800 // 1 week
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
+      })
+    ]
+  })
+})
 
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
-
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }: { request: Request; url: URL }) => {
@@ -145,7 +172,7 @@ registerRoute(
         maxAgeSeconds: 172800 // 2 days
       }),
       new CacheableResponsePlugin({
-        statuses: [200]
+        statuses: [0, 200]
       })
     ]
   })
@@ -162,7 +189,27 @@ registerRoute(
         maxAgeSeconds: 86400 // 1 day
       }),
       new CacheableResponsePlugin({
-        statuses: [200]
+        statuses: [0, 200]
+      })
+    ]
+  })
+)
+
+// Cache all other images
+imageCache();
+
+// Cache mapbox assets
+registerRoute(
+  new RegExp('https://(tiles.mapbox.com|api.mapbox.com)(.*)'),
+  new StaleWhileRevalidate({
+    cacheName: 'profile-images',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 30,
+        maxAgeSeconds: 604800 // 1 week
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
       })
     ]
   })
