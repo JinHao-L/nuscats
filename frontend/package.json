@@ -30,6 +30,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "react-share": "^4.4.0",
     "swiper": "^6.8.4",
     "swr": "^1.0.1",
     "timeago-react": "^3.0.3",

@@ -37,6 +37,7 @@ import {
   FORGET_PASSWORD_ROUTE,
   PASSWORD_RESET_ROUTE,
   RESEND_EMAIL_ROUTE,
+  SIGHTING_ROUTE,
 } from 'app/routes';
 import useAuth from 'hooks/useAuth';
 import { RoleType } from '@api/users';
@@ -63,6 +64,7 @@ import EmailConfirmationPage from './EmailConfirmation';
 import ForgetPasswordPage from './ForgetPassword';
 import ResendConfirmationPage from './ResendConfirmation';
 import ResetPasswordPage from './ResetPassword';
+import SightingPage from './SightingPage';
 
 const HomeTab = lazy(() => import('./HomeTab'));
 interface TabInfo {
@@ -155,6 +157,7 @@ const Tabs: React.FC = () => {
               <CatsTab />
             </Route>
             <Route path={`${CAT_ROUTE}/:id(\\d+)`} component={CatDetailPage} />
+            <Route path={`${SIGHTING_ROUTE}/:id`} component={SightingPage} />
             <Route exact path={SIGNUP_ROUTE} component={Signup} />
             <Route exact path={SIGNIN_ROUTE} component={Signin} />
             <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />

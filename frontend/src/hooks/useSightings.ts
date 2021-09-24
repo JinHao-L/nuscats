@@ -10,7 +10,7 @@ import useSWRInfinite from 'swr/infinite';
 import * as queryString from 'query-string';
 import { parseDate } from 'lib/utils';
 
-export interface UseSightingsOptions extends CatSightingQuery { }
+export interface UseSightingsOptions extends CatSightingQuery {}
 
 export function useSightings(useSightingsOptions?: UseSightingsOptions) {
   // build sightings key
@@ -72,10 +72,10 @@ export function useLatestSightings() {
   const sightings = err
     ? undefined
     : data?.value.map((item) => {
-      item.created_at = parseDate(item.created_at);
-      item.updated_at = parseDate(item.updated_at);
-      return item;
-    });
+        item.created_at = parseDate(item.created_at);
+        item.updated_at = parseDate(item.updated_at);
+        return item;
+      });
 
   return { sightings, error: err, isLoading, mutate };
 }
@@ -94,10 +94,25 @@ export function useAlertSightings() {
   const sightings = err
     ? undefined
     : data?.value.map((item) => {
-      item.created_at = parseDate(item.created_at);
-      item.updated_at = parseDate(item.updated_at);
-      return item;
-    });
+        item.created_at = parseDate(item.created_at);
+        item.updated_at = parseDate(item.updated_at);
+        return item;
+      });
 
   return { sightings, error: err, isLoading, mutate };
+}
+
+export function useSingleSighting(id: CatSighting['id']) {
+  const { data, error, mutate } = useSWR(
+    `${sightingsKey}/${id}`,
+    swrFetcher<CatSighting>(),
+    { dedupingInterval: 10000 },
+  );
+
+  const isLoading = !data && !error;
+
+  const err =
+    data && !data.success ? new Error(`status code: ${data?.status}`) : error;
+
+  return { sighting: data?.value, error: err, isLoading, mutate };
 }

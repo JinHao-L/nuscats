@@ -25,8 +25,14 @@ import {
   timeOutline,
   trash,
 } from 'ionicons/icons';
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TelegramShareButton,
+  TelegramIcon,
+} from 'react-share';
 import TimeAgo from 'timeago-react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Profile, Cat, CatSighting, SightingType } from '@api';
 import defaultAvatar from 'assets/default_avatar.png';
 import { CAT_ROUTE } from 'app/routes';
@@ -72,6 +78,11 @@ const FeedCard: React.FC<FeedCardProps> = ({
   const [showSelectCat, setShowSelectCat] = useState(false);
   const { userProfile } = useAuth();
   const router = useIonRouter();
+
+  const shareUrl = useMemo(() => {
+    const location = window.location;
+    return `${location.protocol}//${location.host}/app/sighting/${sighting.id}`;
+  }, [sighting]);
 
   const routeToCat = () => {
     if (cat) {
@@ -134,7 +145,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
           <IonAvatar slot="start">
             <IonImg
               src={owner?.profile_pic || defaultAvatar}
-              alt={'Sightings owner\'s avatar'}
+              alt={"Sightings owner's avatar"}
               className="inline-block align-middle w-11 h-11 rounded-xl"
             />
           </IonAvatar>
@@ -162,7 +173,8 @@ const FeedCard: React.FC<FeedCardProps> = ({
                   onClick={() => setShowSelectCat(true)}
                   fill="outline"
                 >
-                  {cat ? 'Change' : 'Set'} cat <IonIcon slot="end" icon={chevronForward} />
+                  {cat ? 'Change' : 'Set'} cat{' '}
+                  <IonIcon slot="end" icon={chevronForward} />
                 </IonButton>
               )}
             </div>
@@ -184,6 +196,21 @@ const FeedCard: React.FC<FeedCardProps> = ({
                 Emergency!
               </IonChip>
             )}
+            <div className="flex flex-1" />
+
+            <FacebookShareButton
+              className="mr-2"
+              url={shareUrl}
+              quote="Check out this cat at NUS!"
+            >
+              <FacebookIcon size={28} round />
+            </FacebookShareButton>
+            <TelegramShareButton
+              title="Look at this cat on NUS!"
+              url={shareUrl}
+            >
+              <TelegramIcon size={28} round />
+            </TelegramShareButton>
           </IonRow>
           <IonRow className="flex items-center justify-between mt-4">
             <IonText className="ml-2 text-gray-900 whitespace-normal">
@@ -192,7 +219,10 @@ const FeedCard: React.FC<FeedCardProps> = ({
           </IonRow>
           <IonRow className="flex items-center justify-between mt-4">
             <IonCol>
-              <IonRouterLink {...locationRouterProps} className="flex items-center space-x-2">
+              <IonRouterLink
+                {...locationRouterProps}
+                className="flex items-center space-x-2"
+              >
                 <IonIcon color="secondary" icon={locationOutline} />
                 <IonLabel className="text-sm text-gray-800">
                   {sighting.location_name}

@@ -28,3 +28,6 @@ export const BROADCAST_ANNOUNCEMENT_ROUTE = `${ADMIN_ROUTE}/announcement`;
 export const REQUEST_LOCATION_ROUTE = `${ADMIN_ROUTE}/reqlocation`;
 export const EDIT_CATS_ROUTE = `${ADMIN_ROUTE}/edit`;
 export const ALERT_CATS_ROUTE = `${ADMIN_ROUTE}/alert`;
+
+// Sighting route for sharing
+export const SIGHTING_ROUTE = `${ROOT_ROUTE}/sighting`;
