@@ -27,10 +27,10 @@ import { NotificationsModule } from './notifications/notifications.module';
       rootPath: join(__dirname, '..', '..', 'build'),
     }),
     AppConfigModule,
-    CatsModule,
     AuthModule,
     UsersModule,
     ProfilesModule,
+    CatsModule,
     SightingsModule,
     UploadsModule,
     TypeOrmModule.forRootAsync({

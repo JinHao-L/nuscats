@@ -44,7 +44,6 @@ async function bootstrap() {
     .setTitle('NUSCats')
     .setDescription("API endpoint for NUSCats's backend")
     .setVersion('1.0')
-    .addTag('NUSCats')
     .build();
 
   const swaggerDoc = SwaggerModule.createDocument(app, config);

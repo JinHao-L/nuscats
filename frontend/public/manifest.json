@@ -1,5 +1,5 @@
 {
-  "short_name": "NUSCats",
+  "short_name": "NUS Cats",
   "name": "NUS Cats",
   "icons": [
     {
@@ -20,10 +20,10 @@
     }
   ],
   "start_url": ".",
-  "gcm_sender_id": "645171323336",
-  "gcm_user_visible_only": true,
+  "gcm_sender_id": "103953800507",
   "permissions": [
-    "gcm"
+    "gcm",
+    "storage"
   ],
   "orientation": "portrait",
   "display": "standalone",
