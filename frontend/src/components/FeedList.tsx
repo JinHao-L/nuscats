@@ -68,6 +68,7 @@ const FeedList: React.FC<FeedListProps> = ({ queryParams = {}, cat, user }) => {
                 sighting={sighting}
                 cat={cat || sighting.cat}
                 owner={user || sighting.owner}
+                onCatUpdate={(_) => mutate()}
                 onDelete={(_) => mutate()}
               />
             ))}
