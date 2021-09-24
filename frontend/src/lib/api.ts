@@ -26,9 +26,15 @@ export const notificationCreateKey = '/notify/create';
 export const apiFetch = async (
   path: string,
   body?: any,
-  options?: RequestInit,
+  options?: RequestInit & { timeout?: number },
 ): Promise<Response> => {
-  return fetch(`${ApiBaseUrl}/v1${path}`, {
+
+  const { timeout } = options ?? { timeout: 15000 } // default 15 seconds timeout
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout)
+
+  const res = await fetch(`${ApiBaseUrl}/v1${path}`, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -36,8 +42,13 @@ export const apiFetch = async (
     },
     credentials: 'include',
     ...options,
+    signal: controller.signal,
     body: body ? JSON.stringify(body) : null,
   });
+
+  clearTimeout(id)
+
+  return res;
 };
 
 export type Result<T> = {
@@ -49,14 +60,14 @@ export type Result<T> = {
 // key can only be a single string
 export const swrFetcher =
   <T>(body?: any, options?: RequestInit): Fetcher<Result<T>> =>
-  async (key: string) => {
-    const res = await apiFetch(key, body, options);
-    return {
-      success: res.ok,
-      status: res.status,
-      value: (await res.json()) as T,
+    async (key: string) => {
+      const res = await apiFetch(key, body, options);
+      return {
+        success: res.ok,
+        status: res.status,
+        value: (await res.json()) as T,
+      };
     };
-  };
 
 export async function makeRequest<T>(
   path: RequestInfo,
