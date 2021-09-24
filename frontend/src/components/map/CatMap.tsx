@@ -17,7 +17,11 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { useAlertSightings, useLatestSightings } from 'hooks/useSightings';
+import {
+  useAlertSightings,
+  useLatestSightings,
+  useSightings,
+} from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
@@ -48,14 +52,15 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
     initialPinDetails,
   );
   const [showAlert] = useIonAlert();
-  const history = useHistory()
+  const history = useHistory();
 
   /**
    * Getting latest sightings
    */
   const latestSightings = useLatestSightings();
   const alertSightings = useAlertSightings();
-  const isLoading = latestSightings.isLoading || alertSightings.isLoading;
+  const allSightings = useSightings();
+
   const [showModal, setShowModal] = useState(false);
 
   /**
@@ -98,6 +103,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
   const mutate = () => {
     latestSightings.mutate();
     alertSightings.mutate();
+    allSightings.mutate();
   };
 
   const uniqueSightings = useMemo(() => {
@@ -155,7 +161,6 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
 
   const onUpdateSighting = (sighting: CatSighting) => {
     mutate();
-    console.log(sighting);
   };
 
   return (
@@ -185,8 +190,8 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
             coords={pinDetails?.coords}
             text={pinDetails?.tag}
             onClick={() => {
-                setPinDetails(undefined);
-                history.push(MAP_ROUTE)
+              setPinDetails(undefined);
+              history.push(MAP_ROUTE);
             }}
           />
           <CameraFab onClick={newSighting} />
@@ -240,13 +245,19 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
               </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-              <FeedCard
-                cat={currentSighting.cat}
-                sighting={currentSighting}
-                owner={currentSighting.owner}
-                onDelete={onDeleteSighting}
-                onCatUpdate={onUpdateSighting}
-              />
+              <div className="h-full p-2">
+                <div className="flex justify-center ">
+                  <FeedCard
+                    cat={currentSighting.cat}
+                    sighting={currentSighting}
+                    owner={currentSighting.owner}
+                    onDelete={onDeleteSighting}
+                    onCatUpdate={onUpdateSighting}
+                  />
+                </div>
+
+                <div className="p-2" />
+              </div>
             </IonContent>
           </div>
         </IonModal>

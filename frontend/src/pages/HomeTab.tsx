@@ -13,7 +13,7 @@ import {
 } from '@ionic/react';
 import { refresh } from 'ionicons/icons';
 import { MAP_ROUTE } from 'app/routes';
-import { useLatestSightings } from 'hooks/useSightings';
+import { useAlertSightings, useLatestSightings } from 'hooks/useSightings';
 import NavBar from 'components/NavBar';
 import CatMap from 'components/map/CatMap';
 import type { PinDetails } from 'components/map/CatMap';
@@ -23,7 +23,6 @@ import { useLocation, useHistory } from 'react-router';
 import * as queryString from 'query-string';
 
 const HomeTab: React.FC = () => {
-
   // page setup
   const mapPage = 'Map';
   const feedPage = 'Feed';
@@ -34,18 +33,21 @@ const HomeTab: React.FC = () => {
   const feedShown = currPage === feedPage;
 
   // refresh sightings
-  const { mutate, isLoading } = useLatestSightings();
+  const latestSightings = useLatestSightings();
+  const alertSightings = useAlertSightings();
   const [showFeedback, toggleFeedback] = useState(false);
+  const isLoading = latestSightings.isLoading || alertSightings.isLoading;
 
   const refreshSightings = useCallback(() => {
-    mutate();
+    latestSightings.mutate();
+    alertSightings.mutate();
     toggleFeedback(true);
     const id = setTimeout(() => {
       toggleFeedback(false);
     }, 1000);
 
     return () => clearTimeout(id);
-  }, [mutate, toggleFeedback]);
+  }, [latestSightings, alertSightings, toggleFeedback]);
 
   // change pin location if nagivated to via query string
   const location = useLocation();

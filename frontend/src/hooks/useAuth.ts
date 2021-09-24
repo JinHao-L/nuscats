@@ -9,28 +9,31 @@ const userIdKey = 'userId';
 
 export default function useAuth() {
     const { data: isLoggedIn, mutate: setIsLoggedIn } = useSWR(
-        "get-is-logged-in",
+        'get-is-logged-in',
         () => !!JSON.parse(localStorage.getItem(loggedInKey) || 'false'),
-        { refreshInterval: 30000 }
-    )
+        { refreshInterval: 30000 },
+    );
 
     const { data: userId, mutate: setUserId } = useSWR(
-        "get-user-id",
+        'get-user-id',
         () => localStorage.getItem(userIdKey),
-        { refreshInterval: 30000 }
-    )
+        { refreshInterval: 30000 },
+    );
 
     // const [userId, setUserId] = useState<string | null>(
     //     localStorage.getItem(userIdKey),
     // );
 
-    const setLogin = useCallback((userId: string) => {
-        localStorage.setItem(loggedInKey, 'true');
-        setIsLoggedIn(true);
+    const setLogin = useCallback(
+        (userId: string) => {
+            localStorage.setItem(loggedInKey, 'true');
+            setIsLoggedIn(true);
 
-        localStorage.setItem(userIdKey, userId);
-        setUserId(userId);
-    }, [setIsLoggedIn, setUserId]);
+            localStorage.setItem(userIdKey, userId);
+            setUserId(userId);
+        },
+        [setIsLoggedIn, setUserId],
+    );
 
     const setLogout = useCallback(() => {
         localStorage.removeItem(loggedInKey);
@@ -51,7 +54,7 @@ export default function useAuth() {
         },
     );
 
-    const user = isLoggedIn ? refreshData?.value : undefined
+    const user = isLoggedIn ? refreshData?.value : undefined;
     const shouldCreateProfile = useMemo(() => {
         if (refreshData) {
             return !refreshData.value?.profile?.is_profile_setup;
@@ -90,7 +93,7 @@ export default function useAuth() {
         return () => {
             window.removeEventListener('storage', toggleLoggedIn);
         };
-    }, [setIsLoggedIn, setUserId]);
+    }, []);
 
     const {
         data: profileData,
@@ -100,7 +103,7 @@ export default function useAuth() {
     } = useSWR(
         [userId, isLoggedIn, !shouldCreateProfile],
         (id, loggedIn, profileExists) => {
-            return loggedIn && profileExists && id !== null
+            return loggedIn && profileExists && id
                 ? apiFetch(`/users/${id}`).then(async (res) => {
                     return {
                         success: res.ok,

@@ -21,24 +21,22 @@ const dataURItoBlob = (dataURI: string) => {
 };
 
 export const uploadImage = async (uploadLink: string, image: UserPhoto) => {
-  console.log(`uploading to ${uploadLink}`)
-
-  let res = await fetch(uploadLink, {
+  await fetch(uploadLink, {
     method: 'PUT',
     body: dataURItoBlob(image.dataUrl),
   });
-
-  console.log({ res: await res.text() })
 };
 
-export const getUserProfileImageUpload = async (userId: string): Promise<{ res?: UploadResponse, err?: Error }> => {
-  const res = await apiFetch(`/uploads/users/${userId}`)
+export const getUserProfileImageUpload = async (
+  userId: string,
+): Promise<{ res?: UploadResponse; err?: Error }> => {
+  const res = await apiFetch(`/uploads/users/${userId}`);
   if (!res.ok) {
-    let msg = ((await res.json()) as any).message
+    let msg = ((await res.json()) as any).message;
     return {
       err: new Error(msg),
-    }
+    };
   }
 
-  return { res: (await res.json()) as UploadResponse }
-}
+  return { res: (await res.json()) as UploadResponse };
+};
