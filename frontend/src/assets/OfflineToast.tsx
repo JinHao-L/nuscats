@@ -6,7 +6,15 @@ const OfflineToast: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     return (
-        <Offline>
+        <Offline polling={
+            {
+                enabled: true,
+                url: 'https://httpbin.org/get',
+                interval: 12000,
+                timeout: 5000
+            }
+        }
+        >
             <IonToast
                 isOpen={isOpen}
                 onDidDismiss={() => setIsOpen(false)}
