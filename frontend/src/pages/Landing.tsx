@@ -32,7 +32,7 @@ const Landing: React.FC = () => {
 
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-90">
               <div className="flex flex-col items-center h-full mx-5 pb-14">
-                <IonText className="mt-auto mb-6 font-serif text-3xl font-bold text-center text-white">
+                <IonText className="mt-auto mb-6 text-3xl font-bold text-center text-white">
                   Cute cats of NUS<br/>that everyone loves
                 </IonText>
                 <IonButton

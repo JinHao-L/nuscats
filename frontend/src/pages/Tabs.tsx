@@ -28,6 +28,10 @@ import {
   SETUP_PROFILE_ROUTE,
   SIGNIN_ROUTE,
   SIGNUP_ROUTE,
+  EMAIL_CONFIRM_ROUTE,
+  FORGET_PASSWORD_ROUTE,
+  PASSWORD_RESET_ROUTE,
+  RESEND_EMAIL_ROUTE,
 } from 'app/routes';
 import CatDetailPage from './CatDetailPage';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -47,6 +51,10 @@ import AdminCatAlert from './AdminCatAlert';
 import useAuth from 'hooks/useAuth';
 import { RoleType } from '@api/users';
 import PrivateRoute from 'components/PrivateRoute';
+import EmailConfirmationPage from './EmailConfirmation';
+import ForgetPasswordPage from './ForgetPassword';
+import ResendConfirmationPage from './ResendConfirmation';
+import ResetPasswordPage from './ResetPassword';
 
 interface TabInfo {
   href: string;
@@ -68,6 +76,10 @@ const SHOULD_HIDE_TABS = [
   { path: SIGNUP_ROUTE, exact: true, strict: false },
   { path: SIGNIN_ROUTE, exact: true, strict: false },
   { path: SETUP_PROFILE_ROUTE, exact: true, strict: false },
+  { path: RESEND_EMAIL_ROUTE, exact: true, strict: false },
+  { path: EMAIL_CONFIRM_ROUTE, exact: true, strict: false },
+  { path: PASSWORD_RESET_ROUTE, exact: true, strict: false },
+  { path: FORGET_PASSWORD_ROUTE, exact: true, strict: false },
 ];
 
 const Tabs: React.FC = () => {
@@ -132,6 +144,26 @@ const Tabs: React.FC = () => {
           <Route exact path={SIGNUP_ROUTE} component={Signup} />
           <Route exact path={SIGNIN_ROUTE} component={Signin} />
           <Route exact path={SETUP_PROFILE_ROUTE} component={SetupProfile} />
+          <Route
+            exact
+            path={RESEND_EMAIL_ROUTE}
+            component={ResendConfirmationPage}
+          />
+          <Route
+            exact
+            path={EMAIL_CONFIRM_ROUTE}
+            component={EmailConfirmationPage}
+          />
+          <Route
+            exact
+            path={PASSWORD_RESET_ROUTE}
+            component={ResetPasswordPage}
+          />
+          <Route
+            exact
+            path={FORGET_PASSWORD_ROUTE}
+            component={ForgetPasswordPage}
+          />
           <Route exact path={PROFILE_ROUTE} component={Profile} />
           <Route exact path={PROFILE_SETTINGS_ROUTE} component={Settings} />
           <PrivateRoute

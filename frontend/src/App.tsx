@@ -30,19 +30,7 @@ import './theme/tailwind.css';
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import {
-  EMAIL_CONFIRM_ROUTE,
-  FORGET_PASSWORD_ROUTE,
-  LANDING_ROUTE,
-  MAP_ROUTE,
-  PASSWORD_RESET_ROUTE,
-  RESEND_EMAIL_ROUTE,
-  ROOT_ROUTE,
-} from 'app/routes';
-import ForgetPasswordPage from 'pages/ForgetPassword';
-import EmailConfirmationPage from 'pages/EmailConfirmation';
-import ResetPasswordPage from 'pages/ResetPassword';
-import ResendConfirmationPage from 'pages/ResendConfirmation';
+import { LANDING_ROUTE, MAP_ROUTE, ROOT_ROUTE } from 'app/routes';
 import { useEffect, useMemo } from 'react';
 import { useNotification } from 'hooks/useNotification';
 import useAuth from 'hooks/useAuth';
@@ -71,39 +59,18 @@ const App: React.FC = () => {
   const { isLoggedIn } = useAuth();
 
   const redirect = useMemo(() => {
-    return (isLoggedIn
-      ? <Redirect to={MAP_ROUTE} />
-      : <Redirect to={LANDING_ROUTE} />
-    )
-  },
-    [isLoggedIn]
-  )
+    return isLoggedIn ? (
+      <Redirect to={MAP_ROUTE} />
+    ) : (
+      <Redirect to={LANDING_ROUTE} />
+    );
+  }, [isLoggedIn]);
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path={LANDING_ROUTE} component={Landing} />
-          <Route
-            exact
-            path={RESEND_EMAIL_ROUTE}
-            component={ResendConfirmationPage}
-          />
-          <Route
-            exact
-            path={EMAIL_CONFIRM_ROUTE}
-            component={EmailConfirmationPage}
-          />
-          <Route
-            exact
-            path={PASSWORD_RESET_ROUTE}
-            component={ResetPasswordPage}
-          />
-          <Route
-            exact
-            path={FORGET_PASSWORD_ROUTE}
-            component={ForgetPasswordPage}
-          />
           <Route path={ROOT_ROUTE} component={Tabs} />
           <Route render={() => redirect} />
         </IonRouterOutlet>
