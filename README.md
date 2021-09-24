@@ -95,6 +95,6 @@ yarn be:start
 ```
 
 ### Logging in as Admin in-app:
-email: admin@gmail.com
-password: admin
+* email: admin@gmail.com
+* password: admin
 
