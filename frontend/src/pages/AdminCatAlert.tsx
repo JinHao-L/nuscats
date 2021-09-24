@@ -70,7 +70,7 @@ const AdminCatAlert = () => {
       <IonContent>
         <IonHeader collapse="condense" className="ion-no-border">
           <IonToolbar mode="md">
-            <IonTitle className="ion-text-left">
+            <IonTitle className="text-left">
               <div className="text-3xl font-bold text-left">Cat Alerts</div>
               <div className="text-base font-medium text-left text-gray-500">
                 Manage new cats and emergency reports
