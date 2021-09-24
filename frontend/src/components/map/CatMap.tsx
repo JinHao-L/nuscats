@@ -92,7 +92,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
     if (initialPinDetails) {
       moveTo(initialPinDetails.coords);
     }
-  }, [initialPinDetails, moveTo]);
+  }, [initialPinDetails]);
 
   useEffect(() => {
     if (latestSightings.error || alertSightings.error) {
