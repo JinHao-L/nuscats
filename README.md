@@ -66,6 +66,7 @@ To shut down services after you are done, run
 $ docker-compose down
 ```
 
+
 ### Without Docker
 
 Note that without Docker, you will need to have your own instance of Postgres running and set the necessary environment variables when running the backend. You will also need to set up a local Minio server to simulate S3 features.
@@ -92,3 +93,8 @@ yarn fe:start
 ```bash
 yarn be:start
 ```
+
+### Logging in as Admin in-app:
+email: admin@gmail.com
+password: admin
+
