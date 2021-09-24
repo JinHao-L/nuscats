@@ -25,15 +25,15 @@ const EditCatsList: React.FC = () => {
 							<AdminCatCard key={cat.id} cat={cat} cardColor="bg-tertiary-200" catDataMutate={mutate} editCard />
 						</div>
 					)}
+					<IonButton
+						className="w-full max-w-xl m-auto mb-3 text-lg text-white cursor-pointer h-14"
+						color="primary"
+						expand="block"
+						onClick={() => presentModal()}
+					>
+						Add cat
+					</IonButton>
 				</div>
-				<IonButton
-					className="w-full max-w-xl m-auto mb-3 text-lg text-white cursor-pointer h-14"
-					color="primary"
-					expand="block"
-					onClick={() => presentModal()}
-				>
-					Add cat
-				</IonButton>
 			</IonContent>
 		);
 	}

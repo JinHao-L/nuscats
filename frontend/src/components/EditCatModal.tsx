@@ -1,5 +1,5 @@
 import { Cat, UniversityZone } from "@api/cats";
-import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker, IonPage, IonIcon, useIonAlert } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, useIonPicker, IonPage, IonIcon, useIonAlert, IonPicker } from "@ionic/react";
 import { PickerOptions } from "@ionic/core";
 import { useState } from "react";
 import { camera, logoOctocat } from "ionicons/icons";
@@ -286,7 +286,34 @@ const EditCatModal: React.FC<Props> = ({ dismissModal, cat, catDataMutate }) => 
 						Zone:
 						<div
 							className="block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"
-							onClick={() => presentZonePicker(zonePickerOptions)}
+							onClick={() => {
+								// Workaround for an IonPicker bug
+								zonePickerOptions.columns[0].options.forEach(element => {
+									delete element.selected;
+									delete element.duration;
+									delete element.transform;
+								});
+								presentZonePicker({
+									columns: [
+										{
+											name: "zone",
+											options: zonePickerOptionsArr,
+										},
+									],
+									buttons: [
+										{
+											text: "Cancel",
+											role: "cancel",
+										},
+										{
+											text: "Confirm",
+											handler: (selected) => {
+												setCatData({ ...catData, zone: selected.zone.value })
+											},
+										},
+									],
+								})
+							}}
 						>
 							{catData.zone}
 						</div>
@@ -295,7 +322,43 @@ const EditCatModal: React.FC<Props> = ({ dismissModal, cat, catDataMutate }) => 
 						Neutered status:
 						<div
 							className="block w-full p-3 mt-1 bg-gray-200 border rounded-xl focus:outline-none"
-							onClick={() => presentNeuteredPicker(neuteredPickerOptions)}
+							onClick={() => {
+								// Workaround for an IonPicker bug
+								neuteredPickerOptions.columns[0].options.forEach(element => {
+									delete element.selected;
+									delete element.duration;
+									delete element.transform;
+								})
+								presentNeuteredPicker({
+									columns: [{
+										name: "neuteredStatus",
+										options: [{
+											text: "Unknown",
+											value: undefined,
+										},
+										{
+											text: "Neutered",
+											value: true,
+										},
+										{
+											text: "Not neutered",
+											value: false,
+										}]
+									}],
+									buttons: [
+										{
+											text: "Cancel",
+											role: "cancel",
+										},
+										{
+											text: "Confirm",
+											handler: (selected) => {
+												setCatData({ ...catData, neutered: selected.neuteredStatus.value })
+											}
+										},
+									],
+								})
+							}}
 						>
 							{catData.neutered ? "Neutered" : catData.neutered == undefined ? "Unknown" : "Not neutered"}
 						</div>
