@@ -40,6 +40,22 @@ const App: React.FC = () => {
   const { onNotification, hasPermission, canSubscribe } = useNotification();
 
   useEffect(() => {
+    const unsubscribe = () =>
+      document.removeEventListener('newUpdate', listener);
+    const listener: () => any = () => {
+      present({
+        header: `New content is available`,
+        message: 'Refresh your app to get the latest updates',
+        duration: 3000,
+        position: 'top',
+      });
+      return unsubscribe();
+    };
+    document.addEventListener('newUpdate', listener);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     if (hasPermission && canSubscribe) {
       const unsubscribe = onNotification((payload) => {
         const message = payload.data;
@@ -50,11 +66,10 @@ const App: React.FC = () => {
           position: 'top',
         });
       });
-  
+
       return () => unsubscribe();
     }
   }, [hasPermission, canSubscribe]);
-
 
   const { isLoggedIn } = useAuth();
 
