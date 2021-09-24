@@ -90,10 +90,7 @@ const ProfileTab: React.FC = () => {
             <IonButton
               fill="clear"
               color="secondary"
-              slot="icon-only"
               routerLink={PROFILE_SETTINGS_ROUTE}
-              size={'large'}
-              className="pb-2 pr-2"
             >
               <IonIcon icon={settingsOutline} />
             </IonButton>

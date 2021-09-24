@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.nuscats.cafe',
-  appName: 'NUSCats',
+  appName: 'NUS Cats',
   webDir: 'build',
   bundledWebRuntime: false
 };

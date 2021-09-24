@@ -174,7 +174,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
             alt={'The cat sighting image'}
             className="object-cover h-full min-w-full mt-2"
           />
-          <IonRow className="ion-padding-vertical">
+          <IonRow className="pt-4">
             {sighting.type !== SightingType.Emergency ? (
               <IonChip className="text-xs font-medium " color="secondary">
                 <IonLabel>Spotted</IonLabel>
@@ -185,12 +185,12 @@ const FeedCard: React.FC<FeedCardProps> = ({
               </IonChip>
             )}
           </IonRow>
-          <IonRow className="flex justify-between mt-4 ion-align-items-center">
-            <IonText className="ml-2 text-gray-900 ion-text-wrap">
+          <IonRow className="flex items-center justify-between mt-4">
+            <IonText className="ml-2 text-gray-900 whitespace-normal">
               {sighting.description}
             </IonText>
           </IonRow>
-          <IonRow className="flex justify-between mt-4 ion-align-items-center">
+          <IonRow className="flex items-center justify-between mt-4">
             <IonCol>
               <IonRouterLink {...locationRouterProps} className="flex items-center space-x-2">
                 <IonIcon color="secondary" icon={locationOutline} />

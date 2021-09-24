@@ -27,11 +27,11 @@ import { SightingsService } from './sightings.service';
 import { CreateSightingDto } from './dtos/create-sighting.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { MultipleSightingQuery } from './dtos/multiple-sighting.dto';
-import { LatestSightingQuery } from './dtos/latest-sighting.dto';
 import * as QueryString from 'query-string';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from 'src/users/user.entity';
 import { Usr } from 'src/shared/decorators/user.decorator';
+import { PaginatedSightings } from './dtos/paginated-sighting.dto';
 
 @ApiTags('Sightings')
 @Controller('sightings')
@@ -43,7 +43,7 @@ export class SightingsController {
    */
   @ApiOkResponse({
     description: 'Successfully get list of sightings',
-    type: [CatSighting],
+    type: PaginatedSightings,
   })
   @ApiQuery({ name: 'catIds', required: false, explode: false })
   @ApiQuery({ name: 'ownerIds', required: false, explode: false })
