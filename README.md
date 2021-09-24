@@ -1,5 +1,15 @@
 # NUS Cats
 
+Find your favourite cats!
+
+https://nuscats.herokuapp.com
+
+| Name                | Number    | Contributions             |
+| ------------------- | --------- | ------------------------- |
+| Tan Kang Liang      | A0150038R | Fullstack, Sightings      |
+| Huang Weijie        | A0190270M | Fullstack, Cats           |
+| Lim Jin Hao         | A0183831A | Fullstack, Authentication |
+| Let Yan Wen Dominic | A0205878R | Fullstack, Profile        |
 
 ## Development
 
@@ -13,6 +23,29 @@ The backend can be found at [http://localhost:3001](http://localhost:3001)
 
 1. [Docker](https://docs.docker.com/get-docker/)
 1. [docker-compose](https://docs.docker.com/compose/install/)
+
+#### Environment
+
+The following variables are needed in `frontend/.env`
+
+```
+REACT_APP_MAPBOX_TOKEN
+MESSAGING_VAPID_KEY
+```
+
+The following variables are needed in `backend/.env`
+
+```
+POSITIONSTACK_API_KEY
+EMAIL_ID
+EMAIL_PASS
+EMAIL_HOST
+EMAIL_PORT
+FIREBASE_PROJECT_ID
+FIREBASE_CLIENT_EMAIL
+FIREBASE_PRIVATE_KEY
+```
+
 
 #### Running 
 
@@ -41,6 +74,12 @@ Note that without Docker, you will need to have your own instance of Postgres ru
 
 1. Node
 1. Yarn
+
+#### Environment
+
+Please refer to the above for `frontend/.env`.
+
+Please refer to `backend/src/config/config.schema.ts` for all variables used.
 
 #### Running
 
