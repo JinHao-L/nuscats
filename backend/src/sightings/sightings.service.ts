@@ -116,6 +116,7 @@ export class SightingsService {
       this.sightingsRepository
         .createQueryBuilder('sighting')
         .leftJoinAndSelect('sighting.cat', 'cat')
+        .leftJoinAndSelect('sighting.owner', 'owner')
         .distinctOn(['sighting.cat_id'])
         .where('sighting.cat_id IS NOT NULL')
         .andWhere('sighting.type = :type', { type: SightingType.CatSighted })
@@ -130,6 +131,7 @@ export class SightingsService {
       this.sightingsRepository
         .createQueryBuilder('sighting')
         .leftJoinAndSelect('sighting.cat', 'cat')
+        .leftJoinAndSelect('sighting.owner', 'owner')
         .where('sighting.cat_id IS NULL')
         .orWhere('sighting.type = :type', { type: SightingType.Emergency })
         .orderBy('sighting.created_at', 'DESC');

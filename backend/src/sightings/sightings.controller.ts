@@ -68,7 +68,6 @@ export class SightingsController {
     description: 'Successfully get list of sightings',
     type: [CatSighting],
   })
-  @ApiQuery({ name: 'catIds', required: false, explode: false })
   @Get('/latest')
   getLatest(): Observable<CatSighting[]> {
     return this.sightingsService.listLatest();
