@@ -35,6 +35,7 @@ import { useEffect, useMemo } from 'react';
 import { useNotification } from 'hooks/useNotification';
 import useAuth from 'hooks/useAuth';
 import UpdateAppRequester from 'components/UpdateAppRequester';
+import OfflineToast from 'assets/OfflineToast';
 
 
 const App: React.FC = () => {
@@ -70,6 +71,7 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <UpdateAppRequester />
+      <OfflineToast />
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path={LANDING_ROUTE} component={Landing} />
