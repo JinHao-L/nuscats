@@ -17,7 +17,11 @@ import UserIcon from 'components/map/UserIcon';
 import useGeolocation, { getCenter } from 'hooks/useGeolocation';
 import { State } from 'react-mapbox-gl/lib/map';
 import { takePhoto, UserPhoto } from 'utils/takePhoto';
-import { useAlertSightings, useLatestSightings } from 'hooks/useSightings';
+import {
+  useAlertSightings,
+  useLatestSightings,
+  useSightings,
+} from 'hooks/useSightings';
 import CatIcon from 'components/map/CatIcon';
 import { CatSighting } from '@api/sightings';
 import FeedModal from 'components/FeedModal';
@@ -55,6 +59,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
    */
   const latestSightings = useLatestSightings();
   const alertSightings = useAlertSightings();
+  const allSightings = useSightings();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -98,6 +103,7 @@ const CatMap: React.FC<CatMapProps> = ({ pinDetails: initialPinDetails }) => {
   const mutate = () => {
     latestSightings.mutate();
     alertSightings.mutate();
+    allSightings.mutate();
   };
 
   const uniqueSightings = useMemo(() => {

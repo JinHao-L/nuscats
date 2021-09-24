@@ -99,7 +99,7 @@ export class SightingsService {
         })
         .setParameters({ origin: JSON.stringify(origin) });
     } else {
-      queryBuilder = queryBuilder.orderBy({ 'sighting.created_at': 'ASC' });
+      queryBuilder = queryBuilder.orderBy({ 'sighting.created_at': 'DESC' });
     }
 
     return from(paginate(queryBuilder, pagingOptions));
