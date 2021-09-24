@@ -37,7 +37,7 @@ const EditCatModal: React.FC<Props> = ({ dismissModal, cat, catDataMutate }) => 
 	);
 
 	const zoneColumn: PickerColumn = {
-		name: "zone", 
+		name: "zone",
 		options: zonePickerOptionsArr,
 	}
 
@@ -97,7 +97,7 @@ const EditCatModal: React.FC<Props> = ({ dismissModal, cat, catDataMutate }) => 
 			apiFetch(`${catsKey}/${typedCatData.id}`, { ...typedCatData, image: imageUrl, updated_at: new Date() }, {
 				method: 'PUT',
 			}).then((res) => {
-				if (res.status == 200) {
+				if (res.status === 200) {
 					presentAlert({
 						header: 'Cat successfully updated',
 						buttons: [
