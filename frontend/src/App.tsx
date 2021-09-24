@@ -34,26 +34,12 @@ import { LANDING_ROUTE, MAP_ROUTE, ROOT_ROUTE } from 'app/routes';
 import { useEffect, useMemo } from 'react';
 import { useNotification } from 'hooks/useNotification';
 import useAuth from 'hooks/useAuth';
+import UpdateAppRequester from 'components/UpdateAppRequester';
+
 
 const App: React.FC = () => {
   const [present] = useIonToast();
   const { onNotification, hasPermission, canSubscribe } = useNotification();
-
-  useEffect(() => {
-    const unsubscribe = () =>
-      document.removeEventListener('newUpdate', listener);
-    const listener: () => any = () => {
-      present({
-        header: `New content is available`,
-        message: 'Refresh your app to get the latest updates',
-        duration: 3000,
-        position: 'top',
-      });
-      return unsubscribe();
-    };
-    document.addEventListener('newUpdate', listener);
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
     if (hasPermission && canSubscribe) {
@@ -69,7 +55,7 @@ const App: React.FC = () => {
 
       return () => unsubscribe();
     }
-  }, [hasPermission, canSubscribe]);
+  }, [onNotification, present, hasPermission, canSubscribe]);
 
   const { isLoggedIn } = useAuth();
 
@@ -83,6 +69,7 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
+      <UpdateAppRequester />
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path={LANDING_ROUTE} component={Landing} />
