@@ -8,8 +8,8 @@ https://nuscats.herokuapp.com
 | ------------------- | --------- | ------------------------- |
 | Tan Kang Liang      | A0150038R | Fullstack, Sightings      |
 | Huang Weijie        | A0190270M | Fullstack, Cats           |
-| Lim Jin Hao         | A0183831A | Fullstack, Authentication |
-| Let Yan Wen Dominic | A0205878R | Fullstack, Profile        |
+| Lim Jin Hao         | A0205878R | Fullstack, Authentication |
+| Let Yan Wen Dominic | A0183831A | Fullstack, Profile        |
 
 ## Development
 
