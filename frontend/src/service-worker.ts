@@ -10,11 +10,14 @@
 
 import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { staticResourceCache, googleFontsCache, imageCache } from 'workbox-recipes';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw';
+import * as googleAnalytics from 'workbox-google-analytics';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -26,10 +29,17 @@ clientsClaim();
 // even if you decide not to use precaching. See https://cra.link/PWA
 precacheAndRoute(self.__WB_MANIFEST);
 
+
+googleAnalytics.initialize();
+staticResourceCache();
+googleFontsCache();
+imageCache();
+
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
+
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }: { request: Request; url: URL }) => {
@@ -40,11 +50,6 @@ registerRoute(
 
     // If this is a URL that starts with /_, skip.
     if (url.pathname.startsWith('/_')) {
-      return false;
-    }
-
-    // If this is a URL that starts with /_, skip.
-    if (url.pathname.startsWith('/api')) {
       return false;
     }
 
@@ -77,6 +82,92 @@ registerRoute(
   }),
 );
 
+// Cache sightings, but check the network first
+registerRoute(
+  new RegExp('/v1/sightings(.*)'),
+  new NetworkFirst({
+    cacheName: 'sightings',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 172800 // 2 days
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
+      })
+    ]
+  })
+)
+
+// Cache cats using stale-while-revalidate
+registerRoute(
+  new RegExp('/v1/cats(.*)'),
+  new StaleWhileRevalidate({
+    cacheName: 'cats',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 604800 // 1 week
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
+      })
+    ]
+  })
+)
+
+// Cache user profiles
+registerRoute(
+  new RegExp('/v1/users(.*)'),
+  new StaleWhileRevalidate({
+    cacheName: 'users',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 20,
+        maxAgeSeconds: 86400 // 1 day
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
+      })
+    ]
+  })
+)
+
+// Cache sighting images from S3
+// The images are immutable so we can use a cache first strategy
+registerRoute(
+  new RegExp('https://s3.ap-southeast-1.amazonaws.com/nuscats/sightings/.*\\.(png|jpg)'),
+  new CacheFirst({
+    cacheName: 'sighting-images',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 172800 // 2 days
+      }),
+      new CacheableResponsePlugin({
+        statuses: [200]
+      })
+    ]
+  })
+)
+
+// Cache user profile images from S3
+registerRoute(
+  new RegExp('https://s3.ap-southeast-1.amazonaws.com/nuscats/users/.*\\.(png|jpg)'),
+  new StaleWhileRevalidate({
+    cacheName: 'profile-images',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 20,
+        maxAgeSeconds: 86400 // 1 day
+      }),
+      new CacheableResponsePlugin({
+        statuses: [200]
+      })
+    ]
+  })
+)
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
@@ -100,29 +191,28 @@ const firebaseApp = initializeApp({
 const messaging = getMessaging(firebaseApp);
 
 onBackgroundMessage(messaging, (payload) => {
-  // console.log('[service-worker.js] Received background message ', payload);
+  console.log('[service-worker.js] Received background message ', payload);
   // Customize notification here
-  const notificationTitle = payload.data?.title || 'NUS Cats';
+  const notificationTitle = payload.notification?.title || 'NUS Cats';
   const notificationOptions = {
-    body: payload.data?.body,
-    icon: payload.data?.icon || 'assets/icon/icon.png',
+    body: payload.notification?.body,
+    icon: payload.notification?.image || 'assets/icon/icon.png',
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-self.addEventListener('notificationclick', function (event) {
-  const rootUrl = new URL('/', self.location.origin).href;
-  event.notification.close();
-  // Enumerate windows, and call window.focus(), or open a new one.
-  event.waitUntil(
-    self.clients.matchAll().then(matchedClients => {
-      for (let client of matchedClients) {
-        if (client.url.indexOf(rootUrl) >= 0  && 'focus' in client) {
-          return (client as any).focus();
-        }
-      }
-      return self.clients.openWindow("/").then(client => client?.focus());
-    })
-  );
+self.addEventListener('notificationclick', (event) => {
+  console.log(event.notification);
+  return event;
 });
+
+// self.addEventListener('push', (event) => {
+//   const notificationText = event.data?.text();
+//   const showNotification = self.registration.showNotification('NUS Cats', {
+//     body: notificationText,
+//     icon: 'assets/icon/icon.png',
+//   });
+//   // Make sure the toast notification is displayed, before exiting the function.
+//   event.waitUntil(showNotification);
+// });

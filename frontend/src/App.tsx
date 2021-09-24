@@ -46,6 +46,8 @@ import ResendConfirmationPage from 'pages/ResendConfirmation';
 import { useEffect, useMemo } from 'react';
 import { useNotification } from 'hooks/useNotification';
 import useAuth from 'hooks/useAuth';
+import UpdateAppRequester from 'components/UpdateAppRequester';
+
 
 const App: React.FC = () => {
   const [present] = useIonToast();
@@ -62,10 +64,10 @@ const App: React.FC = () => {
           position: 'top',
         });
       });
-  
+
       return () => unsubscribe();
     }
-  }, [hasPermission, canSubscribe]);
+  }, [onNotification, present, hasPermission, canSubscribe]);
 
 
   const { isLoggedIn } = useAuth();
@@ -81,6 +83,7 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
+      <UpdateAppRequester />
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path={LANDING_ROUTE} component={Landing} />
