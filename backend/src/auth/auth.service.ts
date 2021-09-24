@@ -216,7 +216,7 @@ export class AuthService {
 
         return {
           user,
-          url: `${this.appConfigService.clientUrl}/confirm-email?token=${token}`,
+          url: `${this.appConfigService.clientUrl}/app/confirm-email?token=${token}`,
         };
       }),
       mergeMap(({ user, url }) =>
@@ -245,7 +245,7 @@ export class AuthService {
 
         return {
           user,
-          url: `${this.appConfigService.clientUrl}/password-reset?token=${token}`,
+          url: `${this.appConfigService.clientUrl}/app/password-reset?token=${token}`,
         };
       }),
       mergeMap(({ user, url }) =>

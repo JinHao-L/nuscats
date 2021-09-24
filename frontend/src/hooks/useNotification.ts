@@ -24,31 +24,25 @@ export const useNotification = () => {
 
   const subscribe = async () => {
     // request permission
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      const registration = await navigator.serviceWorker.ready;
+    const registration = await navigator.serviceWorker.ready;
+    const firebaseToken = await getToken(messaging, {
+      vapidKey: process.env.MESSAGING_VAPID_KEY,
+      serviceWorkerRegistration: registration,
+    });
+    console.log('Notification permission granted.');
 
-      console.log('Notification permission granted.');
-      const firebaseToken = await getToken(messaging, {
-        vapidKey: process.env.MESSAGING_VAPID_KEY,
-        serviceWorkerRegistration: registration,
-      });
-
-      console.log('Messaging Token:', firebaseToken);
-      if (token !== firebaseToken) {
-        localStorage.setItem(notificationStorageKey, firebaseToken);
-        setToken(firebaseToken);
-        await updateNotification('subscribe', firebaseToken).then(({ err }) => {
-          if (err) {
-            console.log('Error updating token key in server');
-          }
-        }).catch(err => console.log(err));
-      }
-
-      return firebaseToken;
-    } else {
-      throw new Error('Unable to get user permission');
+    console.log('Messaging Token:', firebaseToken);
+    if (token !== firebaseToken) {
+      localStorage.setItem(notificationStorageKey, firebaseToken);
+      setToken(firebaseToken);
+      await updateNotification('subscribe', firebaseToken).then(({ err }) => {
+        if (err) {
+          console.log('Error updating token key in server');
+        }
+      }).catch(err => console.log(err));
     }
+
+    return firebaseToken;
   };
 
   const unsubscribe = () => {
@@ -73,7 +67,7 @@ export const useNotification = () => {
   };
 
   return {
-    canSubscribe: navigator.serviceWorker.controller !== null && messaging !== null,
+    canSubscribe: navigator?.serviceWorker?.controller !== null && messaging !== null,
     notify: createNotification,
     subscribe,
     unsubscribe,

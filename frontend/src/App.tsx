@@ -13,12 +13,12 @@ import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
 /* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
+// import '@ionic/react/css/padding.css';
+// import '@ionic/react/css/float-elements.css';
+// import '@ionic/react/css/text-alignment.css';
+// import '@ionic/react/css/text-transformation.css';
+// import '@ionic/react/css/flex-utils.css';
+// import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
@@ -30,19 +30,7 @@ import './theme/tailwind.css';
 /* MapBox Setup */
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import {
-  EMAIL_CONFIRM_ROUTE,
-  FORGET_PASSWORD_ROUTE,
-  LANDING_ROUTE,
-  MAP_ROUTE,
-  PASSWORD_RESET_ROUTE,
-  RESEND_EMAIL_ROUTE,
-  ROOT_ROUTE,
-} from 'app/routes';
-import ForgetPasswordPage from 'pages/ForgetPassword';
-import EmailConfirmationPage from 'pages/EmailConfirmation';
-import ResetPasswordPage from 'pages/ResetPassword';
-import ResendConfirmationPage from 'pages/ResendConfirmation';
+import { LANDING_ROUTE, MAP_ROUTE, ROOT_ROUTE } from 'app/routes';
 import { useEffect, useMemo } from 'react';
 import { useNotification } from 'hooks/useNotification';
 import useAuth from 'hooks/useAuth';
@@ -50,6 +38,22 @@ import useAuth from 'hooks/useAuth';
 const App: React.FC = () => {
   const [present] = useIonToast();
   const { onNotification, hasPermission, canSubscribe } = useNotification();
+
+  useEffect(() => {
+    const unsubscribe = () =>
+      document.removeEventListener('newUpdate', listener);
+    const listener: () => any = () => {
+      present({
+        header: `New content is available`,
+        message: 'Refresh your app to get the latest updates',
+        duration: 3000,
+        position: 'top',
+      });
+      return unsubscribe();
+    };
+    document.addEventListener('newUpdate', listener);
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (hasPermission && canSubscribe) {
@@ -62,48 +66,26 @@ const App: React.FC = () => {
           position: 'top',
         });
       });
-  
+
       return () => unsubscribe();
     }
   }, [hasPermission, canSubscribe]);
 
-
   const { isLoggedIn } = useAuth();
 
   const redirect = useMemo(() => {
-    return (isLoggedIn
-      ? <Redirect to={MAP_ROUTE} />
-      : <Redirect to={LANDING_ROUTE} />
-    )
-  },
-    [isLoggedIn]
-  )
+    return isLoggedIn ? (
+      <Redirect to={MAP_ROUTE} />
+    ) : (
+      <Redirect to={LANDING_ROUTE} />
+    );
+  }, [isLoggedIn]);
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path={LANDING_ROUTE} component={Landing} />
-          <Route
-            exact
-            path={RESEND_EMAIL_ROUTE}
-            component={ResendConfirmationPage}
-          />
-          <Route
-            exact
-            path={EMAIL_CONFIRM_ROUTE}
-            component={EmailConfirmationPage}
-          />
-          <Route
-            exact
-            path={PASSWORD_RESET_ROUTE}
-            component={ResetPasswordPage}
-          />
-          <Route
-            exact
-            path={FORGET_PASSWORD_ROUTE}
-            component={ForgetPasswordPage}
-          />
           <Route path={ROOT_ROUTE} component={Tabs} />
           <Route render={() => redirect} />
         </IonRouterOutlet>

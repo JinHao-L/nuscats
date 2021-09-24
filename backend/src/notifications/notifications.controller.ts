@@ -23,6 +23,9 @@ import { RoleType } from '@api/users';
 export class NotificationsController {
   constructor(private notifyService: NotificationsService) {}
 
+  /**
+   * Subscribes the user to a notification topic
+   */
   @ApiCreatedResponse({ description: 'Successfully subscribed' })
   @Post('/subscribe')
   subscribeNotification(
@@ -39,6 +42,9 @@ export class NotificationsController {
     });
   }
 
+  /**
+   * Unsubscribes the user from a notification topic
+   */
   @ApiCreatedResponse({ description: 'Successfully unsubscribed' })
   @ApiBadRequestResponse({ description: 'Already unsubscribed' })
   @Post('/unsubscribe')
@@ -55,6 +61,9 @@ export class NotificationsController {
     });
   }
 
+  /**
+   * Push a new notification to users subscribed to the topic
+   */
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(RoleType.Admin)
   @ApiCreatedResponse({ description: 'Successfully pushed notification' })

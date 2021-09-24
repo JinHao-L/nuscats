@@ -111,7 +111,7 @@ const ChangeNameAndDp: React.FC = () => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref={MAP_ROUTE} />
                     </IonButtons>
-                    <IonTitle className="-ml-6 text-center">
+                    <IonTitle>
                         Change name/profile picture
                     </IonTitle>
                 </IonToolbar>

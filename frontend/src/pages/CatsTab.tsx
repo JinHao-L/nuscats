@@ -31,7 +31,6 @@ const CatsTab: React.FC = () => {
                 {
                   text: 'Not now',
                   role: 'cancel',
-                  handler: () => localStorage.setItem('prompted', 'true'),
                 },
                 {
                   text: 'Turn on',
@@ -44,12 +43,11 @@ const CatsTab: React.FC = () => {
                           position: 'top',
                         });
                       })
-                      .catch((err) => {
-                        return null;
-                      });
+                      .catch(console.log);
                   },
                 },
               ],
+              onDidDismiss: () => localStorage.setItem('prompted', 'true')
             });
           }, 5000);
     
