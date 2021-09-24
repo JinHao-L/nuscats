@@ -53,35 +53,37 @@ const ResendConfirmationPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="mx-5 mt-5 mb-5">
-          <p className="mb-1 text-2xl font-semibold text-transparent bg-clip-text sm:text-3xl md:text-4xl bg-gradient-to-br from-primary-600 to-secondary-600">
-            Resend email confirmation
-          </p>
-          <p className="tracking-wide text-gray-800">
-            Didn't receive your confirmation mail?
-            <br />
-            Get one more on us 🐱
-          </p>
+        <div className="flex flex-col items-center space-y-6">
+          <div className="m-5">
+            <p className="mb-1 text-2xl font-semibold text-transparent bg-clip-text sm:text-3xl md:text-4xl bg-gradient-to-br from-primary-600 to-secondary-600">
+              Resend email confirmation
+            </p>
+            <p className="tracking-wide text-gray-800">
+              Didn't receive your confirmation mail?
+              <br />
+              Get one more on us 🐱
+            </p>
+          </div>
+          <form className="flex flex-col w-full max-w-md px-6" onSubmit={handleSubmit(onSubmit)}>
+            <TextInput
+              id="email"
+              type="email"
+              label="Email"
+              register={register('email', { required: true })}
+              errors={[{ isError: !!errors.email, msg: 'Email is required' }]}
+            />
+            <IonButton
+              className="px-5 text-white cursor-pointer text-md h-14"
+              color="primary"
+              expand="block"
+              type={'submit'}
+              disabled={!!success}
+            >
+              Send confirmation email
+            </IonButton>
+          </form>
+          <IonLoading isOpen={loading} message={'Please wait...'} />
         </div>
-        <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
-            id="email"
-            type="email"
-            label="Email"
-            register={register('email', { required: true })}
-            errors={[{ isError: !!errors.email, msg: 'Email is required' }]}
-          />
-          <IonButton
-            className="mx-5 text-lg text-white cursor-pointer h-14"
-            color="primary"
-            expand="block"
-            type={'submit'}
-            disabled={!!success}
-          >
-            Send confirmation email
-          </IonButton>
-        </form>
-        <IonLoading isOpen={loading} message={'Please wait...'} />
       </IonContent>
     </IonPage>
   );
