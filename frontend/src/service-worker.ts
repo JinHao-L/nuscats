@@ -202,10 +202,10 @@ imageCache();
 registerRoute(
   new RegExp('https://(tiles.mapbox.com|api.mapbox.com)(.*)'),
   new StaleWhileRevalidate({
-    cacheName: 'profile-images',
+    cacheName: 'mapbox-assets',
     plugins: [
       new ExpirationPlugin({
-        maxEntries: 30,
+        maxEntries: 50,
         maxAgeSeconds: 604800 // 1 week
       }),
       new CacheableResponsePlugin({
