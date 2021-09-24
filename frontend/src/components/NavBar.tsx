@@ -113,7 +113,7 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
                             duration: 3000,
                             position: 'top',
                           }))
-                        .catch((err) => {return null}))}
+                        .catch(console.log))}
                     className={'text-sm border-0'}
                 >
                     Notifications
