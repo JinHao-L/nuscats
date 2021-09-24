@@ -59,9 +59,10 @@ const NavBar: React.FC<NavBarProps> = ({ title, children }) => {
     useOnClickOutside(dropdownRef, () => setShowDropDown(false));
 
     const handleLogout = useCallback(() => {
-        logout();
-        setLogout();
-        history.push(LANDING_ROUTE);
+        return logout().finally(() => {
+            setLogout();
+            history.push(LANDING_ROUTE);
+        });
     }, [setLogout, history]);
 
     useIonViewWillEnter(() => setIsAnimating(true));

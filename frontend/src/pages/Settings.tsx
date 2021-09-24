@@ -27,9 +27,10 @@ const Settings: React.FC = () => {
   const history = useHistory()
 
   const handleLogout = useCallback(() => {
-    logout()
-    setLogout()
-    history.push(LANDING_ROUTE)
+    return logout().finally(() => {
+      setLogout()
+      history.push(LANDING_ROUTE)
+    })
 
   }, [setLogout, history])
 
