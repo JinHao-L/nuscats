@@ -1,9 +1,19 @@
-# NUS Cats
+<p align="center">
+  <img src="frontend/public/assets/icon/icon.png" width="320" alt="Logo" />
+</p>
 
-Find your favourite cats!
+<h1 align="center">NUS Cats</h1> 
+<p align="center">Find the location of your favourite cats through crowdsourced data shared by cat lovers like you! View pictures of your favourite cats and share them with like-minded cat lovers here on this app</p> 
 
-https://nuscats.herokuapp.com
+---
 
+Try out the progressive web app here @ https://nuscats.herokuapp.com
+
+## Screenshots
+<img src="images/screenshot_map.png" alt="Map" />
+<img src="images/screenshot_profile.png" alt="Ashy Profile" />
+
+## Team Members
 | Name                | Number    | Contributions             |
 | ------------------- | --------- | ------------------------- |
 | Tan Kang Liang      | A0150038R | Fullstack, Sightings      |
